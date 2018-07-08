@@ -17,7 +17,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private EditText mPassword;
     private Button mLogin;
     private TextView mNewUser;
-    private IMainView mMainView;
+    private IMainViewListener mMainView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,8 +34,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    public void addListener(IMainView iMainView) {
-        mMainView = iMainView;
+    public void addListener(IMainViewListener iMainViewListener) {
+        mMainView = iMainViewListener;
     }
 
     @Override

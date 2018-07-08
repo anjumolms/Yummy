@@ -1,4 +1,4 @@
-package com.example.dell.yummy.user;
+package com.example.dell.yummy.user.reviews;
 
 
 import android.os.Bundle;
@@ -13,10 +13,10 @@ import com.example.dell.yummy.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UserDishesFragment extends Fragment {
+public class UserReviewFragment extends Fragment {
 
 
-    public UserDishesFragment() {
+    public UserReviewFragment() {
         // Required empty public constructor
     }
 
@@ -29,7 +29,7 @@ public class UserDishesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_dishes, container, false);
+        return inflater.inflate(R.layout.fragment_user_review, container, false);
     }
 
 }

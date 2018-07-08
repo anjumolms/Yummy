@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".user.store.StoreDetailsFragment">
+
+    <TextView
+        android:id="@+id/tv_store_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kanthariz"
+        android:textSize="20sp" />
+     <TextView
+        android:id="@+id/tv_dishes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dishes"
+        android:textSize="15sp" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_storedetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/bt_buy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BUY"/>
+
+</LinearLayout>

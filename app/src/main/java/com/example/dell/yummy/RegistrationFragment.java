@@ -15,7 +15,7 @@ import android.widget.EditText;
  */
 public class RegistrationFragment extends Fragment implements View.OnClickListener {
 
-    private IMainView mainView;
+    private IMainViewListener mainView;
     private EditText mUserName;
     private EditText mUId;
     private EditText mPassword;
@@ -42,8 +42,8 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     }
 
 
-    public void addListener(IMainView iMainView) {
-        mainView = iMainView;
+    public void addListener(IMainViewListener iMainViewListener) {
+        mainView = iMainViewListener;
     }
 
     @Override
