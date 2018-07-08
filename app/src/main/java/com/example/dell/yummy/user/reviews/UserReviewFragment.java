@@ -1,4 +1,4 @@
-package com.example.dell.yummy.user;
+package com.example.dell.yummy.user.reviews;
 
 
 import android.os.Bundle;

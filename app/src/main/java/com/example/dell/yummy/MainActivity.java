@@ -8,7 +8,7 @@ import android.os.Bundle;
 
 import com.example.dell.yummy.user.UserHomeActivity;
 
-public class MainActivity extends AppCompatActivity implements IMainView {
+public class MainActivity extends AppCompatActivity implements IMainViewListener {
     private LoginFragment mLoginFragment;
     private RegistrationFragment mRegistrationFragment;
     private  UserHomeActivity mUserHomeActivity;
@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity implements IMainView {
             case Constants.SCREEN_USER_HOME:
                 Intent mySuperIntent = new Intent(this,UserHomeActivity.class);
                 startActivity(mySuperIntent);
-
-        }
+                break;
+                }
     }
 
 }
