@@ -26,8 +26,6 @@ public class StoreDetailsFragment extends Fragment {
     RecyclerView recyclerView;
     IUserViewListener miUserViewListener;
 
-
-
     public StoreDetailsFragment() {
         // Required empty public constructor
     }
