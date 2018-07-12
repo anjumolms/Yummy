@@ -70,7 +70,7 @@ public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.St
                 public void onClick(View v) {
                     Toast.makeText(mCtx,"success",Toast.LENGTH_SHORT).show();
                     if(miUserViewListener != null){
-                        miUserViewListener.addFragment(Constants.SCREEN_DISHES_DETAILS);
+                        miUserViewListener.addFragment(Constants.SCREEN_STORE_DETAILS);
                     }
 
                 }

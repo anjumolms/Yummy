@@ -45,7 +45,7 @@ public class StoreDetailsFragment extends Fragment {
         dishesList.add(
                 new DishesDetails(
                         1,
-                        "Apple MacBook Air Core i5 5th Gen - (8 GB/128 GB SSD/Mac OS Sierra)",
+                        "chikn",
                         "13.3 inch, Silver, 1.35 kg",
                         4.3,
                         60000));
@@ -53,7 +53,7 @@ public class StoreDetailsFragment extends Fragment {
         dishesList.add(
                 new DishesDetails(
                         1,
-                        "Dell Inspiron 7000 Core i5 7th Gen - (8 GB/1 TB HDD/Windows 10 Home)",
+                        "skjshd)",
                         "14 inch, Gray, 1.659 kg",
                         4.3,
                         60000));
@@ -61,7 +61,7 @@ public class StoreDetailsFragment extends Fragment {
         dishesList.add(
                 new DishesDetails(
                         1,
-                        "Microsoft Surface Pro 4 Core m3 6th Gen - (4 GB/128 GB SSD/Windows 10)",
+                        "gdfhd)",
                         "13.3 inch, Silver, 1.35 kg",
                         4.3,
                         60000));
@@ -69,7 +69,7 @@ public class StoreDetailsFragment extends Fragment {
         dishesList.add(
                 new DishesDetails(
                         1,
-                        "Microsoft Surface Pro 4 Core m3 6th Gen - (4 GB/128 GB SSD/Windows 10)",
+                        "dfd",
                         "13.3 inch, Silver, 1.35 kg",
                         4.3,
                         60000));
@@ -77,12 +77,13 @@ public class StoreDetailsFragment extends Fragment {
         dishesList.add(
                 new DishesDetails(
                         1,
-                        "Microsoft Surface Pro 4 Core m3 6th Gen - (4 GB/128 GB SSD/Windows 10)",
+                        "dfgrd",
                         "13.3 inch, Silver, 1.35 kg",
                         4.3,
                         60000));
 
-        UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList,miUserViewListener);
+       // UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList,miUserViewListener);
+        StoreDetailsAdapter adapter = new StoreDetailsAdapter(getActivity(),dishesList);
 
         //setting adapter to recyclerview
         recyclerView.setAdapter(adapter);
