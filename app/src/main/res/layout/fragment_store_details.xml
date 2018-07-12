@@ -1,34 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".user.store.StoreDetailsFragment">
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <TextView
         android:id="@+id/tv_store_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Kanthariz"
-        android:textSize="20sp" />
+        android:text="KANTHARIZ"
+        android:textStyle="bold"
+        android:textSize="30sp" />
      <TextView
         android:id="@+id/tv_dishes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Dishes"
+         android:textStyle="bold"
         android:textSize="15sp" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_storedetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/bt_buy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:text="BUY"/>
 
-</LinearLayout>
+</RelativeLayout>

@@ -31,7 +31,7 @@ public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapte
     public StoreDetailsAdapter.DishesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.layout_store_details, null);
+        View view = inflater.inflate(R.layout.layout_store_details, parent,false);
         return new StoreDetailsAdapter.DishesViewHolder(view);
     }
     @Override

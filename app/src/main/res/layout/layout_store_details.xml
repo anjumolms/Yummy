@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,24 +13,41 @@
             android:layout_margin="5dp">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:weightSum="4"
                 android:orientation="horizontal">
                 <TextView
                     android:id="@+id/dish_item_name"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:layout_marginBottom="3dp"
+                    android:layout_weight="2"
                     android:layout_marginLeft="5dp"
-                    android:text=""
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textColor="#000000"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/et_dish_item_count"
-                    android:layout_width="50dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_weight=".25"
+                    android:layout_marginLeft="10dp"
+
                     />
+                <android.support.v7.widget.AppCompatImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".25"
+                    android:src="@drawable/additem"
+                    android:layout_marginTop="8dp"/>
+                <android.support.v7.widget.AppCompatImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".25"
+                    android:src="@drawable/removeitem"
+                    android:layout_marginTop="8dp"/>
 
             </LinearLayout>
 
@@ -40,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textViewRating"
                     android:layout_marginLeft="5dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="50dp"
                     android:text="INR 569"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     />
