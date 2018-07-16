@@ -9,23 +9,28 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.user.IUserViewListener;
-import com.example.dell.yummy.user.store.StoreDetails;
-import com.example.dell.yummy.user.store.UserStoresAdapter;
+import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.webservice.IApiInterface;
+import com.example.dell.yummy.webservice.StoreDetails;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class UserStoresFragment extends Fragment {
-    List<StoreDetails> storeList;
     RecyclerView recyclerView;
-    IUserViewListener miUserViewListener;
-
+    IFragmentListener miFragmentListener;
+    List<StoreDetails> StoreList;
 
 
     public UserStoresFragment() {
@@ -45,58 +50,48 @@ public class UserStoresFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rv_stores);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        storeList = new ArrayList<>();
 
-        storeList.add(
-                new StoreDetails(
-                        1,
-                        "Apple MacBook Air Core i5 5th Gen - (8 GB/128 GB SSD/Mac OS Sierra)",
-                        "13.3 inch, Silver, 1.35 kg",
-                        4.3,
-                        60000));
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(IApiInterface.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+                .build();
 
-        storeList.add(
-                new StoreDetails(
-                        1,
-                        "Dell Inspiron 7000 Core i5 7th Gen - (8 GB/1 TB HDD/Windows 10 Home)",
-                        "14 inch, Gray, 1.659 kg",
-                        4.3,
-                        60000));
+        IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+        Call<List<StoreDetails>> call = iApiInterface.getStores();
 
-        storeList.add(
-                new StoreDetails(
-                        1,
-                        "Microsoft Surface Pro 4 Core m3 6th Gen - (4 GB/128 GB SSD/Windows 10)",
-                        "13.3 inch, Silver, 1.35 kg",
-                        4.3,
-                        60000));
+        call.enqueue(new Callback<List<StoreDetails>>() {
 
-        storeList.add(
-                new StoreDetails(
-                        1,
-                        "Microsoft Surface Pro 4 Core m3 6th Gen - (4 GB/128 GB SSD/Windows 10)",
-                        "13.3 inch, Silver, 1.35 kg",
-                        4.3,
-                        60000));
+            @Override
+            public void onResponse(Call<List<StoreDetails>> call,
+                                   Response<List<StoreDetails>> response) {
 
-        storeList.add(
-                new StoreDetails(
-                        1,
-                        "Microsoft Surface Pro 4 Core m3 6th Gen - (4 GB/128 GB SSD/Windows 10)",
-                        "13.3 inch, Silver, 1.35 kg",
-                        4.3,
-                        60000));
+                if (response != null) {
+                    if (response.code() == 200) {
+                        StoreList = response.body();
+                    } else {
+                        Toast.makeText(getActivity(), response.code()
+                                + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+
+                }
 
 
-        UserStoresAdapter adapter = new UserStoresAdapter(getActivity(), storeList,miUserViewListener);
+                UserStoresAdapter adapter = new UserStoresAdapter(getActivity(), StoreList, miFragmentListener);
 
-        //setting adapter to recyclerview
-        recyclerView.setAdapter(adapter);
+                //setting adapter to recyclerview
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<StoreDetails>> call, Throwable t) {
+                Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }
 
-    public void addListener(IUserViewListener miUserViewListener) {
-        this.miUserViewListener = miUserViewListener;
+    public void addListener(IFragmentListener miFragmentListener) {
+        this.miFragmentListener = miFragmentListener;
     }
 }

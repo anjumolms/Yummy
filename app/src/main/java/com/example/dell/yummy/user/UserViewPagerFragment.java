@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.user.dishes.UserDishesFragment;
 import com.example.dell.yummy.user.reviews.UserReviewFragment;
@@ -24,7 +25,7 @@ public class UserViewPagerFragment extends Fragment {
     private ViewPager viewPager;
     private UserStoresFragment mUserStoresFragment;
     private UserDishesFragment mUserDishesFragment;
-    private IUserViewListener miUserViewListener;
+    private IFragmentListener miFragmentListener;
 
 
 
@@ -40,10 +41,10 @@ public class UserViewPagerFragment extends Fragment {
        View view = inflater.inflate(R.layout.fragment_user_view_pager, container, false);
 
         mUserStoresFragment = new UserStoresFragment();
-        mUserStoresFragment.addListener(miUserViewListener);
+        mUserStoresFragment.addListener(miFragmentListener);
 
         mUserDishesFragment = new UserDishesFragment();
-        mUserDishesFragment.addListener(miUserViewListener);
+        mUserDishesFragment.addListener(miFragmentListener);
 
 
 
@@ -65,8 +66,8 @@ public class UserViewPagerFragment extends Fragment {
         viewPager.setAdapter(adapter);
     }
 
-    public void addListener(IUserViewListener iUserViewListener) {
-        miUserViewListener = iUserViewListener;
+    public void addListener(IFragmentListener iFragmentListener) {
+        miFragmentListener = iFragmentListener;
 
     }
 }

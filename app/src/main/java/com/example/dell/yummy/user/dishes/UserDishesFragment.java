@@ -11,10 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.user.IUserViewListener;
-import com.example.dell.yummy.user.dishes.DishesDetails;
-import com.example.dell.yummy.user.dishes.UserDishesAdapter;
-import com.example.dell.yummy.user.store.StoreDetails;
+import com.example.dell.yummy.IFragmentListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +23,7 @@ public class UserDishesFragment extends Fragment {
 
     List<DishesDetails> dishesList;
     RecyclerView recyclerView;
-    IUserViewListener miUserViewListener;
+    IFragmentListener miFragmentListener;
 
 
     public UserDishesFragment() {
@@ -91,15 +88,15 @@ public class UserDishesFragment extends Fragment {
                         4.3,
                         60000));
 
-        UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList,miUserViewListener);
+        UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList, miFragmentListener);
 
         //setting adapter to recyclerview
         recyclerView.setAdapter(adapter);
         return view;
     }
 
-    public void addListener(IUserViewListener miUserViewListener) {
-       this.miUserViewListener = miUserViewListener;
+    public void addListener(IFragmentListener miFragmentListener) {
+       this.miFragmentListener = miFragmentListener;
 
     }
 }

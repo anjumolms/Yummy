@@ -10,9 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.user.IUserViewListener;
+import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.user.dishes.DishesDetails;
-import com.example.dell.yummy.user.dishes.UserDishesAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public class StoreDetailsFragment extends Fragment {
 
     List<DishesDetails> dishesList;
     RecyclerView recyclerView;
-    IUserViewListener miUserViewListener;
+    IFragmentListener miFragmentListener;
 
     public StoreDetailsFragment() {
         // Required empty public constructor
@@ -90,8 +89,8 @@ public class StoreDetailsFragment extends Fragment {
         return view;
     }
 
-    public void addListener(IUserViewListener mIUserViewListener) {
-        miUserViewListener = mIUserViewListener;
+    public void addListener(IFragmentListener mIFragmentListener) {
+        miFragmentListener = mIFragmentListener;
 
     }
 

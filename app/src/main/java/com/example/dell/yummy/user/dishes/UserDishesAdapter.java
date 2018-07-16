@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.user.IUserViewListener;
+import com.example.dell.yummy.IFragmentListener;
 
 import java.util.List;
 
@@ -20,15 +20,15 @@ public class UserDishesAdapter extends RecyclerView.Adapter<UserDishesAdapter.Di
     //this context we will use to inflate the layout
     private Context mCtx;
 
-    IUserViewListener miUserViewListener;
+    IFragmentListener miFragmentListener;
     //we are storing all the products in a list
     private List<DishesDetails> dishesDetailsList;
 
     //getting the context and product list with constructor
-    public UserDishesAdapter(Context mCtx, List<DishesDetails> dishesDetailsList, IUserViewListener miUserViewListener) {
+    public UserDishesAdapter(Context mCtx, List<DishesDetails> dishesDetailsList, IFragmentListener miFragmentListener) {
         this.mCtx = mCtx;
         this.dishesDetailsList = dishesDetailsList;
-        this.miUserViewListener = miUserViewListener;
+        this.miFragmentListener = miFragmentListener;
     }
 
     @Override
@@ -76,8 +76,8 @@ public class UserDishesAdapter extends RecyclerView.Adapter<UserDishesAdapter.Di
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mCtx,"success",Toast.LENGTH_SHORT).show();
-                    if(miUserViewListener != null){
-                        miUserViewListener.addFragment(Constants.SCREEN_DISHES_DETAILS);
+                    if(miFragmentListener != null){
+                        miFragmentListener.addFragment(Constants.SCREEN_DISHES_DETAILS);
                     }
                 }
             });

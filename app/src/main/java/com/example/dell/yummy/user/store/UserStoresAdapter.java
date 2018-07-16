@@ -10,7 +10,8 @@ import android.widget.Toast;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.user.IUserViewListener;
+import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.webservice.StoreDetails;
 
 import java.util.List;
 
@@ -20,12 +21,12 @@ public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.St
 
     private List<StoreDetails> storeList;
 
-    IUserViewListener miUserViewListener;
+    IFragmentListener miFragmentListener;
 
-    public UserStoresAdapter(Context mCtx, List<StoreDetails> productList, IUserViewListener miUserViewListener) {
+    public UserStoresAdapter(Context mCtx, List<StoreDetails> productList, IFragmentListener miFragmentListener) {
         this.mCtx = mCtx;
         this.storeList = productList;
-        this.miUserViewListener = miUserViewListener;
+        this.miFragmentListener = miFragmentListener;
 
     }
     @Override
@@ -42,10 +43,10 @@ public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.St
         StoreDetails storeDetails = storeList.get(position);
 
         //binding the data with the viewholder views
-        holder.textViewTitle.setText(storeDetails.getTitle());
-        holder.textViewShortDesc.setText(storeDetails.getShortdesc());
-        holder.textViewRating.setText(String.valueOf(storeDetails.getRating()));
-        holder.textViewPrice.setText(String.valueOf(storeDetails.getPrice()));
+        holder.textViewTitle.setText(storeDetails.getRetailName());
+        holder.textViewShortDesc.setText(storeDetails.getRetailNumber());
+       // holder.textViewRating.setText(String.valueOf(storeDetails.getRating()));
+       // holder.textViewPrice.setText(String.valueOf(storeDetails.getPrice()));
         }
 
     @Override
@@ -69,8 +70,8 @@ public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.St
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mCtx,"success",Toast.LENGTH_SHORT).show();
-                    if(miUserViewListener != null){
-                        miUserViewListener.addFragment(Constants.SCREEN_STORE_DETAILS);
+                    if(miFragmentListener != null){
+                        miFragmentListener.addFragment(Constants.SCREEN_STORE_DETAILS);
                     }
 
                 }

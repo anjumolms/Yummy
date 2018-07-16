@@ -8,11 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.user.IUserViewListener;
 import com.example.dell.yummy.user.dishes.DishesDetails;
-import com.example.dell.yummy.user.dishes.UserDishesAdapter;
 
 import java.util.List;
 

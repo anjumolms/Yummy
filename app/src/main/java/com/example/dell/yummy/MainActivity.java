@@ -6,12 +6,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.dell.yummy.Retailer.RetailerHomeActivity;
 import com.example.dell.yummy.user.UserHomeActivity;
 
 public class MainActivity extends AppCompatActivity implements IMainViewListener {
     private LoginFragment mLoginFragment;
     private RegistrationFragment mRegistrationFragment;
-    private  UserHomeActivity mUserHomeActivity;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +48,38 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
     }
 
     public void addActivity(int screen){
+
+        switch (screen){
+            case Constants.SCREEN_RETAILER_HOME:
+            Intent intent = new Intent(this, RetailerHomeActivity.class);
+
+            startActivity(intent);
+            break;
+            default: break;
+
+        }
+      //
+    }
+
+    @Override
+    public void addActivityInfo(int screen, String name, int wallet) {
+
         switch (screen) {
             case Constants.SCREEN_USER_HOME:
+
                 Intent mySuperIntent = new Intent(this,UserHomeActivity.class);
+                mySuperIntent.putExtra("Key1", name);
+                mySuperIntent.putExtra("Key2", wallet);
                 startActivity(mySuperIntent);
                 break;
-                }
+//            case Constants.SCREEN_RETAILER_HOME:
+//                Intent intent = new Intent(this, RetailerHomeActivity.class);
+//
+//                startActivity(intent);
+//                break;
+            default: break;
+        }
+
     }
 
 }
