@@ -1,37 +1,86 @@
 package com.example.dell.yummy.user.dishes;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class DishesDetails {
-    private int id;
-    private String title;
-    private String shortdesc;
-    private double rating;
-    private double price;
 
-    public DishesDetails(int id, String title, String shortdesc, double rating, double price) {
-        this.id = id;
-        this.title = title;
-        this.shortdesc = shortdesc;
-        this.rating = rating;
-        this.price = price;
-    }
+        @SerializedName("item_name")
+        @Expose
+        private String itemName;
+        @SerializedName("item_price")
+        @Expose
+        private int itemPrice;
+        @SerializedName("item_signature")
+        @Expose
+        private int itemSignature;
+        @SerializedName("item_sold_count")
+        @Expose
+        private int itemSoldCount;
+        @SerializedName("item_stock")
+        @Expose
+        private int itemStock;
+        @SerializedName("menu_id")
+        @Expose
+        private int menuId;
+        @SerializedName("retail_id")
+        @Expose
+        private int retailId;
 
-    public int getId() {
-        return id;
-    }
+        public String getItemName() {
+            return itemName;
+        }
 
-    public String getTitle() {
-        return title;
-    }
+        public void setItemName(String itemName) {
+            this.itemName = itemName;
+        }
 
-    public String getShortdesc() {
-        return shortdesc;
-    }
+        public int getItemPrice() {
+            return itemPrice;
+        }
 
-    public double getRating() {
-        return rating;
-    }
+        public void setItemPrice(int itemPrice) {
+            this.itemPrice = itemPrice;
+        }
 
-    public double getPrice() {
-        return price;
+        public int getItemSignature() {
+            return itemSignature;
+        }
+
+        public void setItemSignature(int itemSignature) {
+            this.itemSignature = itemSignature;
+        }
+
+        public int getItemSoldCount() {
+            return itemSoldCount;
+        }
+
+        public void setItemSoldCount(int itemSoldCount) {
+            this.itemSoldCount = itemSoldCount;
+        }
+
+        public int getItemStock() {
+            return itemStock;
+        }
+
+        public void setItemStock(int itemStock) {
+            this.itemStock = itemStock;
+        }
+
+        public int getMenuId() {
+            return menuId;
+        }
+
+        public void setMenuId(int menuId) {
+            this.menuId = menuId;
+        }
+
+        public int getRetailId() {
+            return retailId;
+        }
+
+        public void setRetailId(int retailId) {
+            this.retailId = retailId;
+        }
+
     }
-}

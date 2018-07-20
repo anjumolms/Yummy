@@ -1,13 +1,26 @@
 package com.example.dell.yummy;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.example.dell.yummy.webservice.IApiInterface;
+import com.example.dell.yummy.webservice.RegistrationResult;
+import com.example.dell.yummy.webservice.UserResult;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -43,6 +56,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
 
 
     public void addListener(IMainViewListener iMainViewListener) {
+
         mainView = iMainViewListener;
     }
 
@@ -51,11 +65,99 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
 
         switch (v.getId()) {
             case R.id.register_login:
-                if(mainView != null){
-                    mainView.addActivity(Constants.SCREEN_USER_HOME);
-                }
-                break;
 
+                String strUserName = mUserName.getText().toString().trim();
+                String strUserID = mUId.getText().toString().trim();
+                String strPassword = mPassword.getText().toString().trim();
+                String strConfirmPassword = mConfirmPassword.getText().toString().trim();
+                String strMobile = mMobile.getText().toString().trim();
+
+                if (TextUtils.isEmpty(strUserName)) {
+                    mUserName.setError("This field cannot be empty");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(strUserID)) {
+                    mUId.setError("This field cannot be empty");
+                    return;
+                }
+                if (TextUtils.isEmpty(strPassword)) {
+                    mPassword.setError("This field cannot be empty");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(strConfirmPassword)) {
+                    mConfirmPassword.setError("This field cannot be empty");
+                    return;
+                }
+                if (TextUtils.isEmpty(strMobile)) {
+                    mMobile.setError("This field cannot be empty");
+                    return;
+                }
+
+                if (!strPassword.equals(strConfirmPassword)) {
+                    mPassword.setError("Password does not match");
+                    return;
+
+                }
+
+                final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setMessage("Loading...");
+                progressDialog.show();
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(IApiInterface.BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                RegistrationResult registrationResult = new RegistrationResult();
+
+                registrationResult.setLoginUsername(strUserName);
+                registrationResult.setLoginPin(Integer.parseInt(strPassword));
+                registrationResult.setUserPhone(strMobile);
+                registrationResult.setUserId(Integer.parseInt(strUserID));
+
+                IApiInterface service = retrofit.create(IApiInterface.class);
+                Call<RegistrationResult> call = service.register(registrationResult);
+
+
+                call.enqueue(new Callback<RegistrationResult>() {
+                    @Override
+                    public void onResponse(Call<RegistrationResult> call,
+                                           Response<RegistrationResult> response) {
+
+                        progressDialog.dismiss();
+                        if (response != null) {
+                            if (response.code() == 200) {
+
+                                RegistrationResult registrationResult = response.body();
+
+                                if (registrationResult != null) {
+
+                                    if (mainView != null) {
+                                        mainView.addFragment(Constants.SCREEN_LOGIN);
+                                    }
+
+
+                                }
+                            }
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<RegistrationResult> call, Throwable t) {
+
+                        progressDialog.dismiss();
+                        Toast.makeText(getActivity(), t.getMessage(),
+                                Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+
+                break;
 
             default:
                 break;

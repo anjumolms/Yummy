@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+    <TableLayout
+        android:orientation="horizontal"
+        android:weightSum="3"
+        >
+
+    <TableRow>
+        <TextView
+            android:id="@+id/tv_retailer_each_item"
+            android:text="PAZHAM"
+            android:layout_width="100dp"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_retailer_listitem_cost"
+            android:layout_weight=".5"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:text="10rs"/>
+
+        <Button
+            android:id="@+id/bt_retailer_update"
+            android:text="UPDATE"/>
+        <Button
+            android:id="@+id/bt_retailer_delete"
+            android:text="Delete"/>
+
+    </TableRow>
+
+    </TableLayout>
+
+
+
+</TableLayout>

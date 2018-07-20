@@ -12,9 +12,14 @@ import android.view.ViewGroup;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.user.dishes.DishesDetails;
+import com.example.dell.yummy.webservice.IApiInterface;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,47 +46,21 @@ public class StoreDetailsFragment extends Fragment {
 
         dishesList = new ArrayList<>();
 
-        dishesList.add(
-                new DishesDetails(
-                        1,
-                        "chikn",
-                        "13.3 inch, Silver, 1.35 kg",
-                        4.3,
-                        60000));
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(IApiInterface.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+                .build();
 
-        dishesList.add(
-                new DishesDetails(
-                        1,
-                        "skjshd)",
-                        "14 inch, Gray, 1.659 kg",
-                        4.3,
-                        60000));
+        IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+        Call<List<DishesDetails>> call = iApiInterface.getStoreDishes();
 
-        dishesList.add(
-                new DishesDetails(
-                        1,
-                        "gdfhd)",
-                        "13.3 inch, Silver, 1.35 kg",
-                        4.3,
-                        60000));
 
-        dishesList.add(
-                new DishesDetails(
-                        1,
-                        "dfd",
-                        "13.3 inch, Silver, 1.35 kg",
-                        4.3,
-                        60000));
 
-        dishesList.add(
-                new DishesDetails(
-                        1,
-                        "dfgrd",
-                        "13.3 inch, Silver, 1.35 kg",
-                        4.3,
-                        60000));
 
-       // UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList,miUserViewListener);
+
+
+
+        // UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList,miUserViewListener);
         StoreDetailsAdapter adapter = new StoreDetailsAdapter(getActivity(),dishesList);
 
         //setting adapter to recyclerview

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   android:layout_margin="20dp"
+    tools:context=".Retailer.RetailerAddItemFragment">
+
+    <TableRow
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+    <TextView
+        android:id="@+id/tv_retailer_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:textStyle="bold"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:text="Item Name" />
+
+        <EditText
+            android:id="@+id/et_retailer_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+    </TableRow>
+
+    <TableRow
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+
+
+    <TextView
+        android:id="@+id/tv_retailer_item_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:textStyle="bold"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:text="Item Cost" />
+
+        <EditText
+            android:id="@+id/et_retailer_cost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+           />
+
+    </TableRow>
+
+    <TableRow
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+    <TextView
+        android:id="@+id/tv_signature_dish"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textStyle="bold"
+        android:gravity="bottom"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:text="Signature Dish ?" />
+
+        <EditText
+            android:id="@+id/et_signature_dish"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+
+           />
+
+    </TableRow>
+
+    <TableRow
+        android:gravity="center"
+        android:layout_marginTop="50dp">
+        <Button
+            android:id="@+id/bt_add_item_retailer"
+            android:text="Add"
+            android:layout_gravity="center"/>
+    </TableRow>
+
+</TableLayout>

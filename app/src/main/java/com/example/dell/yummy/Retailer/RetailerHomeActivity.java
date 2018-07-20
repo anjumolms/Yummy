@@ -21,9 +21,13 @@ import com.example.dell.yummy.R;
 import com.example.dell.yummy.user.store.StoreDetailsFragment;
 
 public class RetailerHomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener , IFragmentListener {
+        implements NavigationView.OnNavigationItemSelectedListener, IFragmentListener {
 
     private RetailerTransactionDetailsFragment mretailerTransactionDetailsFragment;
+    private EachTransactionFragment meachTransactionFragment;
+    private RetailerAddItemFragment mretailerAddItemFragment;
+    private RetailerListItemFragment mretailerListItemFragment;
+    private RetailerWalletFragment mretailerWalletFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +36,15 @@ public class RetailerHomeActivity extends AppCompatActivity
         setupNavigationDrawer();
 
         mretailerTransactionDetailsFragment = new RetailerTransactionDetailsFragment();
+        meachTransactionFragment = new EachTransactionFragment();
         mretailerTransactionDetailsFragment.addListener(this);
+        mretailerAddItemFragment = new RetailerAddItemFragment();
+        mretailerAddItemFragment.addListener(this);
+        mretailerListItemFragment = new RetailerListItemFragment();
+        mretailerListItemFragment.addListener(this);
+        mretailerWalletFragment = new RetailerWalletFragment();
 
         addFragment(Constants.SCREEN_RETAILER_TRANSACTION_DETAILS);
-
 
 
     }
@@ -52,11 +61,29 @@ public class RetailerHomeActivity extends AppCompatActivity
                 fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container, mretailerTransactionDetailsFragment);
                 fragmentTransaction.commit();
                 break;
+            case Constants.SCREEN_RETAILER_EACH_TRANSACTION_DETAILS:
+                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container, meachTransactionFragment);
+                fragmentTransaction.commit();
+                break;
+            case Constants.SCREEN_RETAILER_ADD_ITEMS:
+                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container, mretailerAddItemFragment);
+                fragmentTransaction.commit();
+                break;
+            case Constants.SCREEN_RETAILER_LIST_ITEMS:
+                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container, mretailerListItemFragment);
+                fragmentTransaction.commit();
+                break;
+            case Constants.SCREEN_WALLET:
+                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container, mretailerWalletFragment);
+                fragmentTransaction.commit();
+                break;
 
-                default: break;
+            default:
+                break;
 
 
-        }}
+        }
+    }
 
     private void setupNavigationDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -110,17 +137,21 @@ public class RetailerHomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.add_item) {
+
+            addFragment(Constants.SCREEN_RETAILER_ADD_ITEMS);
+
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.list_item) {
 
-        } else if (id == R.id.nav_slideshow) {
+            addFragment(Constants.SCREEN_RETAILER_LIST_ITEMS);
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.wallet) {
 
-        } else if (id == R.id.nav_share) {
+            addFragment(Constants.SCREEN_WALLET);
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.retailer_logout) {
+
 
         }
 

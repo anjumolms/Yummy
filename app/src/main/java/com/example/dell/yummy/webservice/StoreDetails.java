@@ -2,7 +2,9 @@ package com.example.dell.yummy.webservice;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class StoreDetails {
+import java.io.Serializable;
+
+public class StoreDetails implements Serializable {
     @SerializedName("login_id")
         @Expose
         private int loginId;

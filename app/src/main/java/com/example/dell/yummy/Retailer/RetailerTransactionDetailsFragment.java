@@ -73,7 +73,7 @@ public class RetailerTransactionDetailsFragment extends Fragment {
                         70
                 ));
 
-       TransactionDetailsAdapter adapter = new TransactionDetailsAdapter(getActivity(),transactionDetailsList);
+       TransactionDetailsAdapter adapter = new TransactionDetailsAdapter(getActivity(),transactionDetailsList,iFragmentListener);
         recyclerView.setAdapter(adapter);
         return view;
     }

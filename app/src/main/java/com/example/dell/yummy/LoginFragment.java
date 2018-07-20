@@ -31,7 +31,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private Button mLogin;
     private TextView mNewUser;
     private IMainViewListener mMainView;
-    private int role = 2;
+    private int role;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,23 +59,19 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
             case R.id.btn_login:
 
-                if(role==1)
-                {
 
-                String UserName = "anju";
-                int UserWallet = 100;
-                //validateUser();
+                validateUser();
 
-                if (mMainView != null) {
-                    mMainView.addActivity(Constants.SCREEN_USER_HOME);
-                }}
-                else if(role==2)
-                {
-                    if (mMainView != null) {
-                        mMainView.addActivity(Constants.SCREEN_RETAILER_HOME);
-                    }
-
-                }
+//                if (mMainView != null) {
+//                    mMainView.addActivity(Constants.SCREEN_USER_HOME);
+//                }}
+//                else if(role==2)
+//                {
+//                    if (mMainView != null) {
+//                        mMainView.addActivity(Constants.SCREEN_RETAILER_HOME);
+//                    }
+//
+//                }
                 break;
 
             case R.id.link_signup:

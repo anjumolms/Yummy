@@ -33,7 +33,7 @@ public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.St
     public StoreViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.layout_stores, null);
+        View view = inflater.inflate(R.layout.layout_stores,parent,false );
         return new StoreViewHolder(view);
     }
 
@@ -44,9 +44,7 @@ public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.St
 
         //binding the data with the viewholder views
         holder.textViewTitle.setText(storeDetails.getRetailName());
-        holder.textViewShortDesc.setText(storeDetails.getRetailNumber());
-       // holder.textViewRating.setText(String.valueOf(storeDetails.getRating()));
-       // holder.textViewPrice.setText(String.valueOf(storeDetails.getPrice()));
+        holder.textViewShortDesc.setText(""+storeDetails.getRetailNumber());
         }
 
     @Override
@@ -71,7 +69,9 @@ public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.St
                 public void onClick(View v) {
                     Toast.makeText(mCtx,"success",Toast.LENGTH_SHORT).show();
                     if(miFragmentListener != null){
-                        miFragmentListener.addFragment(Constants.SCREEN_STORE_DETAILS);
+                        int userClickPosition = getAdapterPosition();
+                        StoreDetails storeDetails = storeList.get(userClickPosition);
+                        miFragmentListener.passStoreDetails(Constants.SCREEN_STORE_DETAILS,storeDetails);
                     }
 
                 }

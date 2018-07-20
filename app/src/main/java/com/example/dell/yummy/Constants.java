@@ -12,5 +12,10 @@ public class Constants {
     public static final int SCREEN_USER_WALLET = 7;
     public static final int SCREEN_RETAILER_HOME = 8;
     public static final int SCREEN_RETAILER_TRANSACTION_DETAILS = 9;
+    public static final int SCREEN_RETAILER_EACH_TRANSACTION_DETAILS =10;
+    public static final int SCREEN_RETAILER_ADD_ITEMS =11;
+    public static final int SCREEN_RETAILER_LIST_ITEMS =12;
+    public static final int SCREEN_WALLET =13;
+
 
 }

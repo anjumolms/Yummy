@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dell.yummy.Constants;
+import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
 
 import java.util.List;
@@ -19,10 +21,12 @@ class TransactionDetailsAdapter extends RecyclerView.Adapter<TransactionDetailsA
     private Context mCtx;
     private List<TransactionDetails> transactionDetailsList;
     private TransactionDetails transactionDetails;
+    IFragmentListener iFragmentListener;
 
-    public TransactionDetailsAdapter(Context mCtx, List<TransactionDetails> transactionDetailsList) {
+    public TransactionDetailsAdapter(Context mCtx, List<TransactionDetails> transactionDetailsList,IFragmentListener iFragmentListener) {
         this.mCtx = mCtx;
         this.transactionDetailsList = transactionDetailsList;
+        this.iFragmentListener = iFragmentListener;
     }
 
 
@@ -68,6 +72,10 @@ class TransactionDetailsAdapter extends RecyclerView.Adapter<TransactionDetailsA
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mCtx, "success", Toast.LENGTH_SHORT).show();
+                    if(iFragmentListener != null){
+                        iFragmentListener.addFragment(Constants.SCREEN_RETAILER_EACH_TRANSACTION_DETAILS);
+                    }
+
                 }
             });
         }

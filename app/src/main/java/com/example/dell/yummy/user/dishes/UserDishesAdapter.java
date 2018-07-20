@@ -45,10 +45,8 @@ public class UserDishesAdapter extends RecyclerView.Adapter<UserDishesAdapter.Di
         DishesDetails dishesDetails = dishesDetailsList.get(position);
 
         //binding the data with the viewholder views
-        holder.textViewTitle.setText(dishesDetails.getTitle());
-        holder.textViewShortDesc.setText(dishesDetails.getShortdesc());
-        holder.textViewRating.setText(String.valueOf(dishesDetails.getRating()));
-        holder.textViewPrice.setText(String.valueOf(dishesDetails.getPrice()));
+        holder.textViewTitle.setText(dishesDetails.getItemName());
+        holder.textViewPrice.setText(String.valueOf(dishesDetails.getItemPrice()));
 
     }
 
@@ -61,15 +59,13 @@ public class UserDishesAdapter extends RecyclerView.Adapter<UserDishesAdapter.Di
 
     class DishesViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewTitle, textViewShortDesc, textViewRating, textViewPrice;
+        TextView textViewTitle, textViewPrice;
 
 
         public DishesViewHolder(View itemView) {
             super(itemView);
 
             textViewTitle = itemView.findViewById(R.id.textViewTitle);
-            textViewShortDesc = itemView.findViewById(R.id.textViewShortDesc);
-            textViewRating = itemView.findViewById(R.id.textViewRating);
             textViewPrice = itemView.findViewById(R.id.textViewPrice);
 
             textViewTitle.setOnClickListener(new View.OnClickListener() {

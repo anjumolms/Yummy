@@ -20,6 +20,7 @@ import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.user.store.StoreDetailsFragment;
+import com.example.dell.yummy.webservice.StoreDetails;
 
 public class UserHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IFragmentListener {
@@ -101,6 +102,16 @@ public class UserHomeActivity extends AppCompatActivity
 
 
         }
+    }
+
+    @Override
+    public void passStoreDetails(int screenId, StoreDetails storeDetails) {
+
+        Bundle bundle = new Bundle();
+        //Bundle.putParcelable(storeDetails)
+
+
+
     }
 
     private void setupNavigationDrawer() {
