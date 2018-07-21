@@ -8,22 +8,30 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.user.dishes.DishesDetails;
 import com.example.dell.yummy.user.store.StoreDetailsAdapter;
+import com.example.dell.yummy.webservice.IApiInterface;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class RetailerListItemFragment extends Fragment {
-  IFragmentListener IFragmentListener;
-  RecyclerView recyclerView;
-  ArrayList<DishesDetails> retailordishesList;
+    IFragmentListener IFragmentListener;
+    RecyclerView recyclerView;
+    List<DishesDetails> retailordishesList;
 
 
     public RetailerListItemFragment() {
@@ -41,18 +49,47 @@ public class RetailerListItemFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         retailordishesList = new ArrayList<>();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(IApiInterface.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+                .build();
 
-        retailordishesList.add(new DishesDetails
-                (0,"Pazham","jjj",0,34)) ;
-        retailordishesList.add(new DishesDetails
-                (0,"Pazham","jjj",0,34)) ;
-        retailordishesList.add(new DishesDetails
-                (0,"Pazham","jjj",0,34)) ;
-        retailordishesList.add(new DishesDetails
-                (0,"Pazham","jjj",0,34)) ;
+        IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+        Call<List<DishesDetails>> call = iApiInterface
+                .getStoreMenu(2);
 
-        RetailerListItemAdapter adapter = new RetailerListItemAdapter(getActivity(),retailordishesList);
-        recyclerView.setAdapter(adapter);
+        call.enqueue(new Callback<List<DishesDetails>>() {
+
+
+            @Override
+            public void onResponse(Call<List<DishesDetails>> call,
+                                   Response<List<DishesDetails>> response) {
+                if (response != null) {
+                    if (response.code() == 200) {
+                        retailordishesList = response.body();
+                    } else {
+                        Toast.makeText(getActivity(), response.code()
+                                + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+                if (retailordishesList != null) {
+                    RetailerListItemAdapter adapter = new RetailerListItemAdapter(getActivity(), retailordishesList);
+                    recyclerView.setAdapter(adapter);
+                }
+
+            }
+
+
+            @Override
+            public void onFailure(Call<List<DishesDetails>> call, Throwable t) {
+
+                Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+
         return view;
 
     }

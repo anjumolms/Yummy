@@ -75,11 +75,14 @@ public class UserStoresFragment extends Fragment {
 
                 }
 
+                if(StoreList != null){
 
-                UserStoresAdapter adapter = new UserStoresAdapter(getActivity(), StoreList, miFragmentListener);
+                    UserStoresAdapter adapter = new UserStoresAdapter(getActivity(), StoreList, miFragmentListener);
 
-                //setting adapter to recyclerview
-                recyclerView.setAdapter(adapter);
+                    //setting adapter to recyclerview
+                    recyclerView.setAdapter(adapter);
+                }
+
             }
 
             @Override
@@ -87,6 +90,7 @@ public class UserStoresFragment extends Fragment {
                 Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
             }
         });
+
 
         return view;
     }

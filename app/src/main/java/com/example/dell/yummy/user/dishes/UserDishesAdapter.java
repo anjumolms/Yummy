@@ -35,7 +35,7 @@ public class UserDishesAdapter extends RecyclerView.Adapter<UserDishesAdapter.Di
     public DishesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.layout_dishes, null);
+        View view = inflater.inflate(R.layout.layout_dishes, parent,false);
         return new DishesViewHolder(view);
     }
 
@@ -73,7 +73,9 @@ public class UserDishesAdapter extends RecyclerView.Adapter<UserDishesAdapter.Di
                 public void onClick(View v) {
                     Toast.makeText(mCtx,"success",Toast.LENGTH_SHORT).show();
                     if(miFragmentListener != null){
-                        miFragmentListener.addFragment(Constants.SCREEN_DISHES_DETAILS);
+                        int clickPosition = getAdapterPosition();
+                        DishesDetails dishesDetails = dishesDetailsList.get(clickPosition);
+                        miFragmentListener.addPopup(dishesDetails);
                     }
                 }
             });

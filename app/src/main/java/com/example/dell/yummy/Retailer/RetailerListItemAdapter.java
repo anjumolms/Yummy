@@ -14,14 +14,15 @@ import com.example.dell.yummy.R;
 import com.example.dell.yummy.user.dishes.DishesDetails;
 
 import java.util.ArrayList;
+import java.util.List;
 
 class RetailerListItemAdapter extends RecyclerView.Adapter<RetailerListItemAdapter.ListItemViewHolder> {
 
     private Context mCtx;
 
-    private ArrayList<DishesDetails> retailordishesList;
+    private List<DishesDetails> retailordishesList;
 
-    public RetailerListItemAdapter(Context mCtx, ArrayList<DishesDetails> retailordishesList) {
+    public RetailerListItemAdapter(Context mCtx, List<DishesDetails> retailordishesList) {
         this.mCtx = mCtx;
         this.retailordishesList = retailordishesList;
     }
@@ -40,8 +41,8 @@ class RetailerListItemAdapter extends RecyclerView.Adapter<RetailerListItemAdapt
         DishesDetails dishesDetails = retailordishesList.get(position);
 
         //binding the data with the viewholder views
-        holder.textViewTitle.setText(dishesDetails.getTitle());
-        holder.textViewPrice.setText("" + dishesDetails.getPrice());
+        holder.textViewTitle.setText(dishesDetails.getItemName());
+        holder.textViewPrice.setText("" + dishesDetails.getItemPrice());
     }
 
 

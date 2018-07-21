@@ -2,22 +2,28 @@ package com.example.dell.yummy.user.store;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.user.dishes.DishesDetails;
 import com.example.dell.yummy.webservice.IApiInterface;
+import com.example.dell.yummy.webservice.StoreDetails;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -29,11 +35,23 @@ public class StoreDetailsFragment extends Fragment {
     List<DishesDetails> dishesList;
     RecyclerView recyclerView;
     IFragmentListener miFragmentListener;
+    TextView storeName;
+    StoreDetails storeDetails;
 
     public StoreDetailsFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if(bundle != null){
+             storeDetails = (StoreDetails) bundle.getSerializable("key");
+        }
+
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,6 +61,11 @@ public class StoreDetailsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rv_storedetails);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        storeName = view.findViewById(R.id.tv_store_name);
+
+        if(storeDetails != null){
+            storeName.setText(storeDetails.getRetailName());
+        }
 
         dishesList = new ArrayList<>();
 
@@ -52,7 +75,35 @@ public class StoreDetailsFragment extends Fragment {
                 .build();
 
         IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-        Call<List<DishesDetails>> call = iApiInterface.getStoreDishes();
+        Call<List<DishesDetails>> call = iApiInterface
+                .getStoreMenu(2);
+        call.enqueue(new Callback<List<DishesDetails>>() {
+            @Override
+            public void onResponse(Call<List<DishesDetails>> call, Response<List<DishesDetails>> response) {
+                if (response != null) {
+                    if (response.code() == 200) {
+                        dishesList = response.body();
+                    } else {
+                        Toast.makeText(getActivity(), response.code()
+                                + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+                if (dishesList != null) {
+
+                    // UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList,miUserViewListener);
+                    StoreDetailsAdapter adapter = new StoreDetailsAdapter(getActivity(), dishesList);
+
+                    //setting adapter to recyclerview
+                    recyclerView.setAdapter(adapter);
+                }
+            }
+            @Override
+            public void onFailure(Call<List<DishesDetails>> call, Throwable t) {
+                Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
 
@@ -60,11 +111,7 @@ public class StoreDetailsFragment extends Fragment {
 
 
 
-        // UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList,miUserViewListener);
-        StoreDetailsAdapter adapter = new StoreDetailsAdapter(getActivity(),dishesList);
 
-        //setting adapter to recyclerview
-        recyclerView.setAdapter(adapter);
         return view;
     }
 

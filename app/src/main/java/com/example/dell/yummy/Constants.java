@@ -7,7 +7,7 @@ public class Constants {
     public static final int SCREEN_USER_HOME =2;
     public  static final int SCREEN_USER = 3;
     public static final int SCREEN_STORE_DETAILS = 4;
-    public static final int SCREEN_DISHES_DETAILS = 5;
+    public static final int SCREEN_PAYMENT_DETAILS = 5;
     public static final int SCREEN_USER_ADD_COINS = 6;
     public static final int SCREEN_USER_WALLET = 7;
     public static final int SCREEN_RETAILER_HOME = 8;

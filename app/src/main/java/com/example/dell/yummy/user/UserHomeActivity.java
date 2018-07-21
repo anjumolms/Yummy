@@ -1,5 +1,7 @@
 package com.example.dell.yummy.user;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -8,19 +10,36 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.view.ViewGroup.LayoutParams;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
+import com.example.dell.yummy.user.dishes.DishesDetails;
 import com.example.dell.yummy.user.store.StoreDetailsFragment;
+import com.example.dell.yummy.webservice.IApiInterface;
 import com.example.dell.yummy.webservice.StoreDetails;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IFragmentListener {
@@ -31,13 +50,17 @@ public class UserHomeActivity extends AppCompatActivity
     private UserAddCoinsFragment mUserAddCoinsFragment;
     private UserWalletFragment mUserWalletFragment;
     private TextView mProfileName;
+    private FrameLayout mFrameLayout;
     private int coins;
+
+    DishesDetails dishFromApi;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_home);
+        mFrameLayout = findViewById(R.id.fl_userhome_fragment_container);
 
         setupNavigationDrawer();
 
@@ -79,7 +102,7 @@ public class UserHomeActivity extends AppCompatActivity
                 fragmentTransaction.commit();
                 break;
 
-            case Constants.SCREEN_DISHES_DETAILS:
+            case Constants.SCREEN_PAYMENT_DETAILS:
                 fragmentTransaction.replace(R.id.fl_userhome_fragment_container, mPaymentDetailsFragment);
                 fragmentTransaction.commit();
                 break;
@@ -108,11 +131,107 @@ public class UserHomeActivity extends AppCompatActivity
     public void passStoreDetails(int screenId, StoreDetails storeDetails) {
 
         Bundle bundle = new Bundle();
+        bundle.putSerializable("key", storeDetails);
+        mStoreDetailsFragment.setArguments(bundle);
+
+        addFragment(Constants.SCREEN_STORE_DETAILS);
         //Bundle.putParcelable(storeDetails)
 
 
 
     }
+
+    @Override
+    public void addPopup(DishesDetails dishesDetails) {
+        if(dishesDetails != null){
+            int menuId = dishesDetails.getMenuId();
+
+
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(IApiInterface.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+                    .build();
+
+            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+            Call<DishesDetails> call = iApiInterface.getEachDishDetails(3);
+
+
+            call.enqueue(new Callback<DishesDetails>() {
+                @Override
+                public void onResponse(Call<DishesDetails> call,
+                                       Response<DishesDetails> response) {
+                    if (response != null) {
+                        if (response.code() == 200) {
+                            dishFromApi = response.body();
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(),
+                                    response.code()
+                                    + response.message(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                  showPopup(dishFromApi);
+
+                }
+
+                @Override
+                public void onFailure(Call<DishesDetails> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "invalid", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+
+        }
+
+    }
+
+    private void showPopup(DishesDetails dishFromApi) {
+        if(dishFromApi != null){
+//            Button buy,cancel;
+//
+//            LayoutInflater layoutInflater = (LayoutInflater) UserHomeActivity.this
+//                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            View customView = layoutInflater.inflate(R.layout.popup_dishes_details_layout,null);
+//            buy = customView.findViewById(R.id.bt_popup_buy);
+//            cancel = customView.findViewById(R.id.bt_popup_cancel);
+//
+//            final PopupWindow popupWindow = new PopupWindow(customView, LayoutParams.WRAP_CONTENT,
+//                    LayoutParams.WRAP_CONTENT);
+//            popupWindow.showAtLocation(mFrameLayout, Gravity.CENTER, 0, 0);
+//            cancel.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    popupWindow.dismiss();
+//                }
+//            });
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Store Id "+ dishFromApi.getRetailId());
+            builder.setMessage(dishFromApi.getItemName() + "       " + dishFromApi.getItemPrice() + " rs");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(getApplicationContext(), "You've choosen to buy", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            builder.setNegativeButton("Buy", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    addFragment(Constants.SCREEN_PAYMENT_DETAILS);
+                }
+            });
+
+            builder.show();
+
+        }
+    }
+
 
     private void setupNavigationDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -55,7 +55,7 @@ public class UserDishesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        dishesList = new ArrayList<>();
+        //dishesList = new ArrayList<>();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(IApiInterface.BASE_URL)
@@ -63,20 +63,28 @@ public class UserDishesFragment extends Fragment {
                 .build();
 
         IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-        Call<List<DishesDetails>> call = iApiInterface.getStoreDishes();
+        Call<List<DishesDetails>> call = iApiInterface.getallMenu();
 
 
         call.enqueue(new Callback<List<DishesDetails>>() {
             @Override
-            public void onResponse(Call<List<DishesDetails>> call, Response<List<DishesDetails>> response) {
+            public void onResponse(Call<List<DishesDetails>> call,
+                                   Response<List<DishesDetails>> response) {
 
                 if (response != null) {
                     if (response.code() == 200) {
                         dishesList = response.body();
+
                     } else {
                         Toast.makeText(getActivity(), response.code()
                                 + response.message(), Toast.LENGTH_SHORT).show();
                     }
+                }
+                if(dishesList != null){
+                    UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList, miFragmentListener);
+
+                    //setting adapter to recyclerview
+                    recyclerView.setAdapter(adapter);
                 }
             }
 
@@ -91,10 +99,7 @@ public class UserDishesFragment extends Fragment {
         });
 
 
-        UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList, miFragmentListener);
 
-        //setting adapter to recyclerview
-        recyclerView.setAdapter(adapter);
         return view;
     }
 

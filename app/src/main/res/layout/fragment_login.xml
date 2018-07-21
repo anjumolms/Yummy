@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     android:background="#fff">
 
@@ -32,7 +32,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:hint="UUID" />
+                android:hint="Uid"
+                android:textColorHint="#00838F"
+                android:backgroundTint="@color/tab_color"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password Label -->
@@ -45,7 +47,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:hint="PIN"/>
+                android:hint="Pin"
+                android:textColorHint="#00838F"
+                android:backgroundTint="@color/tab_color"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
@@ -55,7 +59,9 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
-            android:text="Login"/>
+            android:text="Login"
+            android:textColor="#fff"
+            android:background="@color/tab_color"/>
 
         <TextView android:id="@+id/link_signup"
             android:layout_width="fill_parent"
@@ -63,7 +69,8 @@
             android:layout_marginBottom="24dp"
             android:text="No account yet? Create one"
             android:gravity="center"
-            android:textSize="16dip"/>
+            android:textSize="16dip"
+            android:textColor="#00838F"/>
 
     </LinearLayout>
 </LinearLayout>

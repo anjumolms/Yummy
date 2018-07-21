@@ -18,7 +18,9 @@ import android.view.MenuItem;
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
+import com.example.dell.yummy.user.dishes.DishesDetails;
 import com.example.dell.yummy.user.store.StoreDetailsFragment;
+import com.example.dell.yummy.webservice.StoreDetails;
 
 public class RetailerHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IFragmentListener {
@@ -83,6 +85,16 @@ public class RetailerHomeActivity extends AppCompatActivity
 
 
         }
+    }
+
+    @Override
+    public void passStoreDetails(int screenId, StoreDetails storeDetails) {
+
+    }
+
+    @Override
+    public void addPopup(DishesDetails dishesDetails) {
+
     }
 
     private void setupNavigationDrawer() {
