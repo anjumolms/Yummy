@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
@@ -51,6 +53,7 @@ public class UserHomeActivity extends AppCompatActivity
     private UserWalletFragment mUserWalletFragment;
     private TextView mProfileName;
     private FrameLayout mFrameLayout;
+    private List<StoreDetails> mStoreDetails;
     private int coins;
 
     DishesDetails dishFromApi;
@@ -60,6 +63,12 @@ public class UserHomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_home);
+        if (android.os.Build.VERSION.SDK_INT >= 21) {
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(this.getResources().getColor(R.color.tab_color));
+        }
         mFrameLayout = findViewById(R.id.fl_userhome_fragment_container);
 
         setupNavigationDrawer();
@@ -67,6 +76,7 @@ public class UserHomeActivity extends AppCompatActivity
 
         mUserViewPagerFragment = new UserViewPagerFragment();
         mUserViewPagerFragment.addListener(this);
+        mUserViewPagerFragment.setStoreDetails(mStoreDetails);
 
         mStoreDetailsFragment = new StoreDetailsFragment();
         mStoreDetailsFragment.addListener(this);
@@ -85,6 +95,12 @@ public class UserHomeActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mUserViewPagerFragment.setStoreDetails(mStoreDetails);
+    }
+
+    @Override
     public void addFragment(int screenId) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -92,23 +108,28 @@ public class UserHomeActivity extends AppCompatActivity
         switch (screenId) {
 
             case Constants.SCREEN_USER:
-                fragmentTransaction.replace(R.id.fl_userhome_fragment_container, mUserViewPagerFragment);
+                fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
+                        mUserViewPagerFragment);
+
                 fragmentTransaction.commit();
                 break;
 
             case Constants.SCREEN_STORE_DETAILS:
 
-                fragmentTransaction.replace(R.id.fl_userhome_fragment_container, mStoreDetailsFragment);
+                fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
+                        mStoreDetailsFragment);
                 fragmentTransaction.commit();
                 break;
 
             case Constants.SCREEN_PAYMENT_DETAILS:
-                fragmentTransaction.replace(R.id.fl_userhome_fragment_container, mPaymentDetailsFragment);
+                fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
+                        mPaymentDetailsFragment);
                 fragmentTransaction.commit();
                 break;
 
             case Constants.SCREEN_USER_ADD_COINS:
-                fragmentTransaction.replace(R.id.fl_userhome_fragment_container,mUserAddCoinsFragment );
+                fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
+                        mUserAddCoinsFragment);
                 fragmentTransaction.commit();
                 break;
 
@@ -116,7 +137,8 @@ public class UserHomeActivity extends AppCompatActivity
                 Bundle bundle = new Bundle();
                 bundle.putInt("Key2", coins);
                 mUserWalletFragment.setArguments(bundle);
-                fragmentTransaction.replace(R.id.fl_userhome_fragment_container,mUserWalletFragment );
+                fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
+                        mUserWalletFragment);
                 fragmentTransaction.commit();
                 break;
 
@@ -135,17 +157,13 @@ public class UserHomeActivity extends AppCompatActivity
         mStoreDetailsFragment.setArguments(bundle);
 
         addFragment(Constants.SCREEN_STORE_DETAILS);
-        //Bundle.putParcelable(storeDetails)
-
-
 
     }
 
     @Override
     public void addPopup(DishesDetails dishesDetails) {
-        if(dishesDetails != null){
+        if (dishesDetails != null) {
             int menuId = dishesDetails.getMenuId();
-
 
 
             Retrofit retrofit = new Retrofit.Builder()
@@ -164,16 +182,15 @@ public class UserHomeActivity extends AppCompatActivity
                     if (response != null) {
                         if (response.code() == 200) {
                             dishFromApi = response.body();
-                        }
-                        else {
+                        } else {
                             Toast.makeText(getApplicationContext(),
                                     response.code()
-                                    + response.message(),
+                                            + response.message(),
                                     Toast.LENGTH_SHORT).show();
                         }
 
                     }
-                  showPopup(dishFromApi);
+                    showPopup(dishFromApi);
 
                 }
 
@@ -190,33 +207,17 @@ public class UserHomeActivity extends AppCompatActivity
     }
 
     private void showPopup(DishesDetails dishFromApi) {
-        if(dishFromApi != null){
-//            Button buy,cancel;
-//
-//            LayoutInflater layoutInflater = (LayoutInflater) UserHomeActivity.this
-//                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            View customView = layoutInflater.inflate(R.layout.popup_dishes_details_layout,null);
-//            buy = customView.findViewById(R.id.bt_popup_buy);
-//            cancel = customView.findViewById(R.id.bt_popup_cancel);
-//
-//            final PopupWindow popupWindow = new PopupWindow(customView, LayoutParams.WRAP_CONTENT,
-//                    LayoutParams.WRAP_CONTENT);
-//            popupWindow.showAtLocation(mFrameLayout, Gravity.CENTER, 0, 0);
-//            cancel.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    popupWindow.dismiss();
-//                }
-//            });
-
+        if (dishFromApi != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Store Id "+ dishFromApi.getRetailId());
-            builder.setMessage(dishFromApi.getItemName() + "       " + dishFromApi.getItemPrice() + " rs");
+            builder.setTitle("Store Id " + dishFromApi.getRetailId());
+            builder.setMessage(dishFromApi.getItemName() + "       "
+                    + dishFromApi.getItemPrice() + " rs");
             builder.setCancelable(false);
             builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(getApplicationContext(), "You've choosen to buy", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),
+                            "You've choosen to buy", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -238,22 +239,24 @@ public class UserHomeActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View hView =  navigationView.getHeaderView(0);
+        View hView = navigationView.getHeaderView(0);
 
         mProfileName = hView.findViewById(R.id.tv_profilename);
         Intent myIntent = getIntent();
 
-        if(myIntent != null) {
+        if (myIntent != null) {
 
             String fName = myIntent.getStringExtra("Key1");
-            coins  = myIntent.getIntExtra("Key2", 0);
+            coins = myIntent.getIntExtra("Key2", 0);
+            mStoreDetails = (List<StoreDetails>) myIntent.getSerializableExtra("KeyStoreList");
 
-            if(fName != null && !fName.isEmpty()) {
+            if (fName != null && !fName.isEmpty()) {
 
                 mProfileName.setText(fName);
             }
@@ -264,12 +267,20 @@ public class UserHomeActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
+      else if(mUserAddCoinsFragment.isVisible()){
+            addFragment(Constants.SCREEN_USER);
+       }
+       else {
+           super.onBackPressed();
+       }
+
+
     }
 
     @Override

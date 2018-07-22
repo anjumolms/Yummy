@@ -1,38 +1,97 @@
 package com.example.dell.yummy.Retailer;
 
-class TransactionDetails {
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-    private int userId;
-    private int transactionId;
-    private int totalAmount;
+public class TransactionDetails{
+        @SerializedName("order_date")
+        @Expose
+        private String orderDate;
+        @SerializedName("order_id")
+        @Expose
+        private int orderId;
+        @SerializedName("order_item_count")
+        @Expose
+        private int orderItemCount;
+        @SerializedName("order_status")
+        @Expose
+        private String orderStatus;
+        @SerializedName("order_value")
+        @Expose
+        private int orderValue;
+        @SerializedName("retail_id")
+        @Expose
+        private int retailId;
+        @SerializedName("user_id")
+        @Expose
+        private int userId;
+        @SerializedName("wallet_tran_id")
+        @Expose
+        private int walletTranId;
 
-    public TransactionDetails(int userId, int transactionId, int totalAmount) {
-        this.userId = userId;
-        this.transactionId = transactionId;
-        this.totalAmount = totalAmount;
+        public String getOrderDate() {
+            return orderDate;
+        }
+
+        public void setOrderDate(String orderDate) {
+            this.orderDate = orderDate;
+        }
+
+        public int getOrderId() {
+            return orderId;
+        }
+
+        public void setOrderId(int orderId) {
+            this.orderId = orderId;
+        }
+
+        public int getOrderItemCount() {
+            return orderItemCount;
+        }
+
+        public void setOrderItemCount(int orderItemCount) {
+            this.orderItemCount = orderItemCount;
+        }
+
+        public String getOrderStatus() {
+            return orderStatus;
+        }
+
+        public void setOrderStatus(String orderStatus) {
+            this.orderStatus = orderStatus;
+        }
+
+        public int getOrderValue() {
+            return orderValue;
+        }
+
+        public void setOrderValue(int orderValue) {
+            this.orderValue = orderValue;
+        }
+
+        public int getRetailId() {
+            return retailId;
+        }
+
+        public void setRetailId(int retailId) {
+            this.retailId = retailId;
+        }
+
+        public int getUserId() {
+            return userId;
+        }
+
+        public void setUserId(int userId) {
+            this.userId = userId;
+        }
+
+        public int getWalletTranId() {
+            return walletTranId;
+        }
+
+        public void setWalletTranId(int walletTranId) {
+            this.walletTranId = walletTranId;
+        }
+
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public int getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(int transactionId) {
-        this.transactionId = transactionId;
-    }
-
-    public int getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(int totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-}

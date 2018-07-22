@@ -58,28 +58,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
 
             case R.id.btn_login:
-
-
                 validateUser();
-
-//                if (mMainView != null) {
-//                    mMainView.addActivity(Constants.SCREEN_USER_HOME);
-//                }}
-//                else if(role==2)
-//                {
-//                    if (mMainView != null) {
-//                        mMainView.addActivity(Constants.SCREEN_RETAILER_HOME);
-//                    }
-//
-//                }
                 break;
 
             case R.id.link_signup:
-
                 if (mMainView != null) {
                     mMainView.addFragment(Constants.SCREEN_REGISTRATION);
                 }
-
                 break;
             default:
                 break;
@@ -128,7 +113,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             if (userResult.getLoginRole() == 1) {
                                 //User page
                                 if (mMainView != null) {
-                                    mMainView.addActivityInfo(Constants.SCREEN_USER_HOME,userResult.getLoginUsername(),
+                                    mMainView.addActivityInfo(Constants.SCREEN_USER_HOME,
+                                            userResult.getLoginUsername(),
                                             userResult.getUserWallet());
                                 }
 
@@ -136,7 +122,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
                                 //User page NEED CORRECTION
                                 if (mMainView != null) {
-                                    mMainView.addActivityInfo(Constants.SCREEN_RETAILER_HOME,userResult.getLoginUsername(),
+                                    mMainView.addActivityInfo(Constants.SCREEN_RETAILER_HOME,
+                                            userResult.getLoginUsername(),
                                             userResult.getUserWallet());
                                 }
 
@@ -166,20 +153,5 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         Toast.LENGTH_LONG).show();
             }
         });
-
-
-//                if (role == 1) {
-//                    if (mMainView != null) {
-//                        mMainView.addActivity(Constants.SCREEN_USER_HOME);
-//                    }
-//                } else {
-//                    if (mMainView != null) {
-//                        mMainView.addActivity(Constants.SCREEN_RETAILER_HOME);
-//                    }
-//
-//                }
-
     }
-
-
 }

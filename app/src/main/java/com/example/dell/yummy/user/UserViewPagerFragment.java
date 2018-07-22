@@ -14,6 +14,9 @@ import com.example.dell.yummy.R;
 import com.example.dell.yummy.user.dishes.UserDishesFragment;
 import com.example.dell.yummy.user.reviews.UserReviewFragment;
 import com.example.dell.yummy.user.store.UserStoresFragment;
+import com.example.dell.yummy.webservice.StoreDetails;
+
+import java.util.List;
 
 
 /**
@@ -26,6 +29,7 @@ public class UserViewPagerFragment extends Fragment {
     private UserStoresFragment mUserStoresFragment;
     private UserDishesFragment mUserDishesFragment;
     private IFragmentListener miFragmentListener;
+    private List<StoreDetails> mStoreDetails;
 
 
 
@@ -42,6 +46,7 @@ public class UserViewPagerFragment extends Fragment {
 
         mUserStoresFragment = new UserStoresFragment();
         mUserStoresFragment.addListener(miFragmentListener);
+        mUserStoresFragment.setStoreDetails(mStoreDetails);
 
         mUserDishesFragment = new UserDishesFragment();
         mUserDishesFragment.addListener(miFragmentListener);
@@ -69,5 +74,9 @@ public class UserViewPagerFragment extends Fragment {
     public void addListener(IFragmentListener iFragmentListener) {
         miFragmentListener = iFragmentListener;
 
+    }
+
+    public void setStoreDetails(List<StoreDetails> mStoreDetails) {
+        this.mStoreDetails = mStoreDetails;
     }
 }

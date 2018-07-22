@@ -67,7 +67,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
             case R.id.register_login:
 
                 String strUserName = mUserName.getText().toString().trim();
-                String strUserID = mUId.getText().toString().trim();
+                String strEmail = mUId.getText().toString().trim();
                 String strPassword = mPassword.getText().toString().trim();
                 String strConfirmPassword = mConfirmPassword.getText().toString().trim();
                 String strMobile = mMobile.getText().toString().trim();
@@ -77,7 +77,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                     return;
                 }
 
-                if (TextUtils.isEmpty(strUserID)) {
+                if (TextUtils.isEmpty(strEmail)) {
                     mUId.setError("This field cannot be empty");
                     return;
                 }
@@ -112,10 +112,12 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
 
                 RegistrationResult registrationResult = new RegistrationResult();
 
-                registrationResult.setLoginUsername(strUserName);
                 registrationResult.setLoginPin(Integer.parseInt(strPassword));
                 registrationResult.setUserPhone(strMobile);
-                registrationResult.setUserId(Integer.parseInt(strUserID));
+                registrationResult.setUserEmail(strEmail);
+                registrationResult.setLoginUsername(strMobile);
+                registrationResult.setUserName(strUserName);
+
 
                 IApiInterface service = retrofit.create(IApiInterface.class);
                 Call<RegistrationResult> call = service.register(registrationResult);

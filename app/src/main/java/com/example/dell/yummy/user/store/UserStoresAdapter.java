@@ -1,6 +1,7 @@
 package com.example.dell.yummy.user.store;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,8 +44,8 @@ public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.St
         StoreDetails storeDetails = storeList.get(position);
 
         //binding the data with the viewholder views
-        holder.textViewTitle.setText(storeDetails.getRetailName());
-        holder.textViewShortDesc.setText(""+storeDetails.getRetailNumber());
+        holder.textViewStoreName.setText(storeDetails.getRetailName());
+        holder.textViewStoreId.setText("Store ID  "+storeDetails.getRetailNumber());
         }
 
     @Override
@@ -53,18 +54,19 @@ public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.St
     }
     class StoreViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewTitle, textViewShortDesc, textViewRating, textViewPrice;
+        TextView textViewStoreName, textViewStoreId;
+        CardView cardView;
 
 
         public StoreViewHolder(View itemView) {
             super(itemView);
 
-            textViewTitle = itemView.findViewById(R.id.textViewTitle);
-            textViewShortDesc = itemView.findViewById(R.id.textViewShortDesc);
-            textViewRating = itemView.findViewById(R.id.textViewRating);
-            textViewPrice = itemView.findViewById(R.id.textViewPrice);
+            textViewStoreName = itemView.findViewById(R.id.textViewStoreName);
+            textViewStoreId = itemView.findViewById(R.id.textViewStoreId);
+            cardView = itemView.findViewById(R.id.cv_storedetails);
 
-            textViewTitle.setOnClickListener(new View.OnClickListener() {
+
+            cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mCtx,"success",Toast.LENGTH_SHORT).show();

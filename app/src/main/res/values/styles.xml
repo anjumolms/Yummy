@@ -13,6 +13,15 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+
+    <style name="EditTextHint" parent="TextAppearance.AppCompat">
+        <item name="colorAccent">@android:color/white</item>
+        <item name="android:textColorHint">@color/tab_color</item>
+        <item name="colorControlNormal">@color/light_tab</item>
+        <item name="colorControlActivated">@color/light_tab</item>
+        <item name="colorControlHighlight">@color/tab_color</item>
+    </style>
+
     <!--<style name="NoActionBar" parent="@android:style/Theme.Holo.Light">-->
     <!--<item name="android:windowActionBar">false</item>-->
     <!--<item name="android:windowNoTitle">true</item>-->

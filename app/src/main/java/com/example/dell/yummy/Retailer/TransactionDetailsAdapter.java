@@ -1,6 +1,7 @@
 package com.example.dell.yummy.Retailer;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,9 +46,10 @@ class TransactionDetailsAdapter extends RecyclerView.Adapter<TransactionDetailsA
         transactionDetails = transactionDetailsList.get(position);
 
         //binding the data with the viewholder views
-        holder.textViewRetailerId.setText(" "+transactionDetails.getUserId());
-        holder.textViewTransactionId.setText(""+transactionDetails.getTransactionId());
-        holder.textViewAmount.setText(""+transactionDetails.getTotalAmount());
+        holder.textViewUserId.setText("User Id "+transactionDetails.getUserId());
+        holder.textViewTransactionId.setText("Transaction Id "+transactionDetails.getWalletTranId());
+        holder.textViewAmount.setText("Amount "+transactionDetails.getOrderValue());
+        holder.textViewTransactionStatus.setText("Status "+transactionDetails.getOrderStatus());
     }
 
     @Override
@@ -58,17 +60,20 @@ class TransactionDetailsAdapter extends RecyclerView.Adapter<TransactionDetailsA
 
     class TransactionViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewRetailerId, textViewTransactionId, textViewAmount;
-
+        TextView textViewUserId, textViewTransactionId, textViewAmount, textViewTransactionStatus;
+        CardView cardView;
         public TransactionViewHolder(View itemView) {
             super(itemView);
 
-            textViewRetailerId = itemView.findViewById(R.id.tv_retailer_id);
+            textViewUserId = itemView.findViewById(R.id.tv_user_id);
             textViewTransactionId = itemView.findViewById(R.id.tv_transaction_id);
             textViewAmount = itemView.findViewById(R.id.tv_amount);
+            textViewTransactionStatus = itemView.findViewById(R.id.tv_transaction_status);
+             cardView = itemView.findViewById(R.id.cv_transaction_details);
 
 
-            textViewRetailerId.setOnClickListener(new View.OnClickListener() {
+
+            cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mCtx, "success", Toast.LENGTH_SHORT).show();

@@ -51,51 +51,23 @@ public class UserStoresFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(IApiInterface.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                .build();
 
-        IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-        Call<List<StoreDetails>> call = iApiInterface.getStores();
+        if (StoreList != null) {
 
-        call.enqueue(new Callback<List<StoreDetails>>() {
+            UserStoresAdapter adapter = new UserStoresAdapter(getActivity(), StoreList, miFragmentListener);
 
-            @Override
-            public void onResponse(Call<List<StoreDetails>> call,
-                                   Response<List<StoreDetails>> response) {
-
-                if (response != null) {
-                    if (response.code() == 200) {
-                        StoreList = response.body();
-                    } else {
-                        Toast.makeText(getActivity(), response.code()
-                                + response.message(), Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-
-                if(StoreList != null){
-
-                    UserStoresAdapter adapter = new UserStoresAdapter(getActivity(), StoreList, miFragmentListener);
-
-                    //setting adapter to recyclerview
-                    recyclerView.setAdapter(adapter);
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<StoreDetails>> call, Throwable t) {
-                Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+            //setting adapter to recyclerview
+            recyclerView.setAdapter(adapter);
+        }
 
         return view;
     }
 
     public void addListener(IFragmentListener miFragmentListener) {
         this.miFragmentListener = miFragmentListener;
+    }
+
+    public void setStoreDetails(List<StoreDetails> mStoreDetails) {
+        this.StoreList = mStoreDetails;
     }
 }

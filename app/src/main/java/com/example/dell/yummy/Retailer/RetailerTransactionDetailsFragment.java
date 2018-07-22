@@ -8,14 +8,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.user.dishes.DishesDetails;
 import com.example.dell.yummy.user.store.StoreDetailsAdapter;
+import com.example.dell.yummy.webservice.IApiInterface;
+import com.example.dell.yummy.webservice.RetrofitClient;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,44 +45,50 @@ public class RetailerTransactionDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-         View view = inflater.inflate(R.layout.fragment_retailer_transaction_details, container, false);
+         View view = inflater.inflate(R.layout.fragment_retailer_transaction_details,
+                 container, false);
         recyclerView = view.findViewById(R.id.rv_transaction_details);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        transactionDetailsList = new ArrayList<>();
+        //transactionDetailsList = new ArrayList<>();
 
-        transactionDetailsList.add(
-                new TransactionDetails(
-                        166,
-                        185555,
-                        70
-                ));
+        Retrofit retrofit = RetrofitClient.getClient();
+
+        IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+        Call<List<TransactionDetails>> call = iApiInterface.getTransactionDetails(2);
+
+        call.enqueue(new Callback<List<TransactionDetails>>() {
 
 
-        transactionDetailsList.add(
-                new TransactionDetails(
-                        1553553,
-                        3666331,
-                        70
-                ));
+            @Override
+            public void onResponse(Call<List<TransactionDetails>> call,
+                                   Response<List<TransactionDetails>> response) {
+                if (response != null) {
+                    if (response.code() == 200) {
+                        transactionDetailsList = response.body();
 
-        transactionDetailsList.add(
-                new TransactionDetails(
-                        123535,
-                        3663,
-                        70
-                ));
+                    } else {
+                        Toast.makeText(getActivity(), response.code()
+                                + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-        transactionDetailsList.add(
-                new TransactionDetails(
-                        138388,
-                        3553535,
-                        70
-                ));
+                if (transactionDetailsList != null) {
+                    TransactionDetailsAdapter adapter = new TransactionDetailsAdapter(getActivity(), transactionDetailsList, iFragmentListener);
+                    recyclerView.setAdapter(adapter);
+                }
+            }
 
-       TransactionDetailsAdapter adapter = new TransactionDetailsAdapter(getActivity(),transactionDetailsList,iFragmentListener);
-        recyclerView.setAdapter(adapter);
+            @Override
+            public void onFailure(Call<List<TransactionDetails>> call, Throwable t) {
+
+                Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+
         return view;
     }
 

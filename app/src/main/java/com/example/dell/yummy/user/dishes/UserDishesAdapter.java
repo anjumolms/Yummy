@@ -1,6 +1,7 @@
 package com.example.dell.yummy.user.dishes;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +61,7 @@ public class UserDishesAdapter extends RecyclerView.Adapter<UserDishesAdapter.Di
     class DishesViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewTitle, textViewPrice;
+        CardView cardView;
 
 
         public DishesViewHolder(View itemView) {
@@ -67,8 +69,9 @@ public class UserDishesAdapter extends RecyclerView.Adapter<UserDishesAdapter.Di
 
             textViewTitle = itemView.findViewById(R.id.textViewTitle);
             textViewPrice = itemView.findViewById(R.id.textViewPrice);
+            cardView = itemView.findViewById(R.id.cv_disheitem);
 
-            textViewTitle.setOnClickListener(new View.OnClickListener() {
+            cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mCtx,"success",Toast.LENGTH_SHORT).show();

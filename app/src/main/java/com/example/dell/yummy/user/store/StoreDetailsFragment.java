@@ -105,13 +105,6 @@ public class StoreDetailsFragment extends Fragment {
             }
         });
 
-
-
-
-
-
-
-
         return view;
     }
 

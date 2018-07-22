@@ -33,4 +33,6 @@ public class UserAddCoinsFragment extends Fragment {
     public void addListener(IFragmentListener iFragmentListener) {
         this.iFragmentListener = iFragmentListener;
     }
+
+
 }

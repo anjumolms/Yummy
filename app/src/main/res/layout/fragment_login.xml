@@ -24,6 +24,7 @@
 
         <!-- Email Label -->
         <android.support.design.widget.TextInputLayout
+            android:theme="@style/EditTextHint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -32,13 +33,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:hint="Uid"
-                android:textColorHint="#00838F"
-                android:backgroundTint="@color/tab_color"/>
+                android:hint="Mobile" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password Label -->
         <android.support.design.widget.TextInputLayout
+            android:theme="@style/EditTextHint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -47,9 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:hint="Pin"
-                android:textColorHint="#00838F"
-                android:backgroundTint="@color/tab_color"/>
+                android:hint="Pin" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton

@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.webservice.IApiInterface;
+import com.example.dell.yummy.webservice.RetrofitClient;
 import com.example.dell.yummy.webservice.StoreDetails;
 
 import java.util.ArrayList;
@@ -57,10 +58,7 @@ public class UserDishesFragment extends Fragment {
 
         //dishesList = new ArrayList<>();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(IApiInterface.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                .build();
+        Retrofit retrofit = RetrofitClient.getClient();
 
         IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
         Call<List<DishesDetails>> call = iApiInterface.getallMenu();
