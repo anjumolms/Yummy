@@ -115,7 +115,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                 if (mMainView != null) {
                                     mMainView.addActivityInfo(Constants.SCREEN_USER_HOME,
                                             userResult.getLoginUsername(),
-                                            userResult.getUserWallet());
+                                            userResult.getUserWallet(),
+                                            userResult.getUserId());
                                 }
 
                             } else if (userResult.getLoginRole() == 2) {
@@ -124,7 +125,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                 if (mMainView != null) {
                                     mMainView.addActivityInfo(Constants.SCREEN_RETAILER_HOME,
                                             userResult.getLoginUsername(),
-                                            userResult.getUserWallet());
+                                            userResult.getUserWallet(),userResult.getUserId());
                                 }
 
 

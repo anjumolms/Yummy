@@ -24,6 +24,8 @@ import com.example.dell.yummy.user.dishes.DishesDetails;
 import com.example.dell.yummy.user.store.StoreDetailsFragment;
 import com.example.dell.yummy.webservice.StoreDetails;
 
+import java.util.List;
+
 public class RetailerHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IFragmentListener {
 
@@ -103,6 +105,11 @@ public class RetailerHomeActivity extends AppCompatActivity
 
     @Override
     public void addPopup(DishesDetails dishesDetails) {
+
+    }
+
+    @Override
+    public void loadConformationFragment(List<DishesDetails> dishesDetails) {
 
     }
 

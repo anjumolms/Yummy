@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -11,58 +14,59 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp">
-            <LinearLayout
+
+            <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:weightSum="4"
-                android:orientation="horizontal">
+                android:layout_height="match_parent">
+
+                <TableRow>
                 <TextView
                     android:id="@+id/dish_item_name"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:gravity="bottom"
-                    android:layout_marginBottom="3dp"
                     android:layout_weight="2"
-                    android:layout_marginLeft="5dp"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textColor="#000000"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/et_dish_item_count"
+                <TextView
+                    android:id="@+id/tv_dish_item_count"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     />
                 <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/im_add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/additem"
-                    android:layout_marginTop="8dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="10dp"
                     android:background="@android:color/transparent"/>
+
                 <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/im_rem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/removeitem"
-                    android:layout_marginTop="8dp"
-                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
                     android:background="@android:color/transparent"
-                    android:layout_marginLeft="10dp"/>
+                    />
 
-            </LinearLayout>
+                </TableRow>
+
+                <TableRow>
 
                 <TextView
                     android:id="@+id/dish_item_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="50dp"
-                    android:text="INR 569"
-                    android:textSize="18sp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                    />
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+                </TableRow>
+
+            </TableLayout>
+
+
+
+
 
         </android.support.v7.widget.CardView>
 

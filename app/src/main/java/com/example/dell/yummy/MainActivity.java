@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
 
 
     @Override
-    public void addActivityInfo(int screen, String name, int wallet) {
+    public void addActivityInfo(int screen, String name, int wallet,int userID) {
 
         switch (screen) {
             case Constants.SCREEN_USER_HOME:
@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
                 Intent mySuperIntent = new Intent(this,UserHomeActivity.class);
                 mySuperIntent.putExtra("Key1", name);
                 mySuperIntent.putExtra("Key2", wallet);
+                mySuperIntent.putExtra("Key3",userID);
                 if(storeDetailsList != null){
                     mySuperIntent.putExtra("KeyStoreList", (Serializable) storeDetailsList);
                     }

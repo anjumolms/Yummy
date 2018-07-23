@@ -2,6 +2,7 @@ package com.example.dell.yummy.user.store;
 
 
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,9 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.user.dishes.DishesDetails;
@@ -37,6 +40,8 @@ public class StoreDetailsFragment extends Fragment {
     IFragmentListener miFragmentListener;
     TextView storeName;
     StoreDetails storeDetails;
+    Button proceed;
+    StoreDetailsAdapter adapter;
 
     public StoreDetailsFragment() {
         // Required empty public constructor
@@ -46,8 +51,8 @@ public class StoreDetailsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        if(bundle != null){
-             storeDetails = (StoreDetails) bundle.getSerializable("key");
+        if (bundle != null) {
+            storeDetails = (StoreDetails) bundle.getSerializable("key");
         }
 
 
@@ -62,13 +67,35 @@ public class StoreDetailsFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         storeName = view.findViewById(R.id.tv_store_name);
+        proceed = view.findViewById(R.id.bt_buy);
 
-        if(storeDetails != null){
+        if (storeDetails != null) {
             storeName.setText(storeDetails.getRetailName());
         }
 
-        dishesList = new ArrayList<>();
+        proceed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+
+                if (miFragmentListener != null && adapter != null) {
+
+                    List<DishesDetails> dishesDetails = adapter.getDishesDetailsList();
+
+                    miFragmentListener.loadConformationFragment(dishesDetails);
+                }
+
+            }
+        });
+
+
+
+        dishesList = new ArrayList<>();
+        addListItems();
+        return view;
+    }
+
+    private void addListItems() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(IApiInterface.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
@@ -93,24 +120,22 @@ public class StoreDetailsFragment extends Fragment {
                 if (dishesList != null) {
 
                     // UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList,miUserViewListener);
-                    StoreDetailsAdapter adapter = new StoreDetailsAdapter(getActivity(), dishesList);
+                     adapter = new StoreDetailsAdapter(getActivity(), dishesList);
 
                     //setting adapter to recyclerview
                     recyclerView.setAdapter(adapter);
                 }
             }
+
             @Override
             public void onFailure(Call<List<DishesDetails>> call, Throwable t) {
                 Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
             }
         });
-
-        return view;
     }
 
     public void addListener(IFragmentListener mIFragmentListener) {
         miFragmentListener = mIFragmentListener;
 
     }
-
 }

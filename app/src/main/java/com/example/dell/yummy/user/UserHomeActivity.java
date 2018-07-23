@@ -31,6 +31,7 @@ import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.user.dishes.DishesDetails;
+import com.example.dell.yummy.user.store.ConfirmationFragment;
 import com.example.dell.yummy.user.store.StoreDetailsFragment;
 import com.example.dell.yummy.webservice.IApiInterface;
 import com.example.dell.yummy.webservice.StoreDetails;
@@ -51,10 +52,12 @@ public class UserHomeActivity extends AppCompatActivity
     private PaymentDetailsFragment mPaymentDetailsFragment;
     private UserAddCoinsFragment mUserAddCoinsFragment;
     private UserWalletFragment mUserWalletFragment;
+    private ConfirmationFragment mConfirmationFragment;
     private TextView mProfileName;
     private FrameLayout mFrameLayout;
     private List<StoreDetails> mStoreDetails;
     private int coins;
+    private int userid;
 
     DishesDetails dishFromApi;
 
@@ -89,6 +92,9 @@ public class UserHomeActivity extends AppCompatActivity
 
         mUserWalletFragment = new UserWalletFragment();
         mUserWalletFragment.addListener(this);
+
+        mConfirmationFragment = new ConfirmationFragment();
+        mConfirmationFragment.addListener(this);
 
         addFragment(Constants.SCREEN_USER);
 
@@ -141,6 +147,13 @@ public class UserHomeActivity extends AppCompatActivity
                         mUserWalletFragment);
                 fragmentTransaction.commit();
                 break;
+
+                case Constants.SCREEN_CONFIRMATION:
+                    fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
+                            mConfirmationFragment);
+                    fragmentTransaction.commit();
+                    break;
+
 
             default:
                 break;
@@ -206,6 +219,12 @@ public class UserHomeActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void loadConformationFragment(List<DishesDetails> dishesDetails) {
+        mConfirmationFragment.setConfirmationDetails(dishesDetails);
+        addFragment(Constants.SCREEN_CONFIRMATION);
+    }
+
     private void showPopup(DishesDetails dishFromApi) {
         if (dishFromApi != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -254,6 +273,8 @@ public class UserHomeActivity extends AppCompatActivity
 
             String fName = myIntent.getStringExtra("Key1");
             coins = myIntent.getIntExtra("Key2", 0);
+            userid = myIntent.getIntExtra("Key3",0);
+
             mStoreDetails = (List<StoreDetails>) myIntent.getSerializableExtra("KeyStoreList");
 
             if (fName != null && !fName.isEmpty()) {

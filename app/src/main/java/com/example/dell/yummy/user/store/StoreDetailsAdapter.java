@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,8 +17,8 @@ import java.util.List;
 public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapter.DishesViewHolder> {
 
     private Context mCtx;
-
     private List<DishesDetails> dishesDetailsList;
+    int counter;
 
     public StoreDetailsAdapter(Context mCtx, List<DishesDetails> dishesDetailsList) {
         this.mCtx = mCtx;
@@ -35,10 +36,11 @@ public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapte
     public void onBindViewHolder(StoreDetailsAdapter.DishesViewHolder holder, int position) {
         //getting the product of the specified position
         DishesDetails dishesDetails = dishesDetailsList.get(position);
-
         //binding the data with the viewholder views
         holder.textViewTitle.setText(dishesDetails.getItemName());
         holder.textViewPrice.setText(String.valueOf(dishesDetails.getItemPrice()));
+        holder. textViewCount.setText(String.valueOf(counter));
+
         }
 
     @Override
@@ -46,10 +48,14 @@ public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapte
         return dishesDetailsList.size();
     }
 
+    public List<DishesDetails> getDishesDetailsList() {
+        return dishesDetailsList;
+    }
 
     class DishesViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewTitle,textViewPrice;
+        TextView textViewTitle,textViewPrice,textViewCount;
+        ImageButton addimage,removeimage;
 
 
         public DishesViewHolder(View itemView) {
@@ -57,14 +63,39 @@ public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapte
 
             textViewTitle = itemView.findViewById(R.id.dish_item_name);
             textViewPrice = itemView.findViewById(R.id.dish_item_price);
+            addimage = itemView.findViewById(R.id.im_add);
+            removeimage = itemView.findViewById(R.id.im_rem);
+            textViewCount = itemView.findViewById(R.id.tv_dish_item_count);
 
-            textViewTitle.setOnClickListener(new View.OnClickListener() {
+
+
+            addimage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mCtx,"success",Toast.LENGTH_SHORT).show();
-
-                }
+                    int position;
+                    position = getAdapterPosition();
+                    counter = dishesDetailsList.get(position).getCounter();
+                    counter++;
+                    dishesDetailsList.get(position).setCounter(counter);
+                    textViewCount.setText(String.valueOf(counter));
+                    }
             });
+
+            removeimage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position;
+                    position = getAdapterPosition();
+                    counter = dishesDetailsList.get(position).getCounter();
+                    if(counter>0) {
+                        counter--;
+                    }
+                    dishesDetailsList.get(position).setCounter(counter);
+                    textViewCount.setText(String.valueOf(counter));
+                    }
+            });
+
+
 
         }
     }

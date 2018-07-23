@@ -27,7 +27,13 @@ public class DishesDetails {
         @Expose
         private int retailId;
 
-        public String getItemName() {
+        private int counter = 0;
+
+    public int getCounter() { return counter; }
+
+    public void setCounter(int counter) { this.counter = counter; }
+
+    public String getItemName() {
             return itemName;
         }
 
