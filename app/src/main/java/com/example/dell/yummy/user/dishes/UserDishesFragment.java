@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.user.store.UserStoresAdapter;
+import com.example.dell.yummy.webservice.DishesDetails;
 import com.example.dell.yummy.webservice.IApiInterface;
 import com.example.dell.yummy.webservice.RetrofitClient;
 import com.example.dell.yummy.webservice.StoreDetails;
@@ -24,7 +26,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,8 +57,43 @@ public class UserDishesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        //dishesList = new ArrayList<>();
-
+        dishesList = new ArrayList<>();
+//
+//        List<DishesDetails> dummyStoreList = new ArrayList<>();
+//        DishesDetails storeDetails1 = new DishesDetails();
+//        DishesDetails storeDetails2 = new DishesDetails();
+//        DishesDetails storeDetails3 = new DishesDetails();
+//        DishesDetails storeDetails4 = new DishesDetails();
+//        DishesDetails storeDetails5 = new DishesDetails();
+//
+//
+//        storeDetails1.setItemName("PATHIRI");
+//        storeDetails1.setItemPrice(50);
+//
+//        storeDetails2.setItemName("UNNIYAPPAM");
+//        storeDetails2.setItemPrice(20);
+//
+//        storeDetails3.setItemName("LADDU");
+//        storeDetails3.setItemPrice(25);
+//
+//        storeDetails4.setItemName("JILLEBI");
+//        storeDetails4.setItemPrice(10);
+//
+//        storeDetails5.setItemName("PAYASAM");
+//        storeDetails5.setItemPrice(30);
+//
+//
+//
+//        dummyStoreList.add(storeDetails1);
+//        dummyStoreList.add(storeDetails2);
+//        dummyStoreList.add(storeDetails3);
+//        dummyStoreList.add(storeDetails4);
+//        dummyStoreList.add(storeDetails5);
+//
+//        UserDishesAdapter adapter = new UserDishesAdapter(getActivity(),
+//                dummyStoreList, miFragmentListener);
+//        recyclerView.setAdapter(adapter);
+//
         Retrofit retrofit = RetrofitClient.getClient();
 
         IApiInterface iApiInterface = retrofit.create(IApiInterface.class);

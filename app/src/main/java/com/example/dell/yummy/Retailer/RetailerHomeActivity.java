@@ -1,11 +1,8 @@
 package com.example.dell.yummy.Retailer;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,8 +17,7 @@ import android.view.WindowManager;
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.user.dishes.DishesDetails;
-import com.example.dell.yummy.user.store.StoreDetailsFragment;
+import com.example.dell.yummy.webservice.DishesDetails;
 import com.example.dell.yummy.webservice.StoreDetails;
 
 import java.util.List;
@@ -110,6 +106,11 @@ public class RetailerHomeActivity extends AppCompatActivity
 
     @Override
     public void loadConformationFragment(List<DishesDetails> dishesDetails) {
+
+    }
+
+    @Override
+    public void showDialog() {
 
     }
 

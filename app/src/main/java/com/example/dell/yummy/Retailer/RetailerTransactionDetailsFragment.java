@@ -12,12 +12,10 @@ import android.widget.Toast;
 
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.user.dishes.DishesDetails;
-import com.example.dell.yummy.user.store.StoreDetailsAdapter;
 import com.example.dell.yummy.webservice.IApiInterface;
 import com.example.dell.yummy.webservice.RetrofitClient;
+import com.example.dell.yummy.webservice.TransactionDetails;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;

@@ -6,12 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.webservice.DishesDetails;
 
 import java.util.List;
 
@@ -23,7 +24,9 @@ public class UserDishesAdapter extends RecyclerView.Adapter<UserDishesAdapter.Di
 
     IFragmentListener miFragmentListener;
     //we are storing all the products in a list
-    private List<DishesDetails> dishesDetailsList;
+   private List<DishesDetails> dishesDetailsList;
+
+
 
     //getting the context and product list with constructor
     public UserDishesAdapter(Context mCtx, List<DishesDetails> dishesDetailsList, IFragmentListener miFragmentListener) {
@@ -62,6 +65,7 @@ public class UserDishesAdapter extends RecyclerView.Adapter<UserDishesAdapter.Di
 
         TextView textViewTitle, textViewPrice;
         CardView cardView;
+        ImageView storeImg;
 
 
         public DishesViewHolder(View itemView) {
@@ -70,6 +74,9 @@ public class UserDishesAdapter extends RecyclerView.Adapter<UserDishesAdapter.Di
             textViewTitle = itemView.findViewById(R.id.textViewTitle);
             textViewPrice = itemView.findViewById(R.id.textViewPrice);
             cardView = itemView.findViewById(R.id.cv_disheitem);
+            storeImg = itemView.findViewById(R.id.iv_dish);
+
+
 
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override

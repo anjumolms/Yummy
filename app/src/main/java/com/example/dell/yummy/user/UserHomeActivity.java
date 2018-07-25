@@ -1,6 +1,5 @@
 package com.example.dell.yummy.user;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,29 +12,27 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.ViewGroup.LayoutParams;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.user.dishes.DishesDetails;
+import com.example.dell.yummy.webservice.DishesDetails;
 import com.example.dell.yummy.user.store.ConfirmationFragment;
 import com.example.dell.yummy.user.store.StoreDetailsFragment;
 import com.example.dell.yummy.webservice.IApiInterface;
 import com.example.dell.yummy.webservice.StoreDetails;
+import com.stepstone.apprating.AppRatingDialog;
+import com.stepstone.apprating.listener.RatingDialogListener;
 
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -45,7 +42,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserHomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, IFragmentListener {
+        implements NavigationView.OnNavigationItemSelectedListener, IFragmentListener ,RatingDialogListener{
 
     private UserViewPagerFragment mUserViewPagerFragment;
     private StoreDetailsFragment mStoreDetailsFragment;
@@ -57,7 +54,7 @@ public class UserHomeActivity extends AppCompatActivity
     private FrameLayout mFrameLayout;
     private List<StoreDetails> mStoreDetails;
     private int coins;
-    private int userid;
+    public static int userid;
 
     DishesDetails dishFromApi;
 
@@ -347,5 +344,42 @@ public class UserHomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void showDialog() {
+        new AppRatingDialog.Builder()
+                .setPositiveButtonText("Submit")
+                .setNegativeButtonText("Cancel")
+                .setNeutralButtonText("Later")
+                .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
+                .setDefaultRating(2)
+                .setTitle("Rate this application")
+                .setDescription("Please select some stars and give your feedback")
+                .setDefaultComment("This app is pretty cool !")
+                .setStarColor(R.color.fbutton_color_orange)
+                .setNoteDescriptionTextColor(R.color.colorAccent)
+                .setTitleTextColor(R.color.colorPrimaryDark)
+                .setDescriptionTextColor(R.color.tab_color)
+                .setHint("Please write your comment here ...")
+                .setHintTextColor(R.color.tab_color)
+                .setCommentTextColor(R.color.background)
+                .setCommentBackgroundColor(R.color.colorPrimaryDark)
+                .setWindowAnimation(R.style.MyDialogFadeAnimation)
+                .create(UserHomeActivity.this)
+                .show();
+    }
+    @Override
+    public void onPositiveButtonClicked(int i, String s) {
+
+    }
+
+    @Override
+    public void onNegativeButtonClicked() {
+
+    }
+
+    @Override
+    public void onNeutralButtonClicked() {
+
     }
 }

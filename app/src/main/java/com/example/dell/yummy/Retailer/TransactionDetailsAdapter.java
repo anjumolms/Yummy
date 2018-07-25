@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
+import com.example.dell.yummy.webservice.TransactionDetails;
 
 import java.util.List;
 

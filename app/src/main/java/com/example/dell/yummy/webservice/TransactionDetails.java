@@ -1,4 +1,4 @@
-package com.example.dell.yummy.Retailer;
+package com.example.dell.yummy.webservice;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -28,8 +28,15 @@ public class TransactionDetails{
         @SerializedName("wallet_tran_id")
         @Expose
         private int walletTranId;
+        @SerializedName("order_items_string")
+        @Expose
+        private String orderItemsString;
 
-        public String getOrderDate() {
+    public String getOrderItemsString() { return orderItemsString; }
+
+    public void setOrderItemsString(String orderItemsString) { this.orderItemsString = orderItemsString; }
+
+    public String getOrderDate() {
             return orderDate;
         }
 

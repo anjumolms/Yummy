@@ -1,17 +1,12 @@
 package com.example.dell.yummy.webservice;
 
-import com.example.dell.yummy.Retailer.TransactionDetails;
-import com.example.dell.yummy.user.dishes.DishesDetails;
-
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Retrofit;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public interface IApiInterface {
 
@@ -45,7 +40,8 @@ public interface IApiInterface {
         @GET("order/getstoreorders/{id}")
     Call<List<TransactionDetails>> getTransactionDetails(@Path("id") int id);
 
+        @POST("")
 
-
+        Call<TransactionDetails> getOrderDetails(@Body TransactionDetails transactionDetails);
 
 }

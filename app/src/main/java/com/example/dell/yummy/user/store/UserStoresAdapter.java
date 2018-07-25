@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.St
         //binding the data with the viewholder views
         holder.textViewStoreName.setText(storeDetails.getRetailName());
         holder.textViewStoreId.setText("Store ID  "+storeDetails.getRetailNumber());
+
         }
 
     @Override
@@ -56,6 +58,7 @@ public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.St
 
         TextView textViewStoreName, textViewStoreId;
         CardView cardView;
+        ImageView storeImg;
 
 
         public StoreViewHolder(View itemView) {
@@ -64,6 +67,7 @@ public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.St
             textViewStoreName = itemView.findViewById(R.id.textViewStoreName);
             textViewStoreId = itemView.findViewById(R.id.textViewStoreId);
             cardView = itemView.findViewById(R.id.cv_storedetails);
+            storeImg = itemView.findViewById(R.id.iv_store);
 
 
             cardView.setOnClickListener(new View.OnClickListener() {

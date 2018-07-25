@@ -2,7 +2,6 @@ package com.example.dell.yummy.user.store;
 
 
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,10 +13,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.IFragmentListener;
-import com.example.dell.yummy.user.dishes.DishesDetails;
+import com.example.dell.yummy.webservice.DishesDetails;
 import com.example.dell.yummy.webservice.IApiInterface;
 import com.example.dell.yummy.webservice.StoreDetails;
 

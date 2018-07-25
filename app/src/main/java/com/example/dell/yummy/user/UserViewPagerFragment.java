@@ -28,6 +28,7 @@ public class UserViewPagerFragment extends Fragment {
     private ViewPager viewPager;
     private UserStoresFragment mUserStoresFragment;
     private UserDishesFragment mUserDishesFragment;
+    private UserReviewFragment mUserReviewFragment;
     private IFragmentListener miFragmentListener;
     private List<StoreDetails> mStoreDetails;
 
@@ -51,6 +52,9 @@ public class UserViewPagerFragment extends Fragment {
         mUserDishesFragment = new UserDishesFragment();
         mUserDishesFragment.addListener(miFragmentListener);
 
+        mUserReviewFragment = new UserReviewFragment();
+        mUserReviewFragment.addListener(miFragmentListener);
+
 
 
         viewPager =  view.findViewById(R.id.viewpager);
@@ -67,7 +71,7 @@ public class UserViewPagerFragment extends Fragment {
         FragmentUserPagerAdapter adapter = new FragmentUserPagerAdapter(getActivity().getSupportFragmentManager());
         adapter.addFrag(mUserStoresFragment , "Stores");
         adapter.addFrag(mUserDishesFragment, "Dishes");
-        adapter.addFrag(new UserReviewFragment(), "Review");
+        adapter.addFrag(mUserReviewFragment, "Review");
         viewPager.setAdapter(adapter);
     }
 

@@ -7,10 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.user.dishes.DishesDetails;
+import com.example.dell.yummy.webservice.DishesDetails;
 
 import java.util.List;
 
