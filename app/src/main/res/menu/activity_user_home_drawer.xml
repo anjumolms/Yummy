@@ -12,6 +12,21 @@
             android:id="@+id/nav_wallet"
             android:icon="@drawable/wallet"
             android:title="Wallet" />
+        <item
+            android:id="@+id/nav_wish_list"
+            android:icon="@drawable/addtowishlist"
+            android:title="Wish List" />
+
+        <item
+            android:id="@+id/nav_gift_coins"
+            android:icon="@drawable/giftcards"
+            android:title="Gift coins" />
+        <item
+            android:id="@+id/nav_request_coins"
+            android:icon="@drawable/requestcoins"
+            android:title="Request Coins" />
+
+
         <!--<item-->
             <!--android:id="@+id/nav_slideshow"-->
             <!--android:icon="@drawable/ic_menu_slideshow"-->
@@ -21,7 +36,6 @@
             <!--android:icon="@drawable/ic_menu_manage"-->
             <!--android:title="Tools" />-->
     </group>
-
     <item android:title="Communicate">
         <menu>
             <!--<item-->

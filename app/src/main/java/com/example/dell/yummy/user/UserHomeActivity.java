@@ -262,7 +262,7 @@ public class UserHomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View hView = navigationView.getHeaderView(0);
-
+        navigationView.setItemIconTintList(null);
         mProfileName = hView.findViewById(R.id.tv_profilename);
         Intent myIntent = getIntent();
 
