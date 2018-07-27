@@ -276,7 +276,7 @@ public class UserHomeActivity extends AppCompatActivity
 
             if (fName != null && !fName.isEmpty()) {
 
-                mProfileName.setText(fName);
+                //mProfileName.setText(fName);
             }
         }
         navigationView.setNavigationItemSelectedListener(this);
@@ -353,17 +353,17 @@ public class UserHomeActivity extends AppCompatActivity
                 .setNeutralButtonText("Later")
                 .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
                 .setDefaultRating(2)
-                .setTitle("Rate this application")
+                .setTitle("Rate your YummY Taste")
                 .setDescription("Please select some stars and give your feedback")
-                .setDefaultComment("This app is pretty cool !")
-                .setStarColor(R.color.fbutton_color_orange)
-                .setNoteDescriptionTextColor(R.color.colorAccent)
-                .setTitleTextColor(R.color.colorPrimaryDark)
-                .setDescriptionTextColor(R.color.tab_color)
+                .setDefaultComment("It is delicious !")
+                .setStarColor(R.color.colorAccent)
+                .setNoteDescriptionTextColor(R.color.text)
+                .setTitleTextColor(R.color.light_tab)
+                .setDescriptionTextColor(R.color.light_tab)
                 .setHint("Please write your comment here ...")
                 .setHintTextColor(R.color.tab_color)
                 .setCommentTextColor(R.color.background)
-                .setCommentBackgroundColor(R.color.colorPrimaryDark)
+                .setCommentBackgroundColor(R.color.rvbackground)
                 .setWindowAnimation(R.style.MyDialogFadeAnimation)
                 .create(UserHomeActivity.this)
                 .show();

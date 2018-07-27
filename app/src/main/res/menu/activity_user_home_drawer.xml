@@ -6,26 +6,17 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_coin"
-            android:icon="@drawable/coin"
-            android:title="Add Coin" />
-        <item
-            android:id="@+id/nav_wallet"
-            android:icon="@drawable/wallet"
+            android:icon="@drawable/retailerwallet"
             android:title="Wallet" />
         <item
-            android:id="@+id/nav_wish_list"
-            android:icon="@drawable/addtowishlist"
-            android:title="Wish List" />
+            android:id="@+id/nav_wallet"
+            android:icon="@drawable/additem"
+            android:title="Add Item" />
 
         <item
             android:id="@+id/nav_gift_coins"
-            android:icon="@drawable/giftcards"
-            android:title="Gift coins" />
-        <item
-            android:id="@+id/nav_request_coins"
-            android:icon="@drawable/requestcoins"
-            android:title="Request Coins" />
-
+            android:icon="@drawable/retailerlistitem"
+            android:title="List Item" />
 
         <!--<item-->
             <!--android:id="@+id/nav_slideshow"-->

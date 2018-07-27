@@ -24,6 +24,15 @@
     <color name="fbutton_color_concrete">#95a5a6</color>
     <color name="fbutton_color_asbestos">#7f8c8d</color>
     <color name="tab_color">#006064</color>
+    <color name="tab_color_dark">#004D40</color>
     <color name="light_tab">#00838F</color>
     <color name="background">#fff</color>
+    <color name="rvbackground">#B2DFDB</color>
+    <color name="text">#4DB6AC</color>
+
+
+
+
+
+
 </resources>
