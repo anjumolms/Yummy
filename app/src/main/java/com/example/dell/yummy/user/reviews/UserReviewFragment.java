@@ -4,6 +4,8 @@ package com.example.dell.yummy.user.reviews;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,8 @@ import java.util.Arrays;
  */
 public class UserReviewFragment extends Fragment {
     IFragmentListener iFragmentListener;
+    RecyclerView recyclerView1,recyclerView2;
+
 
     public UserReviewFragment() {
         // Required empty public constructor
@@ -36,9 +40,19 @@ public class UserReviewFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_review,
          container, false);
-        if(iFragmentListener != null) {
-            iFragmentListener.showDialog();
-        }
+
+        recyclerView1 = view.findViewById(R.id.rv_addreview);
+        recyclerView1.setHasFixedSize(true);
+        recyclerView1.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        recyclerView2 = view.findViewById(R.id.rv_viewreview);
+        recyclerView2.setHasFixedSize(true);
+        recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+//        if(iFragmentListener != null) {
+//            iFragmentListener.showDialog();
+//        }
 
 
         return view;

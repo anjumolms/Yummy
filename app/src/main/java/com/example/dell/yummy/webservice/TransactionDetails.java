@@ -32,11 +32,11 @@ public class TransactionDetails{
         @Expose
         private String orderItemsString;
 
-    public String getOrderItemsString() { return orderItemsString; }
+        public String getOrderItemsString() { return orderItemsString; }
 
-    public void setOrderItemsString(String orderItemsString) { this.orderItemsString = orderItemsString; }
+        public void setOrderItemsString(String orderItemsString) { this.orderItemsString = orderItemsString; }
 
-    public String getOrderDate() {
+        public String getOrderDate() {
             return orderDate;
         }
 

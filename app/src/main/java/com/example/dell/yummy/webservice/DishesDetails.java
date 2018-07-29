@@ -26,8 +26,15 @@ public class DishesDetails {
         @SerializedName("retail_id")
         @Expose
         private int retailId;
+        @SerializedName("item_review")
+        @Expose
+        private int review;
 
         private int counter = 0;
+
+    public int getReview() { return review; }
+
+    public void setReview(int review) { this.review = review; }
 
     public int getCounter() { return counter; }
 
@@ -36,6 +43,7 @@ public class DishesDetails {
     public String getItemName() {
             return itemName;
         }
+
 
         public void setItemName(String itemName) {
             this.itemName = itemName;
