@@ -35,7 +35,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SplashActivity extends AppCompatActivity {
 
     List<StoreDetails> storeDetails;
-     RippleBackground rippleBackground;
 
 
     @Override
@@ -55,7 +54,7 @@ public class SplashActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.INTERNET},
                     101);
         }else{
-            rippleBackground.startRippleAnimation();
+
             getStoreDetails();
         }
     }
@@ -65,7 +64,6 @@ public class SplashActivity extends AppCompatActivity {
         if (requestCode == 101) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                rippleBackground.startRippleAnimation();
                 getStoreDetails();
 
             }else if (grantResults[0] == PackageManager.PERMISSION_DENIED){
