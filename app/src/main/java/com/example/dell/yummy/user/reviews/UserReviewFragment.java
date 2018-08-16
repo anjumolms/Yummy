@@ -15,14 +15,17 @@ import com.example.dell.yummy.R;
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class UserReviewFragment extends Fragment {
-    IFragmentListener iFragmentListener;
-    RecyclerView recyclerView1,recyclerView2;
+
+    RecyclerView recyclerView1;
+    List<UserReview> userReviews;
 
 
     public UserReviewFragment() {
@@ -44,22 +47,23 @@ public class UserReviewFragment extends Fragment {
         recyclerView1 = view.findViewById(R.id.rv_addreview);
         recyclerView1.setHasFixedSize(true);
         recyclerView1.setLayoutManager(new LinearLayoutManager(getActivity()));
+        userReviews = new ArrayList<>();
+        UserReview userReview1 = new UserReview();
+        userReview1.setOrderItem("Chicken Biriyani");
+        UserReview userReview4 = new UserReview();
+        userReview4.setOrderItem("Kutthuportae");
+        UserReview userReview2 = new UserReview();
+        userReview2.setOrderItem("mutton biriyani");
+        UserReview userReview3 = new UserReview();
+        userReview3.setOrderItem("Meals");
 
-        recyclerView2 = view.findViewById(R.id.rv_viewreview);
-        recyclerView2.setHasFixedSize(true);
-        recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
-//        if(iFragmentListener != null) {
-//            iFragmentListener.showDialog();
-//        }
-
-
+        UserAddReviewAdapter adapter = new UserAddReviewAdapter(getActivity(),userReviews);
+        recyclerView1.setAdapter(adapter);
         return view;
     }
 
 
-    public void addListener(IFragmentListener iFragmentListener) {
-        this.iFragmentListener = iFragmentListener;
+    public void addListener(IFragmentListener miFragmentListener) {
     }
 }

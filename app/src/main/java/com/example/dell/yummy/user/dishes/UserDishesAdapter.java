@@ -16,7 +16,8 @@ import com.example.dell.yummy.webservice.DishesDetails;
 
 import java.util.List;
 
-public class UserDishesAdapter extends RecyclerView.Adapter<UserDishesAdapter.DishesViewHolder> {
+public class UserDishesAdapter extends
+        RecyclerView.Adapter<UserDishesAdapter.DishesViewHolder> {
 
 
     //this context we will use to inflate the layout
@@ -29,7 +30,8 @@ public class UserDishesAdapter extends RecyclerView.Adapter<UserDishesAdapter.Di
 
 
     //getting the context and product list with constructor
-    public UserDishesAdapter(Context mCtx, List<DishesDetails> dishesDetailsList, IFragmentListener miFragmentListener) {
+    public UserDishesAdapter(Context mCtx, List<DishesDetails> dishesDetailsList,
+                             IFragmentListener miFragmentListener) {
         this.mCtx = mCtx;
         this.dishesDetailsList = dishesDetailsList;
         this.miFragmentListener = miFragmentListener;

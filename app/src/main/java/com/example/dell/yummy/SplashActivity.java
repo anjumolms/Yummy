@@ -48,7 +48,7 @@ public class SplashActivity extends AppCompatActivity {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(this.getResources().getColor(R.color.tab_color));
         }
-        rippleBackground = (RippleBackground) findViewById(R.id.content);
+
 
         if (ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.INTERNET)
                 != PackageManager.PERMISSION_GRANTED) {

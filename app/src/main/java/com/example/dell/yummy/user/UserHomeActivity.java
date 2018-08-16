@@ -137,11 +137,13 @@ public class UserHomeActivity extends AppCompatActivity
                 break;
 
             case Constants.SCREEN_USER_WALLET:
+
                 Bundle bundle = new Bundle();
                 bundle.putInt("Key2", coins);
                 mUserWalletFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
                         mUserWalletFragment);
+
                 fragmentTransaction.commit();
                 break;
 
