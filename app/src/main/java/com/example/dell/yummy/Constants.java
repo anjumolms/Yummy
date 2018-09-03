@@ -17,6 +17,11 @@ public class Constants {
     public static final int SCREEN_RETAILER_LIST_ITEMS =12;
     public static final int SCREEN_WALLET =13;
     public static final int SCREEN_CONFIRMATION = 14;
+    public static final int SCREEN_ORDER_SUCCESSFULL = 15;
+
+    public static final String CHANNEL_ID = "my_channel_01";
+    public static final String CHANNEL_NAME = "Simplified Coding Notification";
+    public static final String CHANNEL_DESCRIPTION = "www.simplifiedcoding.net";
 
 
 }

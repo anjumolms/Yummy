@@ -115,9 +115,7 @@ public class UserDishesFragment extends Fragment {
                     }
                 }
                 if(dishesList != null){
-                    UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList, miFragmentListener);
-
-                    //setting adapter to recyclerview
+                    UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList, miFragmentListener);//setting adapter to recyclerview
                     recyclerView.setAdapter(adapter);
                 }
             }

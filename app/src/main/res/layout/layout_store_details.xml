@@ -19,20 +19,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <TableRow>
+                <TableRow
+                    android:layout_marginTop="10dp">
                 <TextView
                     android:id="@+id/dish_item_name"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textColor="#000000"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"/>
 
                 <TextView
                     android:id="@+id/tv_dish_item_count"
-                    android:layout_width="50dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight=".3"
                     />
                 <android.support.v7.widget.AppCompatImageButton
                     android:id="@+id/im_add"
@@ -47,18 +51,22 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/removeitem"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:background="@android:color/transparent"
                     />
 
                 </TableRow>
 
-                <TableRow>
+                <TableRow
+                    android:layout_marginTop="5dp">
 
                 <TextView
                     android:id="@+id/dish_item_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical" />
 
                 </TableRow>
 

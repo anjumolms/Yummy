@@ -11,4 +11,7 @@ public interface IFragmentListener {
     void addPopup(DishesDetails dishesDetails);
     void loadConformationFragment(List<DishesDetails> dishesDetails);
     void showDialog();
+    int getUserId();
+    String getUserName();
+
 }

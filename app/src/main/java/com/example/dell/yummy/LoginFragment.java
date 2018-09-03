@@ -1,6 +1,8 @@
 package com.example.dell.yummy;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -113,6 +115,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             if (userResult.getLoginRole() == 1) {
                                 //User page
                                 if (mMainView != null) {
+                                    SharedPreferences sharedpreferences
+                                            = getActivity().getSharedPreferences("USERDETAILS",
+                                            Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                    editor.putString("UserName", userResult.getLoginUsername());
+                                    editor.putInt("UserPin", userResult.getLoginPin());
+                                    editor.putInt("Wallet", userResult.getUserWallet());
+                                    editor.commit();
+
                                     mMainView.addActivityInfo(Constants.SCREEN_USER_HOME,
                                             userResult.getLoginUsername(),
                                             userResult.getUserWallet(),
@@ -123,9 +134,19 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
                                 //User page NEED CORRECTION
                                 if (mMainView != null) {
+                                    SharedPreferences sharedpreferences
+                                            = getActivity().getSharedPreferences("RETAILERDETAILS",
+                                            Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                    editor.putString("UserName", userResult.getLoginUsername());
+                                    editor.putInt("UserPin", userResult.getLoginPin());
+                                    editor.putInt("Wallet", userResult.getUserWallet());
+                                    editor.commit();
                                     mMainView.addActivityInfo(Constants.SCREEN_RETAILER_HOME,
                                             userResult.getLoginUsername(),
-                                            userResult.getUserWallet(),userResult.getUserId());
+                                            userResult.getUserWallet(), userResult.getUserId());
+
+
                                 }
 
 

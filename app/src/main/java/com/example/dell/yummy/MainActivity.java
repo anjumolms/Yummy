@@ -74,7 +74,8 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
         switch (screen) {
             case Constants.SCREEN_USER_HOME:
 
-                Intent mySuperIntent = new Intent(this,UserHomeActivity.class);
+                Intent mySuperIntent = new Intent(this,
+                        UserHomeActivity.class);
                 mySuperIntent.putExtra("Key1", name);
                 mySuperIntent.putExtra("Key2", wallet);
                 mySuperIntent.putExtra("Key3",userID);

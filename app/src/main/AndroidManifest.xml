@@ -32,6 +32,19 @@
             android:name=".Retailer.RetailerHomeActivity"
             android:label="@string/title_activity_retailer_home"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <service
+            android:name=".MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
