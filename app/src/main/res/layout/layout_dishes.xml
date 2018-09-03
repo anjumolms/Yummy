@@ -13,13 +13,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
-            android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/iv_dish"
-                android:layout_width="100dp"
-                android:layout_height="100dp" />
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/food"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,6 +45,15 @@
                 android:layout_marginTop="5dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textStyle="bold" />
+            <RatingBar
+                android:id="@+id/rtbProductRating"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:numStars="5"
+                android:rating="3.5"
+                android:layout_marginLeft="5dp"
+                style="?android:attr/ratingBarStyleSmall"
+                />
 
         </LinearLayout>
         </LinearLayout>

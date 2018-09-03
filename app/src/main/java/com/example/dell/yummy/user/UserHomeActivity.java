@@ -1,5 +1,6 @@
 package com.example.dell.yummy.user;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,18 +13,23 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
+import com.example.dell.yummy.user.store.OrderSuccessfullFragment;
 import com.example.dell.yummy.webservice.DishesDetails;
 import com.example.dell.yummy.user.store.ConfirmationFragment;
 import com.example.dell.yummy.user.store.StoreDetailsFragment;
@@ -42,7 +48,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserHomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, IFragmentListener ,RatingDialogListener{
+        implements NavigationView.OnNavigationItemSelectedListener, IFragmentListener, RatingDialogListener {
 
     private UserViewPagerFragment mUserViewPagerFragment;
     private StoreDetailsFragment mStoreDetailsFragment;
@@ -50,11 +56,14 @@ public class UserHomeActivity extends AppCompatActivity
     private UserAddCoinsFragment mUserAddCoinsFragment;
     private UserWalletFragment mUserWalletFragment;
     private ConfirmationFragment mConfirmationFragment;
+    private OrderSuccessfullFragment mOrderSuccessfullFragment;
     private TextView mProfileName;
     private FrameLayout mFrameLayout;
     private List<StoreDetails> mStoreDetails;
+    DrawerLayout drawer;
     private int coins;
-    public static int userid;
+    public int userid;
+    int counter = 0;
 
     DishesDetails dishFromApi;
 
@@ -92,6 +101,10 @@ public class UserHomeActivity extends AppCompatActivity
 
         mConfirmationFragment = new ConfirmationFragment();
         mConfirmationFragment.addListener(this);
+
+        mOrderSuccessfullFragment = new OrderSuccessfullFragment();
+        mOrderSuccessfullFragment.addListener(this);
+
 
         addFragment(Constants.SCREEN_USER);
 
@@ -147,12 +160,17 @@ public class UserHomeActivity extends AppCompatActivity
                 fragmentTransaction.commit();
                 break;
 
-                case Constants.SCREEN_CONFIRMATION:
-                    fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
-                            mConfirmationFragment);
-                    fragmentTransaction.commit();
-                    break;
+            case Constants.SCREEN_CONFIRMATION:
+                fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
+                        mConfirmationFragment);
+                fragmentTransaction.commit();
+                break;
 
+            case Constants.SCREEN_ORDER_SUCCESSFULL:
+                fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
+                        mOrderSuccessfullFragment);
+                fragmentTransaction.commit();
+                break;
 
             default:
                 break;
@@ -177,45 +195,48 @@ public class UserHomeActivity extends AppCompatActivity
         if (dishesDetails != null) {
             int menuId = dishesDetails.getMenuId();
 
-
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(IApiInterface.BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                    .build();
-
-            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-            Call<DishesDetails> call = iApiInterface.getEachDishDetails(3);
+            showPopup(dishesDetails);
 
 
-            call.enqueue(new Callback<DishesDetails>() {
-                @Override
-                public void onResponse(Call<DishesDetails> call,
-                                       Response<DishesDetails> response) {
-                    if (response != null) {
-                        if (response.code() == 200) {
-                            dishFromApi = response.body();
-                        } else {
-                            Toast.makeText(getApplicationContext(),
-                                    response.code()
-                                            + response.message(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
+//            Retrofit retrofit = new Retrofit.Builder()
+//                    .baseUrl(IApiInterface.BASE_URL)
+//                    .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+//                    .build();
+//
+//            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+//            Call<DishesDetails> call = iApiInterface.getEachDishDetails(3);
+//
+//
+//            call.enqueue(new Callback<DishesDetails>() {
+//                @Override
+//                public void onResponse(Call<DishesDetails> call,
+//                                       Response<DishesDetails> response) {
+//                    if (response != null) {
+//                        if (response.code() == 200) {
+//                            dishFromApi = response.body();
+//                        } else {
+//                            Toast.makeText(getApplicationContext(),
+//                                    response.code()
+//                                            + response.message(),
+//                                    Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                    }
 
-                    }
-                    showPopup(dishFromApi);
 
-                }
-
-                @Override
-                public void onFailure(Call<DishesDetails> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "invalid", Toast.LENGTH_SHORT).show();
-
-                }
-            });
-
+//                }
+//
+//                @Override
+//                public void onFailure(Call<DishesDetails> call, Throwable t) {
+//                    Toast.makeText(getApplicationContext(), "invalid", Toast.LENGTH_SHORT).show();
+//
+//                }
+//            });
+//
+//
+//        }
 
         }
-
     }
 
     @Override
@@ -224,38 +245,80 @@ public class UserHomeActivity extends AppCompatActivity
         addFragment(Constants.SCREEN_CONFIRMATION);
     }
 
-    private void showPopup(DishesDetails dishFromApi) {
+    private void showPopup(final DishesDetails dishFromApi) {
         if (dishFromApi != null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Store Id " + dishFromApi.getRetailId());
-            builder.setMessage(dishFromApi.getItemName() + "       "
-                    + dishFromApi.getItemPrice() + " rs");
-            builder.setCancelable(false);
-            builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+            // ...Irrelevant code for customizing the buttons and title
+            final Dialog dialog = new Dialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+            dialog.setCancelable(false);
+            dialog.setContentView(R.layout.alert_popup);
+
+            TextView storeName = dialog.findViewById(R.id.popup_store_name);
+            TextView itemName = dialog.findViewById(R.id.popup_item_name);
+            TextView itemPrice = dialog.findViewById(R.id.popup_item_price);
+            final TextView itemCount = dialog.findViewById(R.id.popup_dish_item_count);
+            ImageButton addBt = dialog.findViewById(R.id.popup_im_add);
+            ImageButton removeBt = dialog.findViewById(R.id.popup_im_rem);
+
+            TextView btBuy = dialog.findViewById(R.id.popup_buy);
+            TextView btCancel = dialog.findViewById(R.id.popup_cancel);
+            storeName.setText("Store Id " + dishFromApi.getRetailId());
+            itemName.setText(dishFromApi.getItemName());
+            itemPrice.setText("₹ " + dishFromApi.getItemPrice());
+
+
+            addBt.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(getApplicationContext(),
-                            "You've choosen to buy", Toast.LENGTH_SHORT).show();
+                public void onClick(View view) {
+
+                    counter = counter + 1;
+                    dishFromApi.setCounter(counter);
+                    itemCount.setText(String.valueOf(counter));
+
+                }
+            });
+            removeBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if (counter > 0) {
+                        counter--;
+                    }
+                    dishFromApi.setCounter(counter);
+                    itemCount.setText(String.valueOf(counter));
+
+                }
+            });
+            btBuy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   counter = 0;
+                    dialog.dismiss();
                 }
             });
 
-            builder.setNegativeButton("Buy", new DialogInterface.OnClickListener() {
+            btCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    addFragment(Constants.SCREEN_PAYMENT_DETAILS);
+                public void onClick(View v) {
+                    counter = 0;
+                    dialog.dismiss();
                 }
             });
 
-            builder.show();
+            dialog.show();
+            Window window = dialog.getWindow();
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
         }
+
     }
 
 
     private void setupNavigationDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
@@ -272,9 +335,10 @@ public class UserHomeActivity extends AppCompatActivity
 
             String fName = myIntent.getStringExtra("Key1");
             coins = myIntent.getIntExtra("Key2", 0);
-            userid = myIntent.getIntExtra("Key3",0);
+            userid = myIntent.getIntExtra("Key3", 0);
 
-            mStoreDetails = (List<StoreDetails>) myIntent.getSerializableExtra("KeyStoreList");
+            mStoreDetails = (List<StoreDetails>) myIntent
+                    .getSerializableExtra("KeyStoreList");
 
             if (fName != null && !fName.isEmpty()) {
 
@@ -292,13 +356,11 @@ public class UserHomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-      else if(mUserAddCoinsFragment.isVisible()){
+        } else if (mUserAddCoinsFragment.isVisible()) {
             addFragment(Constants.SCREEN_USER);
-       }
-       else {
-           super.onBackPressed();
-       }
+        } else {
+            super.onBackPressed();
+        }
 
 
     }
@@ -370,6 +432,17 @@ public class UserHomeActivity extends AppCompatActivity
                 .create(UserHomeActivity.this)
                 .show();
     }
+
+    @Override
+    public int getUserId() {
+        return userid;
+    }
+
+    @Override
+    public String getUserName() {
+        return null;
+    }
+
     @Override
     public void onPositiveButtonClicked(int i, String s) {
 

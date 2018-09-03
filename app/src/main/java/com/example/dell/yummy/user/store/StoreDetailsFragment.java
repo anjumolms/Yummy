@@ -1,6 +1,7 @@
 package com.example.dell.yummy.user.store;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -40,6 +41,7 @@ public class StoreDetailsFragment extends Fragment {
     StoreDetails storeDetails;
     Button proceed;
     StoreDetailsAdapter adapter;
+    ProgressDialog progressDialog;
 
     public StoreDetailsFragment() {
         // Required empty public constructor
@@ -66,6 +68,9 @@ public class StoreDetailsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         storeName = view.findViewById(R.id.tv_store_name);
         proceed = view.findViewById(R.id.bt_buy);
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
 
         if (storeDetails != null) {
             storeName.setText(storeDetails.getRetailName());
@@ -79,13 +84,19 @@ public class StoreDetailsFragment extends Fragment {
                 if (miFragmentListener != null && adapter != null) {
 
                     List<DishesDetails> dishesDetails = adapter.getDishesDetailsList();
-
-                    miFragmentListener.loadConformationFragment(dishesDetails);
+                    List<DishesDetails> selectedItems = new ArrayList<>();
+                    for (DishesDetails details : dishesDetails) {
+                        if (details.getCounter() >= 1) {
+                            selectedItems.add(details);
+                        }
+                    }
+                    if (selectedItems.size() > 0) {
+                        miFragmentListener.loadConformationFragment(dishesDetails);
+                    }
                 }
 
             }
         });
-
 
 
         dishesList = new ArrayList<>();
@@ -100,6 +111,7 @@ public class StoreDetailsFragment extends Fragment {
                 .build();
 
         IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+        // TODO Hardcoded menu Id.
         Call<List<DishesDetails>> call = iApiInterface
                 .getStoreMenu(2);
         call.enqueue(new Callback<List<DishesDetails>>() {
@@ -116,9 +128,9 @@ public class StoreDetailsFragment extends Fragment {
                 }
 
                 if (dishesList != null) {
-
+                    progressDialog.dismiss();
                     // UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList,miUserViewListener);
-                     adapter = new StoreDetailsAdapter(getActivity(), dishesList);
+                    adapter = new StoreDetailsAdapter(getActivity(), dishesList);
 
                     //setting adapter to recyclerview
                     recyclerView.setAdapter(adapter);
@@ -127,6 +139,7 @@ public class StoreDetailsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<DishesDetails>> call, Throwable t) {
+                progressDialog.dismiss();
                 Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
             }
         });

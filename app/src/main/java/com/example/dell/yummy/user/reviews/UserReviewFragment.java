@@ -26,6 +26,7 @@ public class UserReviewFragment extends Fragment {
 
     RecyclerView recyclerView1;
     List<UserReview> userReviews;
+    IFragmentListener mIFragmentListener;
 
 
     public UserReviewFragment() {
@@ -57,13 +58,26 @@ public class UserReviewFragment extends Fragment {
         UserReview userReview3 = new UserReview();
         userReview3.setOrderItem("Meals");
 
+        userReview1.setStoreName("Kantharies");
+        userReview2.setStoreName("Gondola");
+        userReview3.setStoreName("Chickfila");
+        userReview4.setStoreName("thedln");
 
-        UserAddReviewAdapter adapter = new UserAddReviewAdapter(getActivity(),userReviews);
+        userReviews.add(userReview1);
+        userReviews.add(userReview2);
+        userReviews.add(userReview3);
+        userReviews.add(userReview4);
+
+
+        UserAddReviewAdapter adapter = new UserAddReviewAdapter(getActivity(),
+                userReviews, mIFragmentListener);
         recyclerView1.setAdapter(adapter);
         return view;
     }
 
 
     public void addListener(IFragmentListener miFragmentListener) {
+        this.mIFragmentListener =  miFragmentListener;
+
     }
 }

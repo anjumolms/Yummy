@@ -114,6 +114,16 @@ public class RetailerHomeActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public int getUserId() {
+        return 0;
+    }
+
+    @Override
+    public String getUserName() {
+        return null;
+    }
+
     private void setupNavigationDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

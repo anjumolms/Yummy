@@ -2,6 +2,7 @@ package com.example.dell.yummy.webservice;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -10,8 +11,8 @@ import retrofit2.http.Path;
 
 public interface IApiInterface {
 
-   //  public static final String BASE_URL = "http://192.168.43.254:8080/Yummy_Service/api/";
-    public static final String BASE_URL = "https://22a41bca-1ea1-4526-983a-6bc8491c3e2b.mock.pstmn.io/Yummy_Service/api/";
+    public static final String BASE_URL = "http://192.168.43.254:8080/Yummy_Service/api/";
+    //public static final String BASE_URL = "https://22a41bca-1ea1-4526-983a-6bc8491c3e2b.mock.pstmn.io/Yummy_Service/api/";
 
 //    @Headers("Content-Type: application/json")
 //    @Multipart
@@ -37,11 +38,11 @@ public interface IApiInterface {
     @GET("menu/getmenu/{id}")
     Call<DishesDetails> getEachDishDetails(@Path("id") int id);
 
-        @GET("order/getstoreorders/{id}")
+    @GET("order/getstoreorders/{id}")
     Call<List<TransactionDetails>> getTransactionDetails(@Path("id") int id);
 
-        @POST("")
+    @POST("order/makeorder")
+    Call<Order> getOrderDetails(@Body Order orderDetails);
 
-        Call<TransactionDetails> getOrderDetails(@Body TransactionDetails transactionDetails);
 
 }

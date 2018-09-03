@@ -37,7 +37,7 @@ public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapte
         DishesDetails dishesDetails = dishesDetailsList.get(position);
         //binding the data with the viewholder views
         holder.textViewTitle.setText(dishesDetails.getItemName());
-        holder.textViewPrice.setText(String.valueOf(dishesDetails.getItemPrice()));
+        holder.textViewPrice.setText("₹ " + dishesDetails.getItemPrice());
         holder. textViewCount.setText(String.valueOf(counter));
 
         }
