@@ -14,12 +14,8 @@
             android:title="List Item" />
         <item
             android:id="@+id/wallet"
-            android:icon="@drawable/wallet"
+            android:icon="@drawable/retailerwallet"
             android:title="Wallet" />
-        <!--<item-->
-            <!--android:id="@+id/nav_manage"-->
-            <!--android:icon="@drawable/ic_menu_manage"-->
-            <!--android:title="Tools" />-->
     </group>
 
     <item android:title="Communicate">

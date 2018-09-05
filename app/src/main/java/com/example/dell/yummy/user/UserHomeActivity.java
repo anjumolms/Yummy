@@ -38,6 +38,7 @@ import com.example.dell.yummy.webservice.StoreDetails;
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -347,7 +348,39 @@ public class UserHomeActivity extends AppCompatActivity
         }
         navigationView.setNavigationItemSelectedListener(this);
     }
+    public List<DishesDetails> getDishesDetails(){
+        List<DishesDetails> dummyStoreList = new ArrayList<>();
+        DishesDetails storeDetails1 = new DishesDetails();
+        DishesDetails storeDetails2 = new DishesDetails();
+        DishesDetails storeDetails3 = new DishesDetails();
+        DishesDetails storeDetails4 = new DishesDetails();
+        DishesDetails storeDetails5 = new DishesDetails();
 
+
+        storeDetails1.setItemName("PATHIRI");
+        storeDetails1.setItemPrice(50);
+
+        storeDetails2.setItemName("UNNIYAPPAM");
+        storeDetails2.setItemPrice(20);
+
+        storeDetails3.setItemName("LADDU");
+        storeDetails3.setItemPrice(25);
+
+        storeDetails4.setItemName("JILLEBI");
+        storeDetails4.setItemPrice(10);
+
+        storeDetails5.setItemName("PAYASAM");
+        storeDetails5.setItemPrice(30);
+
+
+
+        dummyStoreList.add(storeDetails1);
+        dummyStoreList.add(storeDetails2);
+        dummyStoreList.add(storeDetails3);
+        dummyStoreList.add(storeDetails4);
+        dummyStoreList.add(storeDetails5);
+        return dummyStoreList;
+    }
 
     @Override
     public void onBackPressed() {
@@ -356,7 +389,10 @@ public class UserHomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (mUserAddCoinsFragment.isVisible()) {
+        } else if (mUserAddCoinsFragment.isVisible()
+                || mUserWalletFragment.isVisible()
+                || mConfirmationFragment.isVisible()
+                || mStoreDetailsFragment.isVisible()) {
             addFragment(Constants.SCREEN_USER);
         } else {
             super.onBackPressed();

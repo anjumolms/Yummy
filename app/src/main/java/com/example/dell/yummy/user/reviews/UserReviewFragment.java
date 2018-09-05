@@ -43,7 +43,7 @@ public class UserReviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_review,
-         container, false);
+                container, false);
 
         recyclerView1 = view.findViewById(R.id.rv_addreview);
         recyclerView1.setHasFixedSize(true);
@@ -58,15 +58,36 @@ public class UserReviewFragment extends Fragment {
         UserReview userReview3 = new UserReview();
         userReview3.setOrderItem("Meals");
 
+        UserReview userReview5 = new UserReview();
+        userReview5.setOrderItem("Biriyani");
+        UserReview userReview6 = new UserReview();
+        userReview6.setOrderItem("Chappathi");
+        UserReview userReview7 = new UserReview();
+        userReview7.setOrderItem("Tea");
+        UserReview userReview8 = new UserReview();
+        userReview8.setOrderItem("Coffee");
+        UserReview userReview9 = new UserReview();
+        userReview9.setOrderItem("Meals");
+
         userReview1.setStoreName("Kantharies");
         userReview2.setStoreName("Gondola");
         userReview3.setStoreName("Chickfila");
         userReview4.setStoreName("thedln");
+        userReview5.setStoreName("Le Arabia");
+        userReview6.setStoreName("Ajwa");
+        userReview7.setStoreName("Saravana");
+        userReview8.setStoreName("Arayas");
+        userReview9.setStoreName("thedln");
 
         userReviews.add(userReview1);
         userReviews.add(userReview2);
         userReviews.add(userReview3);
         userReviews.add(userReview4);
+        userReviews.add(userReview5);
+        userReviews.add(userReview6);
+        userReviews.add(userReview7);
+        userReviews.add(userReview8);
+        userReviews.add(userReview9);
 
 
         UserAddReviewAdapter adapter = new UserAddReviewAdapter(getActivity(),
@@ -77,7 +98,7 @@ public class UserReviewFragment extends Fragment {
 
 
     public void addListener(IFragmentListener miFragmentListener) {
-        this.mIFragmentListener =  miFragmentListener;
+        this.mIFragmentListener = miFragmentListener;
 
     }
 }

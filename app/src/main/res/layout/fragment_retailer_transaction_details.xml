@@ -29,7 +29,8 @@
         android:text="Transaction Details"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:gravity="center"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_transaction_details"

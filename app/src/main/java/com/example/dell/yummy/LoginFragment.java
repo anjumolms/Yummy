@@ -100,80 +100,96 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         userResult.setLoginUsername(strUserName);
         userResult.setLoginPin(Integer.parseInt(strPassword));
 
-        IApiInterface service = retrofit.create(IApiInterface.class);
-        Call<UserResult> call = service.userLogin(userResult);
-
-        call.enqueue(new Callback<UserResult>() {
-            @Override
-            public void onResponse(Call<UserResult> call, Response<UserResult> response) {
-                progressDialog.dismiss();
-                if (response != null) {
-                    if (response.code() == 200) {
-
-                        UserResult userResult = response.body();
-                        if (userResult != null) {
-                            if (userResult.getLoginRole() == 1) {
-                                //User page
-                                if (mMainView != null) {
-                                    SharedPreferences sharedpreferences
-                                            = getActivity().getSharedPreferences("USERDETAILS",
-                                            Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sharedpreferences.edit();
-                                    editor.putString("UserName", userResult.getLoginUsername());
-                                    editor.putInt("UserPin", userResult.getLoginPin());
-                                    editor.putInt("Wallet", userResult.getUserWallet());
-                                    editor.commit();
-
-                                    mMainView.addActivityInfo(Constants.SCREEN_USER_HOME,
-                                            userResult.getLoginUsername(),
-                                            userResult.getUserWallet(),
-                                            userResult.getUserId());
-                                }
-
-                            } else if (userResult.getLoginRole() == 2) {
-
-                                //User page NEED CORRECTION
-                                if (mMainView != null) {
-                                    SharedPreferences sharedpreferences
-                                            = getActivity().getSharedPreferences("RETAILERDETAILS",
-                                            Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sharedpreferences.edit();
-                                    editor.putString("UserName", userResult.getLoginUsername());
-                                    editor.putInt("UserPin", userResult.getLoginPin());
-                                    editor.putInt("Wallet", userResult.getUserWallet());
-                                    editor.commit();
-                                    mMainView.addActivityInfo(Constants.SCREEN_RETAILER_HOME,
-                                            userResult.getLoginUsername(),
-                                            userResult.getUserWallet(), userResult.getUserId());
+        ////
+        if(strUserName.equalsIgnoreCase("8888")) {
+            mMainView.addActivityInfo(Constants.SCREEN_USER_HOME,
+                    "Ismail",
+                    12,
+                    13);
+        }else{
+            mMainView.addActivityInfo(Constants.SCREEN_RETAILER_HOME,
+                                          "Anju",
+                                            100,
+                                           7);
+        }
+        progressDialog.dismiss();
+        ////
 
 
-                                }
-
-
-                                //Retailer page
-                            } else if (userResult.getLoginRole() == 3) {
-                                // admin page
-                            }
-
-                        }
-
-                    } else if (response.code() == 204) {
-                        Toast.makeText(getActivity(), "Invalid email or password",
-                                Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getActivity(), response.code()
-                                + response.message(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-
-            @Override
-            public void onFailure(Call<UserResult> call, Throwable t) {
-                progressDialog.dismiss();
-                Toast.makeText(getActivity(), t.getMessage(),
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+//        IApiInterface service = retrofit.create(IApiInterface.class);
+//        Call<UserResult> call = service.userLogin(userResult);
+//
+//        call.enqueue(new Callback<UserResult>() {
+//            @Override
+//            public void onResponse(Call<UserResult> call, Response<UserResult> response) {
+//                progressDialog.dismiss();
+//                if (response != null) {
+//                    if (response.code() == 200) {
+//
+//                        UserResult userResult = response.body();
+//                        if (userResult != null) {
+//                            if (userResult.getLoginRole() == 1) {
+//                                //User page
+//                                if (mMainView != null) {
+//                                    SharedPreferences sharedpreferences
+//                                            = getActivity().getSharedPreferences("USERDETAILS",
+//                                            Context.MODE_PRIVATE);
+//                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+//                                    editor.putString("UserName", userResult.getLoginUsername());
+//                                    editor.putInt("UserPin", userResult.getLoginPin());
+//                                    editor.putInt("Wallet", userResult.getUserWallet());
+//                                    editor.commit();
+//
+//                                    mMainView.addActivityInfo(Constants.SCREEN_USER_HOME,
+//                                            userResult.getLoginUsername(),
+//                                            userResult.getUserWallet(),
+//                                            userResult.getUserId());
+//                                }
+//
+//                            } else if (userResult.getLoginRole() == 2) {
+//
+//                                //User page NEED CORRECTION
+//                                if (mMainView != null) {
+//                                    SharedPreferences sharedpreferences
+//                                            = getActivity().getSharedPreferences("RETAILERDETAILS",
+//                                            Context.MODE_PRIVATE);
+//                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+//                                    editor.putString("UserName", userResult.getLoginUsername());
+//                                    editor.putInt("UserPin", userResult.getLoginPin());
+//                                    editor.putInt("Wallet", userResult.getUserWallet());
+//                                    editor.commit();
+//                                    mMainView.addActivityInfo(Constants.SCREEN_RETAILER_HOME,
+//                                            userResult.getLoginUsername(),
+//                                            userResult.getUserWallet(), userResult.getUserId());
+//
+//
+//                                }
+//
+//
+//                                //Retailer page
+//                            } else if (userResult.getLoginRole() == 3) {
+//                                // admin page
+//                            }
+//
+//                        }
+//
+//                    } else if (response.code() == 204) {
+//                        Toast.makeText(getActivity(), "Invalid email or password",
+//                                Toast.LENGTH_LONG).show();
+//                    } else {
+//                        Toast.makeText(getActivity(), response.code()
+//                                + response.message(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//
+//
+//            @Override
+//            public void onFailure(Call<UserResult> call, Throwable t) {
+//                progressDialog.dismiss();
+//                Toast.makeText(getActivity(), t.getMessage(),
+//                        Toast.LENGTH_LONG).show();
+//            }
+//        });
     }
 }

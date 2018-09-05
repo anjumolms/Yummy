@@ -124,6 +124,11 @@ public class RetailerHomeActivity extends AppCompatActivity
         return null;
     }
 
+    @Override
+    public List<DishesDetails> getDishesDetails() {
+        return null;
+    }
+
     private void setupNavigationDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -132,10 +137,12 @@ public class RetailerHomeActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
+
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
     }
 
     @Override
@@ -143,6 +150,11 @@ public class RetailerHomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (mretailerWalletFragment.isVisible()
+                || mretailerListItemFragment.isVisible()
+                || mretailerAddItemFragment.isVisible()
+                || meachTransactionFragment.isVisible()) {
+            addFragment(Constants.SCREEN_RETAILER_TRANSACTION_DETAILS);
         } else {
             super.onBackPressed();
         }

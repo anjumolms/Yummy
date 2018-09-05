@@ -69,11 +69,13 @@ public class UserViewPagerFragment extends Fragment {
 
     }
     private void addTabs(ViewPager viewPager) {
-        FragmentUserPagerAdapter adapter = new FragmentUserPagerAdapter(getActivity().getSupportFragmentManager());
+        FragmentUserPagerAdapter adapter = new FragmentUserPagerAdapter(getActivity()
+                .getSupportFragmentManager());
         adapter.addFrag(mUserStoresFragment , "Stores");
         adapter.addFrag(mUserDishesFragment, "Dishes");
         adapter.addFrag(mUserReviewFragment, "Review");
         viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(0);
     }
 
     public void addListener(IFragmentListener iFragmentListener) {

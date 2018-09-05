@@ -11,8 +11,10 @@ import retrofit2.http.Path;
 
 public interface IApiInterface {
 
-    public static final String BASE_URL = "http://192.168.43.254:8080/Yummy_Service/api/";
-    //public static final String BASE_URL = "https://22a41bca-1ea1-4526-983a-6bc8491c3e2b.mock.pstmn.io/Yummy_Service/api/";
+    //public static final String BASE_URL = "http://192.168.43.254:8080/Yummy_Service/api/";
+    public static final String BASE_URL
+            ="https://fc6b9080-76cb-41df-b8ff-bb3f0f1dca27.mock.pstmn.io/Yummy_Service/api/";
+
 
 //    @Headers("Content-Type: application/json")
 //    @Multipart

@@ -15,6 +15,8 @@ import com.example.dell.yummy.webservice.StoreDetails;
 import java.io.Serializable;
 import java.util.List;
 
+import static com.example.dell.yummy.Constants.SCREEN_LOGIN;
+
 public class MainActivity extends AppCompatActivity implements IMainViewListener {
     private LoginFragment mLoginFragment;
     private RegistrationFragment mRegistrationFragment;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
         mRegistrationFragment.addListener(this);
 
 
-        addFragment(Constants.SCREEN_LOGIN);
+        addFragment(SCREEN_LOGIN);
     }
 
     @Override
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         switch (screenId) {
-            case Constants.SCREEN_LOGIN:
+            case SCREEN_LOGIN:
                 fragmentTransaction.replace(R.id.fl_main_fragment_container, mLoginFragment);
                 fragmentTransaction.commit();
                 break;
@@ -100,7 +102,9 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        onDestroy();
+        if(mRegistrationFragment.isVisible()){
+            addFragment(SCREEN_LOGIN);
+        }
     }
 }
 

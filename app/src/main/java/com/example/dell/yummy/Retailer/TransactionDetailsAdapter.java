@@ -16,7 +16,8 @@ import com.example.dell.yummy.webservice.TransactionDetails;
 
 import java.util.List;
 
-class TransactionDetailsAdapter extends RecyclerView.Adapter<TransactionDetailsAdapter.TransactionViewHolder>
+class TransactionDetailsAdapter extends
+        RecyclerView.Adapter<TransactionDetailsAdapter.TransactionViewHolder>
 
 {
 
@@ -25,7 +26,9 @@ class TransactionDetailsAdapter extends RecyclerView.Adapter<TransactionDetailsA
     private TransactionDetails transactionDetails;
     IFragmentListener iFragmentListener;
 
-    public TransactionDetailsAdapter(Context mCtx, List<TransactionDetails> transactionDetailsList,IFragmentListener iFragmentListener) {
+    public TransactionDetailsAdapter(Context mCtx,
+                                     List<TransactionDetails> transactionDetailsList,
+                                     IFragmentListener iFragmentListener) {
         this.mCtx = mCtx;
         this.transactionDetailsList = transactionDetailsList;
         this.iFragmentListener = iFragmentListener;
@@ -36,7 +39,8 @@ class TransactionDetailsAdapter extends RecyclerView.Adapter<TransactionDetailsA
     public TransactionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.layout_transaction_details, null);
+        View view = inflater.inflate(R.layout.layout_transaction_details, parent,
+                false);
         return new TransactionViewHolder(view);
     }
 
@@ -47,10 +51,10 @@ class TransactionDetailsAdapter extends RecyclerView.Adapter<TransactionDetailsA
         transactionDetails = transactionDetailsList.get(position);
 
         //binding the data with the viewholder views
-        holder.textViewUserId.setText("User Id "+transactionDetails.getUserId());
-        holder.textViewTransactionId.setText("Transaction Id "+transactionDetails.getWalletTranId());
-        holder.textViewAmount.setText("Amount "+transactionDetails.getOrderValue());
-        holder.textViewTransactionStatus.setText("Status "+transactionDetails.getOrderStatus());
+        holder.textViewUserId.setText(""+transactionDetails.getUserId());
+        holder.textViewTransactionId.setText(""+transactionDetails.getWalletTranId());
+        holder.textViewAmount.setText(""+transactionDetails.getOrderValue());
+        holder.textViewTransactionStatus.setText(transactionDetails.getOrderStatus());
     }
 
     @Override
@@ -61,7 +65,8 @@ class TransactionDetailsAdapter extends RecyclerView.Adapter<TransactionDetailsA
 
     class TransactionViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewUserId, textViewTransactionId, textViewAmount, textViewTransactionStatus;
+        TextView textViewUserId, textViewTransactionId, textViewAmount,
+                textViewTransactionStatus;
         CardView cardView;
         public TransactionViewHolder(View itemView) {
             super(itemView);

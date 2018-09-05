@@ -13,5 +13,6 @@ public interface IFragmentListener {
     void showDialog();
     int getUserId();
     String getUserName();
+    List<DishesDetails> getDishesDetails();
 
 }
