@@ -13,8 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.dell.yummy.webservice.IApiInterface;
-import com.example.dell.yummy.webservice.RegistrationResult;
-import com.example.dell.yummy.webservice.UserResult;
+import com.example.dell.yummy.model.RegistrationResult;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,24 +33,26 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     private EditText mPassword;
     private EditText mConfirmPassword;
     private EditText mMobile;
-
     private Button mlogin;
+    private ProgressDialog mProgressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
+        initViews(view);
+        mlogin.setOnClickListener(this);
+        return view;
+    }
 
+    private void initViews(View view) {
         mUserName = view.findViewById(R.id.register_username);
         mUId = view.findViewById(R.id.register_uid);
         mPassword = view.findViewById(R.id.register_password);
         mConfirmPassword = view.findViewById(R.id.confirm_password);
         mMobile = view.findViewById(R.id.register_mobile);
         mlogin = view.findViewById(R.id.register_login);
-
-        mlogin.setOnClickListener(this);
-        return view;
     }
 
 
@@ -65,100 +66,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
 
         switch (v.getId()) {
             case R.id.register_login:
-
-                String strUserName = mUserName.getText().toString().trim();
-                String strEmail = mUId.getText().toString().trim();
-                String strPassword = mPassword.getText().toString().trim();
-                String strConfirmPassword = mConfirmPassword.getText().toString().trim();
-                String strMobile = mMobile.getText().toString().trim();
-
-                if (TextUtils.isEmpty(strUserName)) {
-                    mUserName.setError("This field cannot be empty");
-                    return;
-                }
-
-                if (TextUtils.isEmpty(strEmail)) {
-                    mUId.setError("This field cannot be empty");
-                    return;
-                }
-                if (TextUtils.isEmpty(strPassword)) {
-                    mPassword.setError("This field cannot be empty");
-                    return;
-                }
-
-                if (TextUtils.isEmpty(strConfirmPassword)) {
-                    mConfirmPassword.setError("This field cannot be empty");
-                    return;
-                }
-                if (TextUtils.isEmpty(strMobile)) {
-                    mMobile.setError("This field cannot be empty");
-                    return;
-                }
-
-                if (!strPassword.equals(strConfirmPassword)) {
-                    mPassword.setError("Password does not match");
-                    return;
-
-                }
-
-                final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-                progressDialog.setMessage("Loading...");
-                progressDialog.show();
-
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(IApiInterface.BASE_URL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-
-                RegistrationResult registrationResult = new RegistrationResult();
-
-                registrationResult.setLoginPin(Integer.parseInt(strPassword));
-                registrationResult.setUserPhone(strMobile);
-                registrationResult.setUserEmail(strEmail);
-                registrationResult.setLoginUsername(strMobile);
-                registrationResult.setUserName(strUserName);
-
-
-                IApiInterface service = retrofit.create(IApiInterface.class);
-                Call<RegistrationResult> call = service.register(registrationResult);
-
-
-                call.enqueue(new Callback<RegistrationResult>() {
-                    @Override
-                    public void onResponse(Call<RegistrationResult> call,
-                                           Response<RegistrationResult> response) {
-
-                        progressDialog.dismiss();
-                        if (response != null) {
-                            if (response.code() == 200) {
-
-                                RegistrationResult registrationResult = response.body();
-
-                                if (registrationResult != null) {
-
-                                    if (mainView != null) {
-                                        mainView.addFragment(Constants.SCREEN_LOGIN);
-                                    }
-
-
-                                }
-                            }
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<RegistrationResult> call, Throwable t) {
-
-                        progressDialog.dismiss();
-                        Toast.makeText(getActivity(), t.getMessage(),
-                                Toast.LENGTH_LONG).show();
-
-                    }
-                });
-
-
+                getValuesFromFields();
                 break;
 
             default:
@@ -166,5 +74,88 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         }
     }
 
+    private void getValuesFromFields() {
+
+        String strUserName = mUserName.getText().toString().trim();
+        String strEmail = mUId.getText().toString().trim();
+        String strPassword = mPassword.getText().toString().trim();
+        String strConfirmPassword = mConfirmPassword.getText().toString().trim();
+        String strMobile = mMobile.getText().toString().trim();
+
+
+        if (TextUtils.isEmpty(strUserName)) {
+            mUserName.setError(Constants.FIELD_EMPTY_WARNING);
+            return;
+        }
+
+        if (TextUtils.isEmpty(strEmail)) {
+            mUId.setError(Constants.FIELD_EMPTY_WARNING);
+            return;
+        }
+        if (TextUtils.isEmpty(strPassword)) {
+            mPassword.setError(Constants.FIELD_EMPTY_WARNING);
+            return;
+        }
+
+        if (TextUtils.isEmpty(strConfirmPassword)) {
+            mConfirmPassword.setError(Constants.FIELD_EMPTY_WARNING);
+            return;
+        }
+        if (TextUtils.isEmpty(strMobile)) {
+            mMobile.setError(Constants.FIELD_EMPTY_WARNING);
+            return;
+        }
+
+        if (!strPassword.equals(strConfirmPassword)) {
+            mPassword.setError(Constants.FIELD_PASSWORD_INCORRECT);
+            return;
+
+        }
+
+        RegistrationResult registrationResult = new RegistrationResult();
+        registrationResult.setLoginPin(Integer.parseInt(strPassword));
+        registrationResult.setUserPhone(strMobile);
+        registrationResult.setUserEmail(strEmail);
+        registrationResult.setLoginUsername(strMobile);
+        registrationResult.setUserName(strUserName);
+        showProgress();
+        registerUser(registrationResult);
+    }
+
+    private void registerUser(RegistrationResult registrationResult) {
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            IApiInterface service = retrofit.create(IApiInterface.class);
+            Call<RegistrationResult> call = service.register(registrationResult);
+            call.enqueue(new Callback<RegistrationResult>() {
+                @Override
+                public void onResponse(Call<RegistrationResult> call,
+                                       Response<RegistrationResult> response) {
+                    mProgressDialog.dismiss();
+                    if (response != null && response.code() == 200) {
+
+                        RegistrationResult registrationResult = response.body();
+                        if (registrationResult != null && mainView != null) {
+                            mainView.addFragment(Constants.SCREEN_LOGIN);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<RegistrationResult> call, Throwable t) {
+                    mProgressDialog.dismiss();
+                    Toast.makeText(getActivity(),
+                            t.getMessage(), Toast.LENGTH_LONG).show();
+
+                }
+            });
+        }
+    }
+
+    private void showProgress() {
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setMessage("Loading...");
+        mProgressDialog.show();
+    }
 }
 

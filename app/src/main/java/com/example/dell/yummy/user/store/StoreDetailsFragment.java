@@ -14,11 +14,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dell.yummy.DataSingleton;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.IFragmentListener;
-import com.example.dell.yummy.webservice.DishesDetails;
+import com.example.dell.yummy.model.DishesDetails;
 import com.example.dell.yummy.webservice.IApiInterface;
-import com.example.dell.yummy.webservice.StoreDetails;
+import com.example.dell.yummy.model.StoreDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,21 +28,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StoreDetailsFragment extends Fragment {
+public class StoreDetailsFragment extends Fragment implements View.OnClickListener {
 
-    List<DishesDetails> dishesList;
-    RecyclerView recyclerView;
-    IFragmentListener miFragmentListener;
-    TextView storeName;
-    StoreDetails storeDetails;
-    Button proceed;
-    StoreDetailsAdapter adapter;
-    ProgressDialog progressDialog;
+    private List<DishesDetails> dishesList;
+    private RecyclerView mRecyclerView;
+    private IFragmentListener miFragmentListener;
+    private TextView mStoreName;
+    private StoreDetails mStoreDetails;
+    private Button mProceed;
+    private StoreDetailsAdapter adapter;
+    private ProgressDialog mProgressDialog;
 
     public StoreDetailsFragment() {
         // Required empty public constructor
@@ -52,10 +52,8 @@ public class StoreDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            storeDetails = (StoreDetails) bundle.getSerializable("key");
+            mStoreDetails = (StoreDetails) bundle.getSerializable("key");
         }
-
-
     }
 
     @Override
@@ -63,24 +61,72 @@ public class StoreDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_store_details, container, false);
-        recyclerView = view.findViewById(R.id.rv_storedetails);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        storeName = view.findViewById(R.id.tv_store_name);
-        proceed = view.findViewById(R.id.bt_buy);
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
+        initViews(view);
+        mProceed.setOnClickListener(this);
+        dishesList = new ArrayList<>();
+        getStoreDishes();
+        return view;
+    }
 
-        if (storeDetails != null) {
-            storeName.setText(storeDetails.getRetailName());
+    private void initViews(View view) {
+        mRecyclerView = view.findViewById(R.id.rv_storedetails);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mStoreName = view.findViewById(R.id.tv_store_name);
+        mProceed = view.findViewById(R.id.bt_buy);
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setMessage("Loading...");
+        mProgressDialog.show();
+
+        if (mStoreDetails != null) {
+            mStoreName.setText(mStoreDetails.getRetailName());
         }
+    }
 
-        proceed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    private void getStoreDishes() {
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+            // TODO Hardcoded menu Id.
+            Call<List<DishesDetails>> call = iApiInterface
+                    .getStoreMenu(2);
+            call.enqueue(new Callback<List<DishesDetails>>() {
+                @Override
+                public void onResponse(Call<List<DishesDetails>> call,
+                                       Response<List<DishesDetails>> response) {
+                    if (response != null && response.code() == 200) {
 
+                        dishesList = response.body();
 
+                    } else {
+                        Toast.makeText(getActivity(), response.code()
+                                + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                    if (dishesList != null) {
+                        mProgressDialog.dismiss();
+                        adapter = new StoreDetailsAdapter(getActivity(), dishesList);
+                        mRecyclerView.setAdapter(adapter);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<DishesDetails>> call, Throwable t) {
+                    mProgressDialog.dismiss();
+                    Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    public void addListener(IFragmentListener mIFragmentListener) {
+        miFragmentListener = mIFragmentListener;
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bt_buy:
                 if (miFragmentListener != null && adapter != null) {
 
                     List<DishesDetails> dishesDetails = adapter.getDishesDetailsList();
@@ -94,59 +140,9 @@ public class StoreDetailsFragment extends Fragment {
                         miFragmentListener.loadConformationFragment(dishesDetails);
                     }
                 }
-
-            }
-        });
-
-
-        dishesList = new ArrayList<>();
-        addListItems();
-        return view;
-    }
-
-    private void addListItems() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(IApiInterface.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                .build();
-
-        IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-        // TODO Hardcoded menu Id.
-        Call<List<DishesDetails>> call = iApiInterface
-                .getStoreMenu(2);
-        call.enqueue(new Callback<List<DishesDetails>>() {
-            @Override
-            public void onResponse(Call<List<DishesDetails>> call, Response<List<DishesDetails>> response) {
-                if (response != null) {
-                    if (response.code() == 200) {
-                        dishesList = response.body();
-                    } else {
-                        Toast.makeText(getActivity(), response.code()
-                                + response.message(), Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-
-                if (dishesList != null) {
-                    progressDialog.dismiss();
-                    // UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList,miUserViewListener);
-                    adapter = new StoreDetailsAdapter(getActivity(), dishesList);
-
-                    //setting adapter to recyclerview
-                    recyclerView.setAdapter(adapter);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<DishesDetails>> call, Throwable t) {
-                progressDialog.dismiss();
-                Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void addListener(IFragmentListener mIFragmentListener) {
-        miFragmentListener = mIFragmentListener;
-
+                break;
+            default:
+                break;
+        }
     }
 }

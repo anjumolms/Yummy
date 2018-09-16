@@ -1,4 +1,4 @@
-package com.example.dell.yummy.user.reviews;
+package com.example.dell.yummy.model;
 
 
 import com.google.gson.annotations.Expose;

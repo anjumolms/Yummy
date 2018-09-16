@@ -1,4 +1,4 @@
-package com.example.dell.yummy;
+package com.example.dell.yummy.fcmservice;
 
 import android.app.Service;
 

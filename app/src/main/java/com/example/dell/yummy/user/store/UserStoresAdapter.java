@@ -13,11 +13,12 @@ import android.widget.Toast;
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.IFragmentListener;
-import com.example.dell.yummy.webservice.StoreDetails;
+import com.example.dell.yummy.model.StoreDetails;
 
 import java.util.List;
 
-public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.StoreViewHolder> {
+public class UserStoresAdapter extends
+        RecyclerView.Adapter<UserStoresAdapter.StoreViewHolder> {
 
     private Context mCtx;
 
@@ -25,7 +26,8 @@ public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.St
 
     IFragmentListener miFragmentListener;
 
-    public UserStoresAdapter(Context mCtx, List<StoreDetails> productList, IFragmentListener miFragmentListener) {
+    public UserStoresAdapter(Context mCtx, List<StoreDetails> productList,
+                             IFragmentListener miFragmentListener) {
         this.mCtx = mCtx;
         this.storeList = productList;
         this.miFragmentListener = miFragmentListener;
@@ -43,7 +45,6 @@ public class UserStoresAdapter extends RecyclerView.Adapter<UserStoresAdapter.St
     public void onBindViewHolder(StoreViewHolder holder, int position) {
         //getting the product of the specified position
         StoreDetails storeDetails = storeList.get(position);
-
         //binding the data with the viewholder views
         holder.textViewStoreName.setText(storeDetails.getRetailName());
         holder.textViewStoreId.setText("Store ID  "+storeDetails.getRetailNumber());

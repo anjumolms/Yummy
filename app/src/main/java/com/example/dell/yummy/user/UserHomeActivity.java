@@ -1,7 +1,6 @@
 package com.example.dell.yummy.user;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -10,46 +9,38 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.dell.yummy.Constants;
+import com.example.dell.yummy.DataSingleton;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.user.store.OrderSuccessfullFragment;
-import com.example.dell.yummy.webservice.DishesDetails;
+import com.example.dell.yummy.model.DishesDetails;
 import com.example.dell.yummy.user.store.ConfirmationFragment;
 import com.example.dell.yummy.user.store.StoreDetailsFragment;
-import com.example.dell.yummy.webservice.IApiInterface;
-import com.example.dell.yummy.webservice.StoreDetails;
+import com.example.dell.yummy.model.StoreDetails;
+import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
+import com.victor.loading.rotate.RotateLoading;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class UserHomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, IFragmentListener, RatingDialogListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        IFragmentListener, RatingDialogListener {
 
     private UserViewPagerFragment mUserViewPagerFragment;
     private StoreDetailsFragment mStoreDetailsFragment;
@@ -58,14 +49,10 @@ public class UserHomeActivity extends AppCompatActivity
     private UserWalletFragment mUserWalletFragment;
     private ConfirmationFragment mConfirmationFragment;
     private OrderSuccessfullFragment mOrderSuccessfullFragment;
-    private TextView mProfileName;
     private FrameLayout mFrameLayout;
-    private List<StoreDetails> mStoreDetails;
+    private TextView mProfileName;
     DrawerLayout drawer;
-    private int coins;
-    public int userid;
     int counter = 0;
-
     DishesDetails dishFromApi;
 
 
@@ -73,20 +60,29 @@ public class UserHomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_home);
-        if (android.os.Build.VERSION.SDK_INT >= 21) {
-            Window window = this.getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(this.getResources().getColor(R.color.tab_color));
-        }
         mFrameLayout = findViewById(R.id.fl_userhome_fragment_container);
-
+        setTabColor();
         setupNavigationDrawer();
+        initFragments();
+        addFragment(Constants.SCREEN_USER);
+        LoadDetails();
 
+    }
 
+    private void LoadDetails() {
+        RetrofitNetworksCalls retrofitNetworksCalls
+                = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
+        if (retrofitNetworksCalls != null) {
+
+            retrofitNetworksCalls.getStoreDetails(getApplicationContext());
+            retrofitNetworksCalls.getDishDetails(getApplicationContext());
+
+        }
+    }
+
+    private void initFragments() {
         mUserViewPagerFragment = new UserViewPagerFragment();
         mUserViewPagerFragment.addListener(this);
-        mUserViewPagerFragment.setStoreDetails(mStoreDetails);
 
         mStoreDetailsFragment = new StoreDetailsFragment();
         mStoreDetailsFragment.addListener(this);
@@ -105,16 +101,20 @@ public class UserHomeActivity extends AppCompatActivity
 
         mOrderSuccessfullFragment = new OrderSuccessfullFragment();
         mOrderSuccessfullFragment.addListener(this);
+    }
 
-
-        addFragment(Constants.SCREEN_USER);
-
+    private void setTabColor() {
+        if (android.os.Build.VERSION.SDK_INT >= 21) {
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(this.getResources().getColor(R.color.tab_color));
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mUserViewPagerFragment.setStoreDetails(mStoreDetails);
     }
 
     @Override
@@ -151,10 +151,6 @@ public class UserHomeActivity extends AppCompatActivity
                 break;
 
             case Constants.SCREEN_USER_WALLET:
-
-                Bundle bundle = new Bundle();
-                bundle.putInt("Key2", coins);
-                mUserWalletFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
                         mUserWalletFragment);
 
@@ -186,7 +182,6 @@ public class UserHomeActivity extends AppCompatActivity
         Bundle bundle = new Bundle();
         bundle.putSerializable("key", storeDetails);
         mStoreDetailsFragment.setArguments(bundle);
-
         addFragment(Constants.SCREEN_STORE_DETAILS);
 
     }
@@ -194,49 +189,7 @@ public class UserHomeActivity extends AppCompatActivity
     @Override
     public void addPopup(DishesDetails dishesDetails) {
         if (dishesDetails != null) {
-            int menuId = dishesDetails.getMenuId();
-
             showPopup(dishesDetails);
-
-
-//            Retrofit retrofit = new Retrofit.Builder()
-//                    .baseUrl(IApiInterface.BASE_URL)
-//                    .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-//                    .build();
-//
-//            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-//            Call<DishesDetails> call = iApiInterface.getEachDishDetails(3);
-//
-//
-//            call.enqueue(new Callback<DishesDetails>() {
-//                @Override
-//                public void onResponse(Call<DishesDetails> call,
-//                                       Response<DishesDetails> response) {
-//                    if (response != null) {
-//                        if (response.code() == 200) {
-//                            dishFromApi = response.body();
-//                        } else {
-//                            Toast.makeText(getApplicationContext(),
-//                                    response.code()
-//                                            + response.message(),
-//                                    Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                    }
-
-
-//                }
-//
-//                @Override
-//                public void onFailure(Call<DishesDetails> call, Throwable t) {
-//                    Toast.makeText(getApplicationContext(), "invalid", Toast.LENGTH_SHORT).show();
-//
-//                }
-//            });
-//
-//
-//        }
-
         }
     }
 
@@ -294,7 +247,7 @@ public class UserHomeActivity extends AppCompatActivity
             btBuy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   counter = 0;
+                    counter = 0;
                     dialog.dismiss();
                 }
             });
@@ -309,12 +262,12 @@ public class UserHomeActivity extends AppCompatActivity
 
             dialog.show();
             Window window = dialog.getWindow();
-            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT);
 
         }
 
     }
-
 
     private void setupNavigationDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -330,56 +283,7 @@ public class UserHomeActivity extends AppCompatActivity
         View hView = navigationView.getHeaderView(0);
         navigationView.setItemIconTintList(null);
         mProfileName = hView.findViewById(R.id.tv_profilename);
-        Intent myIntent = getIntent();
-
-        if (myIntent != null) {
-
-            String fName = myIntent.getStringExtra("Key1");
-            coins = myIntent.getIntExtra("Key2", 0);
-            userid = myIntent.getIntExtra("Key3", 0);
-
-            mStoreDetails = (List<StoreDetails>) myIntent
-                    .getSerializableExtra("KeyStoreList");
-
-            if (fName != null && !fName.isEmpty()) {
-
-                //mProfileName.setText(fName);
-            }
-        }
         navigationView.setNavigationItemSelectedListener(this);
-    }
-    public List<DishesDetails> getDishesDetails(){
-        List<DishesDetails> dummyStoreList = new ArrayList<>();
-        DishesDetails storeDetails1 = new DishesDetails();
-        DishesDetails storeDetails2 = new DishesDetails();
-        DishesDetails storeDetails3 = new DishesDetails();
-        DishesDetails storeDetails4 = new DishesDetails();
-        DishesDetails storeDetails5 = new DishesDetails();
-
-
-        storeDetails1.setItemName("PATHIRI");
-        storeDetails1.setItemPrice(50);
-
-        storeDetails2.setItemName("UNNIYAPPAM");
-        storeDetails2.setItemPrice(20);
-
-        storeDetails3.setItemName("LADDU");
-        storeDetails3.setItemPrice(25);
-
-        storeDetails4.setItemName("JILLEBI");
-        storeDetails4.setItemPrice(10);
-
-        storeDetails5.setItemName("PAYASAM");
-        storeDetails5.setItemPrice(30);
-
-
-
-        dummyStoreList.add(storeDetails1);
-        dummyStoreList.add(storeDetails2);
-        dummyStoreList.add(storeDetails3);
-        dummyStoreList.add(storeDetails4);
-        dummyStoreList.add(storeDetails5);
-        return dummyStoreList;
     }
 
     @Override
@@ -470,23 +374,11 @@ public class UserHomeActivity extends AppCompatActivity
     }
 
     @Override
-    public int getUserId() {
-        return userid;
-    }
-
-    @Override
-    public String getUserName() {
-        return null;
-    }
-
-    @Override
     public void onPositiveButtonClicked(int i, String s) {
-
     }
 
     @Override
     public void onNegativeButtonClicked() {
-
     }
 
     @Override

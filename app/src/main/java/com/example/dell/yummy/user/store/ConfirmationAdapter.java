@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.webservice.DishesDetails;
+import com.example.dell.yummy.model.DishesDetails;
 
 import java.util.List;
 
@@ -59,7 +59,6 @@ public class ConfirmationAdapter extends RecyclerView.Adapter<ConfirmationAdapte
 
             textViewTitle = itemView.findViewById(R.id.textView6);
             textViewPrice = itemView.findViewById(R.id.textView7);
-
         }
     }
 

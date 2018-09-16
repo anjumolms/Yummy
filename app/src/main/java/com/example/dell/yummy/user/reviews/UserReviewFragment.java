@@ -2,7 +2,6 @@ package com.example.dell.yummy.user.reviews;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,11 +11,9 @@ import android.view.ViewGroup;
 
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
-import com.stepstone.apprating.AppRatingDialog;
-import com.stepstone.apprating.listener.RatingDialogListener;
+import com.example.dell.yummy.model.UserReview;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,8 +21,8 @@ import java.util.List;
  */
 public class UserReviewFragment extends Fragment {
 
-    RecyclerView recyclerView1;
-    List<UserReview> userReviews;
+    RecyclerView mRecyclerView;
+    List<UserReview> mListuserReviews;
     IFragmentListener mIFragmentListener;
 
 
@@ -34,21 +31,14 @@ public class UserReviewFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_review,
                 container, false);
+        initViews(view);
 
-        recyclerView1 = view.findViewById(R.id.rv_addreview);
-        recyclerView1.setHasFixedSize(true);
-        recyclerView1.setLayoutManager(new LinearLayoutManager(getActivity()));
-        userReviews = new ArrayList<>();
+        mListuserReviews = new ArrayList<>();
         UserReview userReview1 = new UserReview();
         userReview1.setOrderItem("Chicken Biriyani");
         UserReview userReview4 = new UserReview();
@@ -79,21 +69,27 @@ public class UserReviewFragment extends Fragment {
         userReview8.setStoreName("Arayas");
         userReview9.setStoreName("thedln");
 
-        userReviews.add(userReview1);
-        userReviews.add(userReview2);
-        userReviews.add(userReview3);
-        userReviews.add(userReview4);
-        userReviews.add(userReview5);
-        userReviews.add(userReview6);
-        userReviews.add(userReview7);
-        userReviews.add(userReview8);
-        userReviews.add(userReview9);
+        mListuserReviews.add(userReview1);
+        mListuserReviews.add(userReview2);
+        mListuserReviews.add(userReview3);
+        mListuserReviews.add(userReview4);
+        mListuserReviews.add(userReview5);
+        mListuserReviews.add(userReview6);
+        mListuserReviews.add(userReview7);
+        mListuserReviews.add(userReview8);
+        mListuserReviews.add(userReview9);
 
 
         UserAddReviewAdapter adapter = new UserAddReviewAdapter(getActivity(),
-                userReviews, mIFragmentListener);
-        recyclerView1.setAdapter(adapter);
+                mListuserReviews, mIFragmentListener);
+        mRecyclerView.setAdapter(adapter);
         return view;
+    }
+
+    private void initViews(View view) {
+        mRecyclerView = view.findViewById(R.id.rv_addreview);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
 

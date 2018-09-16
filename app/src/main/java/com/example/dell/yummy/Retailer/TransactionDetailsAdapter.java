@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.webservice.TransactionDetails;
+import com.example.dell.yummy.model.TransactionDetails;
 
 import java.util.List;
 
@@ -75,10 +75,7 @@ class TransactionDetailsAdapter extends
             textViewTransactionId = itemView.findViewById(R.id.tv_transaction_id);
             textViewAmount = itemView.findViewById(R.id.tv_amount);
             textViewTransactionStatus = itemView.findViewById(R.id.tv_transaction_status);
-             cardView = itemView.findViewById(R.id.cv_transaction_details);
-
-
-
+            cardView = itemView.findViewById(R.id.cv_transaction_details);
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

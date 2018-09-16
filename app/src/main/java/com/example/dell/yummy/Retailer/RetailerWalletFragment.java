@@ -12,10 +12,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.webservice.IApiInterface;
-import com.example.dell.yummy.webservice.UserResult;
+import com.example.dell.yummy.model.UserResult;
 
 import retrofit2.Call;
 import retrofit2.Callback;

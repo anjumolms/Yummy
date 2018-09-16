@@ -1,45 +1,48 @@
 package com.example.dell.yummy.user.dishes;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.example.dell.yummy.Constants;
+import com.example.dell.yummy.DataSingleton;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.IFragmentListener;
-import com.example.dell.yummy.user.store.UserStoresAdapter;
-import com.example.dell.yummy.webservice.DishesDetails;
-import com.example.dell.yummy.webservice.IApiInterface;
-import com.example.dell.yummy.webservice.RetrofitClient;
-import com.example.dell.yummy.webservice.StoreDetails;
+import com.example.dell.yummy.model.DishesDetails;
+import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class UserDishesFragment extends Fragment {
 
-    List<DishesDetails> dishesList;
-    RecyclerView recyclerView;
-    IFragmentListener miFragmentListener;
+    private List<DishesDetails> dishesList;
+    private RecyclerView recyclerView;
+    private IFragmentListener miFragmentListener;
+    private UserDishesAdapter adapter;
 
-
-    public UserDishesFragment() {
-        // Required empty public constructor
-    }
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent != null
+                    && intent.getAction().equals(Constants.NOTIFY_DISH_DETAILS)){
+                showDishDetails();
+            }
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,78 +54,43 @@ public class UserDishesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_user_dishes, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_dishes, container,
+                false);
+        initViews(view);
+        return view;
+    }
 
+    private void initViews(View view) {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_DISH_DETAILS);
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(broadcastReceiver,intentFilter);
 
-       // dishesList = new ArrayList<>();
-
-
-        if(miFragmentListener != null){
-          List<DishesDetails> dummyStoreList= miFragmentListener.getDishesDetails();
-            UserDishesAdapter adapter = new UserDishesAdapter(getActivity(),
-                    dummyStoreList, miFragmentListener);
-            recyclerView.setAdapter(adapter);
-        }
-
-//
-//        Retrofit retrofit = RetrofitClient.getClient();
-//
-//        IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-//        Call<List<DishesDetails>> call = iApiInterface.getallMenu();
-//
-//
-//        call.enqueue(new Callback<List<DishesDetails>>() {
-//            @Override
-//            public void onResponse(Call<List<DishesDetails>> call,
-//                                   Response<List<DishesDetails>> response) {
-//
-//                if (response != null) {
-//                    if (response.code() == 200) {
-//                        dishesList = response.body();
-//
-//                    } else {
-//                        Toast.makeText(getActivity(), response.code()
-//                                + response.message(), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//                if(dishesList != null){
-//                    UserDishesAdapter adapter = new UserDishesAdapter(getActivity(), dishesList, miFragmentListener);//setting adapter to recyclerview
-//                    recyclerView.setAdapter(adapter);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<DishesDetails>> call, Throwable t) {
-//
-//                Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
-//
-//
-//            }
-//
-//        });
-//
-
-
-        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(miFragmentListener != null){
-            List<DishesDetails> dummyStoreList= miFragmentListener.getDishesDetails();
-            UserDishesAdapter adapter = new UserDishesAdapter(getActivity(),
-                    dummyStoreList, miFragmentListener);
-            recyclerView.setAdapter(adapter);
-        }
+
     }
 
     public void addListener(IFragmentListener miFragmentListener) {
         this.miFragmentListener = miFragmentListener;
 
+    }
+
+    public void showDishDetails(){
+        RetrofitNetworksCalls networksCalls = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
+        if(networksCalls != null){
+            List<DishesDetails> dishesDetails = networksCalls.getDishDetailsList();
+            if (dishesDetails != null) {
+                adapter = new UserDishesAdapter(getActivity(),
+                        dishesDetails, miFragmentListener);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            }
+        }
     }
 }
 

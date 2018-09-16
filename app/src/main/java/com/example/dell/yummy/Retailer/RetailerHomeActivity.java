@@ -17,8 +17,8 @@ import android.view.WindowManager;
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.webservice.DishesDetails;
-import com.example.dell.yummy.webservice.StoreDetails;
+import com.example.dell.yummy.model.DishesDetails;
+import com.example.dell.yummy.model.StoreDetails;
 
 import java.util.List;
 
@@ -35,15 +35,22 @@ public class RetailerHomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_retailer_home);
+        setTabColor();
+        setupNavigationDrawer();
+        initFragments();
+        addFragment(Constants.SCREEN_RETAILER_TRANSACTION_DETAILS);
+    }
 
+    private void setTabColor() {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
             Window window = this.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(this.getResources().getColor(R.color.tab_color));
         }
-        setupNavigationDrawer();
+    }
 
+    private void initFragments() {
         mretailerTransactionDetailsFragment = new RetailerTransactionDetailsFragment();
         meachTransactionFragment = new EachTransactionFragment();
         mretailerTransactionDetailsFragment.addListener(this);
@@ -52,10 +59,6 @@ public class RetailerHomeActivity extends AppCompatActivity
         mretailerListItemFragment = new RetailerListItemFragment();
         mretailerListItemFragment.addListener(this);
         mretailerWalletFragment = new RetailerWalletFragment();
-
-        addFragment(Constants.SCREEN_RETAILER_TRANSACTION_DETAILS);
-
-
     }
 
     @Override
@@ -67,30 +70,33 @@ public class RetailerHomeActivity extends AppCompatActivity
         switch (screenId) {
 
             case Constants.SCREEN_RETAILER_TRANSACTION_DETAILS:
-                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container, mretailerTransactionDetailsFragment);
+                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container,
+                        mretailerTransactionDetailsFragment);
                 fragmentTransaction.commit();
                 break;
             case Constants.SCREEN_RETAILER_EACH_TRANSACTION_DETAILS:
-                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container, meachTransactionFragment);
+                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container,
+                        meachTransactionFragment);
                 fragmentTransaction.commit();
                 break;
             case Constants.SCREEN_RETAILER_ADD_ITEMS:
-                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container, mretailerAddItemFragment);
+                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container,
+                        mretailerAddItemFragment);
                 fragmentTransaction.commit();
                 break;
             case Constants.SCREEN_RETAILER_LIST_ITEMS:
-                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container, mretailerListItemFragment);
+                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container,
+                        mretailerListItemFragment);
                 fragmentTransaction.commit();
                 break;
             case Constants.SCREEN_WALLET:
-                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container, mretailerWalletFragment);
+                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container,
+                        mretailerWalletFragment);
                 fragmentTransaction.commit();
                 break;
 
             default:
                 break;
-
-
         }
     }
 
@@ -114,28 +120,14 @@ public class RetailerHomeActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public int getUserId() {
-        return 0;
-    }
-
-    @Override
-    public String getUserName() {
-        return null;
-    }
-
-    @Override
-    public List<DishesDetails> getDishesDetails() {
-        return null;
-    }
-
     private void setupNavigationDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
 
         toggle.syncState();
@@ -210,6 +202,4 @@ public class RetailerHomeActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
 }

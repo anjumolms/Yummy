@@ -9,7 +9,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.webservice.DishesDetails;
+import com.example.dell.yummy.model.DishesDetails;
 
 import java.util.List;
 
@@ -93,11 +93,6 @@ public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapte
                     textViewCount.setText(String.valueOf(counter));
                     }
             });
-
-
-
         }
     }
-
-
 }

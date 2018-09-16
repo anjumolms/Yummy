@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.IFragmentListener;
-import com.example.dell.yummy.webservice.DishesDetails;
+import com.example.dell.yummy.model.DishesDetails;
 
 import java.util.List;
 
@@ -25,8 +25,7 @@ public class UserDishesAdapter extends
 
     IFragmentListener miFragmentListener;
     //we are storing all the products in a list
-   private List<DishesDetails> dishesDetailsList;
-
+    private List<DishesDetails> dishesDetailsList;
 
 
     //getting the context and product list with constructor
@@ -41,7 +40,7 @@ public class UserDishesAdapter extends
     public DishesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.layout_dishes, parent,false);
+        View view = inflater.inflate(R.layout.layout_dishes, parent, false);
         return new DishesViewHolder(view);
     }
 
@@ -79,12 +78,11 @@ public class UserDishesAdapter extends
             storeImg = itemView.findViewById(R.id.iv_dish);
 
 
-
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mCtx,"success",Toast.LENGTH_SHORT).show();
-                    if(miFragmentListener != null){
+                    Toast.makeText(mCtx, "success", Toast.LENGTH_SHORT).show();
+                    if (miFragmentListener != null) {
                         int clickPosition = getAdapterPosition();
                         DishesDetails dishesDetails = dishesDetailsList.get(clickPosition);
                         miFragmentListener.addPopup(dishesDetails);

@@ -10,8 +10,7 @@ import android.widget.TextView;
 
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.user.store.ConfirmationAdapter;
-import com.example.dell.yummy.webservice.DishesDetails;
+import com.example.dell.yummy.model.UserReview;
 
 import java.util.List;
 

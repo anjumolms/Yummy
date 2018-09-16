@@ -1,4 +1,4 @@
-package com.example.dell.yummy.webservice;
+package com.example.dell.yummy.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

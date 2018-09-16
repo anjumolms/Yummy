@@ -1,7 +1,7 @@
 package com.example.dell.yummy;
 
-import com.example.dell.yummy.webservice.DishesDetails;
-import com.example.dell.yummy.webservice.StoreDetails;
+import com.example.dell.yummy.model.DishesDetails;
+import com.example.dell.yummy.model.StoreDetails;
 
 import java.util.List;
 
@@ -11,8 +11,4 @@ public interface IFragmentListener {
     void addPopup(DishesDetails dishesDetails);
     void loadConformationFragment(List<DishesDetails> dishesDetails);
     void showDialog();
-    int getUserId();
-    String getUserName();
-    List<DishesDetails> getDishesDetails();
-
 }

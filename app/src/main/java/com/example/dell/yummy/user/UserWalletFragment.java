@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
 
@@ -42,8 +43,9 @@ public class UserWalletFragment extends Fragment {
                 false);
         mUserCoin = view.findViewById(R.id.tv_user_coin);
         SharedPreferences sharedpreferences
-                = getActivity().getSharedPreferences("USERDETAILS", Context.MODE_PRIVATE);
-        coins = sharedpreferences.getInt("Wallet", 0);
+                = getActivity().getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                Context.MODE_PRIVATE);
+        coins = sharedpreferences.getInt(Constants.KEY_WALLET, 0);
         mUserCoin.setText("Remaining Coins : " + coins);
 
         return view;

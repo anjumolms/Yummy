@@ -11,10 +11,11 @@ import android.view.ViewGroup;
 
 import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
+import com.example.dell.yummy.model.DishesDetails;
 import com.example.dell.yummy.user.dishes.UserDishesFragment;
 import com.example.dell.yummy.user.reviews.UserReviewFragment;
 import com.example.dell.yummy.user.store.UserStoresFragment;
-import com.example.dell.yummy.webservice.StoreDetails;
+import com.example.dell.yummy.model.StoreDetails;
 
 import java.util.List;
 
@@ -45,29 +46,27 @@ public class UserViewPagerFragment extends Fragment {
         // Inflate the layout for this fragment
        View view = inflater.inflate(R.layout.fragment_user_view_pager, container,
                false);
+        initFragments();
+        viewPager =  view.findViewById(R.id.viewpager);
+        addTabs(viewPager);
+        tabLayout =  view.findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
+        return view;
+
+    }
+
+    private void initFragments() {
         mUserStoresFragment = new UserStoresFragment();
         mUserStoresFragment.addListener(miFragmentListener);
-        mUserStoresFragment.setStoreDetails(mStoreDetails);
 
         mUserDishesFragment = new UserDishesFragment();
         mUserDishesFragment.addListener(miFragmentListener);
 
         mUserReviewFragment = new UserReviewFragment();
         mUserReviewFragment.addListener(miFragmentListener);
-
-
-
-        viewPager =  view.findViewById(R.id.viewpager);
-        addTabs(viewPager);
-
-        tabLayout =  view.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-
-        return view;
-
     }
+
     private void addTabs(ViewPager viewPager) {
         FragmentUserPagerAdapter adapter = new FragmentUserPagerAdapter(getActivity()
                 .getSupportFragmentManager());
@@ -81,9 +80,5 @@ public class UserViewPagerFragment extends Fragment {
     public void addListener(IFragmentListener iFragmentListener) {
         miFragmentListener = iFragmentListener;
 
-    }
-
-    public void setStoreDetails(List<StoreDetails> mStoreDetails) {
-        this.mStoreDetails = mStoreDetails;
     }
 }

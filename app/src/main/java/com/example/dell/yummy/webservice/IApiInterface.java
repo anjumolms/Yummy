@@ -1,8 +1,14 @@
 package com.example.dell.yummy.webservice;
 
+import com.example.dell.yummy.model.DishesDetails;
+import com.example.dell.yummy.model.Order;
+import com.example.dell.yummy.model.RegistrationResult;
+import com.example.dell.yummy.model.StoreDetails;
+import com.example.dell.yummy.model.TransactionDetails;
+import com.example.dell.yummy.model.UserResult;
+
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -11,9 +17,9 @@ import retrofit2.http.Path;
 
 public interface IApiInterface {
 
-    //public static final String BASE_URL = "http://192.168.43.254:8080/Yummy_Service/api/";
-    public static final String BASE_URL
-            ="https://fc6b9080-76cb-41df-b8ff-bb3f0f1dca27.mock.pstmn.io/Yummy_Service/api/";
+    public static final String BASE_URL = "http://192.168.1.112:8080/Yummy_Service/api/";
+//    public static final String BASE_URL
+//            ="https://5d79daeb-3481-4889-ab12-08b480ce1963.mock.pstmn.io/Yummy_Service/api/";
 
 
 //    @Headers("Content-Type: application/json")

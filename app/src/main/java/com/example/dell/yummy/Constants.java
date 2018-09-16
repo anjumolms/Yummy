@@ -23,5 +23,23 @@ public class Constants {
     public static final String CHANNEL_NAME = "Simplified Coding Notification";
     public static final String CHANNEL_DESCRIPTION = "www.simplifiedcoding.net";
 
+    //login fragment
+    public static final String FIELD_EMPTY_WARNING = "This field cannot be empty";
+    public static final String FIELD_PASSWORD_INCORRECT = "Password does not match";
 
+
+    //SharedPreferance details
+    public static final String SHARED_PREFERANCE_LOGIN_DETAILS = "LoginDetails";
+    public static final String KEY_USER_NAME = "UserName";
+    public static final String KEY_LOGIN_PIN = "UserPin";
+    public static final String KEY_WALLET = "Wallet";
+
+    //Database constants
+    public static final String COLOUM_USER_NAME = "username";
+    public static final String COLOUM_USER_TOKEN = "token";
+    public static final String TABLE_NAME = "login_details";
+
+
+    public static final String NOTIFY_STORE_DETAILS = "NOTIFY_STORE_DETAILS";
+    public static final String NOTIFY_DISH_DETAILS = "NOTIFY_DISH_DETAILS";
 }
