@@ -23,6 +23,10 @@ public class UserResult {
     @Expose
     private int userWallet;
 
+    @SerializedName("login_token")
+    @Expose
+    private String token;
+
     public int getLoginId() {
         return loginId;
     }
@@ -69,6 +73,14 @@ public class UserResult {
 
     public void setUserWallet(int userWallet) {
         this.userWallet = userWallet;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
 }

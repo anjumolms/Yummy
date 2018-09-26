@@ -10,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.example.dell.yummy.Retailer.RetailerHomeActivity;
+import com.example.dell.yummy.admin.AdminHomeActivity;
 import com.example.dell.yummy.dbhandler.DbHandler;
 import com.example.dell.yummy.user.UserHomeActivity;
 import com.example.dell.yummy.model.StoreDetails;
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
 
 
     @Override
-    public void addActivityInfo(int screen, String name, int wallet, int userID) {
+    public void addActivityInfo(int screen) {
 
         switch (screen) {
             case Constants.SCREEN_USER_HOME:
@@ -84,13 +85,14 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
                         UserHomeActivity.class);
                 startActivity(mySuperIntent);
                 break;
-
-
             case Constants.SCREEN_RETAILER_HOME:
                 Intent intent = new Intent(this, RetailerHomeActivity.class);
                 startActivity(intent);
                 break;
-
+            case Constants.SCREEN_ADMIN_HOME:
+                Intent adminIntent = new Intent(this, AdminHomeActivity.class);
+                startActivity(adminIntent);
+                break;
 
             default:
                 break;

@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class UserReview {
+
     @SerializedName("menu_id")
     @Expose
     private int menuId;
@@ -29,10 +30,6 @@ public class UserReview {
     @SerializedName("user_rating")
     @Expose
     private int userRating;
-
-    //TODO Storename not in UserReview POJO
-    private String storeName;
-
 
     public int getMenuId() {
         return menuId;
@@ -96,14 +93,6 @@ public class UserReview {
 
     public void setUserRating(int userRating) {
         this.userRating = userRating;
-    }
-
-    public String getStoreName() {
-        return storeName;
-    }
-
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
     }
 
 }

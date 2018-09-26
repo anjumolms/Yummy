@@ -1,5 +1,8 @@
 package com.example.dell.yummy.Retailer;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -11,25 +14,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.dell.yummy.Constants;
-import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.DataSingleton;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.model.DishesDetails;
-import com.example.dell.yummy.model.StoreDetails;
-
-import java.util.List;
+import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 
 public class RetailerHomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, IFragmentListener {
-
+        implements NavigationView.OnNavigationItemSelectedListener, IRetailerFragmentListener {
     private RetailerTransactionDetailsFragment mretailerTransactionDetailsFragment;
     private EachTransactionFragment meachTransactionFragment;
     private RetailerAddItemFragment mretailerAddItemFragment;
     private RetailerListItemFragment mretailerListItemFragment;
     private RetailerWalletFragment mretailerWalletFragment;
+    private ConfirmOrdersFragment mConfirmOrdersFragment;
+    private int counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,7 @@ public class RetailerHomeActivity extends AppCompatActivity
         setupNavigationDrawer();
         initFragments();
         addFragment(Constants.SCREEN_RETAILER_TRANSACTION_DETAILS);
+
     }
 
     private void setTabColor() {
@@ -59,6 +66,27 @@ public class RetailerHomeActivity extends AppCompatActivity
         mretailerListItemFragment = new RetailerListItemFragment();
         mretailerListItemFragment.addListener(this);
         mretailerWalletFragment = new RetailerWalletFragment();
+        mConfirmOrdersFragment = new ConfirmOrdersFragment();
+        mConfirmOrdersFragment.addListener(this);
+        loadDetails();
+    }
+
+    private void loadDetails() {
+        RetrofitNetworksCalls retrofitNetworksCalls
+                = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
+        if (retrofitNetworksCalls != null) {
+
+            SharedPreferences sharedPreferences = getApplicationContext()
+                    .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                            Context.MODE_PRIVATE);
+            int id = 0;
+            if (sharedPreferences != null) {
+                id = sharedPreferences.getInt(Constants.KEY_ID, 0);
+            }
+
+            retrofitNetworksCalls.getTransactionDetails(getApplicationContext(), id);
+            retrofitNetworksCalls.getRetailerMenuList(getApplicationContext(),0);
+        }
     }
 
     @Override
@@ -94,6 +122,11 @@ public class RetailerHomeActivity extends AppCompatActivity
                         mretailerWalletFragment);
                 fragmentTransaction.commit();
                 break;
+            case Constants.SCREEN_CONFIRM_ORDERS:
+                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container,
+                        mConfirmOrdersFragment);
+                fragmentTransaction.commit();
+                break;
 
             default:
                 break;
@@ -101,23 +134,18 @@ public class RetailerHomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void passStoreDetails(int screenId, StoreDetails storeDetails) {
-
+    public void loadEachTransactionFragment(int position) {
+        if (meachTransactionFragment != null) {
+            meachTransactionFragment.listPosition(position);
+            addFragment(Constants.SCREEN_RETAILER_EACH_TRANSACTION_DETAILS);
+        }
     }
 
     @Override
-    public void addPopup(DishesDetails dishesDetails) {
-
-    }
-
-    @Override
-    public void loadConformationFragment(List<DishesDetails> dishesDetails) {
-
-    }
-
-    @Override
-    public void showDialog() {
-
+    public void showItemUpdatePopup(final DishesDetails dishesDetails) {
+         if(mretailerListItemFragment != null){
+             mretailerListItemFragment.showUpdatePopup(dishesDetails);
+         }
     }
 
     private void setupNavigationDrawer() {
@@ -196,6 +224,8 @@ public class RetailerHomeActivity extends AppCompatActivity
         } else if (id == R.id.retailer_logout) {
 
 
+        } else if (id == R.id.confirm_orders) {
+            addFragment(Constants.SCREEN_CONFIRM_ORDERS);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

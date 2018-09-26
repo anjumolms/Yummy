@@ -16,6 +16,10 @@
             android:id="@+id/wallet"
             android:icon="@drawable/retailerwallet"
             android:title="Wallet" />
+        <item
+            android:id="@+id/confirm_orders"
+            android:icon="@drawable/retailerwallet"
+            android:title="Confirmed Orders" />
     </group>
 
     <item android:title="Communicate">
@@ -25,9 +29,9 @@
                 android:icon="@drawable/logout"
                 android:title="Logout" />
             <!--<item-->
-                <!--android:id="@+id/nav_send"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="Send" />-->
+            <!--android:id="@+id/nav_send"-->
+            <!--android:icon="@drawable/ic_menu_send"-->
+            <!--android:title="Send" />-->
         </menu>
     </item>
 

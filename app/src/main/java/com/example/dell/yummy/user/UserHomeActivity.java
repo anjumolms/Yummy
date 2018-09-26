@@ -1,14 +1,22 @@
 package com.example.dell.yummy.user;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -19,11 +27,13 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
-import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
+import com.example.dell.yummy.model.Order;
+import com.example.dell.yummy.model.UserReview;
 import com.example.dell.yummy.user.store.OrderSuccessfullFragment;
 import com.example.dell.yummy.model.DishesDetails;
 import com.example.dell.yummy.user.store.ConfirmationFragment;
@@ -32,15 +42,13 @@ import com.example.dell.yummy.model.StoreDetails;
 import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
-import com.victor.loading.rotate.RotateLoading;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class UserHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        IFragmentListener, RatingDialogListener {
+        IUserFragmentListener, RatingDialogListener {
 
     private UserViewPagerFragment mUserViewPagerFragment;
     private StoreDetailsFragment mStoreDetailsFragment;
@@ -51,9 +59,34 @@ public class UserHomeActivity extends AppCompatActivity
     private OrderSuccessfullFragment mOrderSuccessfullFragment;
     private FrameLayout mFrameLayout;
     private TextView mProfileName;
+    private UserReview mUserReview;
+    int reviewId;
     DrawerLayout drawer;
     int counter = 0;
     DishesDetails dishFromApi;
+    private ProgressDialog mProgressDialog;
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                String action = intent.getAction();
+                switch (action) {
+                    case Constants.NOTIFY_USER_CONFIRM_ORDER:
+                        getUserWalletDetails();
+                        break;
+                    case Constants.NOTIFY_WALLET_UPDATED:
+                        dismissProgress();
+                        break;
+                    case Constants.NOTIFY_REVIEW_UPDATED:
+                        removeItemsFromReviewList();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    };
 
 
     @Override
@@ -66,6 +99,7 @@ public class UserHomeActivity extends AppCompatActivity
         initFragments();
         addFragment(Constants.SCREEN_USER);
         LoadDetails();
+        showPlacesList();
 
     }
 
@@ -73,9 +107,9 @@ public class UserHomeActivity extends AppCompatActivity
         RetrofitNetworksCalls retrofitNetworksCalls
                 = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
         if (retrofitNetworksCalls != null) {
-
             retrofitNetworksCalls.getStoreDetails(getApplicationContext());
             retrofitNetworksCalls.getDishDetails(getApplicationContext());
+            retrofitNetworksCalls.getReviewDetails(getApplicationContext());
 
         }
     }
@@ -101,6 +135,14 @@ public class UserHomeActivity extends AppCompatActivity
 
         mOrderSuccessfullFragment = new OrderSuccessfullFragment();
         mOrderSuccessfullFragment.addListener(this);
+
+        mProgressDialog = new ProgressDialog(this);
+
+        IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_USER_CONFIRM_ORDER);
+        intentFilter.addAction(Constants.NOTIFY_WALLET_UPDATED);
+        intentFilter.addAction(Constants.NOTIFY_REVIEW_UPDATED);
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(broadcastReceiver, intentFilter);
     }
 
     private void setTabColor() {
@@ -127,7 +169,6 @@ public class UserHomeActivity extends AppCompatActivity
             case Constants.SCREEN_USER:
                 fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
                         mUserViewPagerFragment);
-
                 fragmentTransaction.commit();
                 break;
 
@@ -179,9 +220,9 @@ public class UserHomeActivity extends AppCompatActivity
     @Override
     public void passStoreDetails(int screenId, StoreDetails storeDetails) {
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("key", storeDetails);
-        mStoreDetailsFragment.setArguments(bundle);
+        if(mStoreDetailsFragment != null){
+            mStoreDetailsFragment.selectedStore(storeDetails);
+        }
         addFragment(Constants.SCREEN_STORE_DETAILS);
 
     }
@@ -197,6 +238,32 @@ public class UserHomeActivity extends AppCompatActivity
     public void loadConformationFragment(List<DishesDetails> dishesDetails) {
         mConfirmationFragment.setConfirmationDetails(dishesDetails);
         addFragment(Constants.SCREEN_CONFIRMATION);
+    }
+
+
+    private void showPlacesList() {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle("Choose your location");
+        String[] types = {"Campus ", "Bhavani"};
+        b.setItems(types, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+                switch (which) {
+                    case 0:
+                        //onZipRequested();
+                        break;
+                    case 1:
+                        //onCategoryRequested();
+                        break;
+                }
+            }
+
+        });
+
+        b.show();
     }
 
     private void showPopup(final DishesDetails dishFromApi) {
@@ -248,7 +315,34 @@ public class UserHomeActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     counter = 0;
-                    dialog.dismiss();
+                    if (!itemCount.getText().toString().isEmpty()) {
+
+                        int numberOfItems = Integer.parseInt(itemCount.getText().toString());
+                        SharedPreferences sharedpreferences
+                                = getApplicationContext()
+                                .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                                        Context.MODE_PRIVATE);
+                        int userid = sharedpreferences.getInt(Constants.KEY_ID, 0);
+
+                        int total = numberOfItems * dishFromApi.getItemPrice();
+                        Order orderDetails = new Order();
+                        orderDetails.setUser_id(userid);
+                        orderDetails.setRetail_id(dishFromApi.getRetailId());
+                        orderDetails.setOrder_item_count(numberOfItems);
+                        orderDetails.setOrder_value(total);
+                        orderDetails.setOrder_items_string("" + dishFromApi.getMenuId());
+                        RetrofitNetworksCalls calls = DataSingleton
+                                .getInstance().getRetrofitNetworksCallsObject();
+                        if (calls != null) {
+                            calls.confirmOrder(getApplicationContext(), orderDetails);
+                        }
+                        showProgress();
+                        dialog.dismiss();
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                "Please select dish count ", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             });
 
@@ -267,6 +361,28 @@ public class UserHomeActivity extends AppCompatActivity
 
         }
 
+    }
+
+    private void getUserWalletDetails() {
+        RetrofitNetworksCalls calls = DataSingleton
+                .getInstance().getRetrofitNetworksCallsObject();
+        if (calls != null) {
+            calls.getUserWalletDetails(this);
+        }
+    }
+
+    private void dismissProgress() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    private void showProgress() {
+        if (mProgressDialog != null) {
+
+            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.show();
+        }
     }
 
     private void setupNavigationDrawer() {
@@ -297,7 +413,15 @@ public class UserHomeActivity extends AppCompatActivity
                 || mUserWalletFragment.isVisible()
                 || mConfirmationFragment.isVisible()
                 || mStoreDetailsFragment.isVisible()) {
-            addFragment(Constants.SCREEN_USER);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            UserViewPagerFragment userViewPagerFragment = new UserViewPagerFragment();
+            userViewPagerFragment.addListener(this);
+            fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
+                    userViewPagerFragment);
+            fragmentTransaction.commit();
+
         } else {
             super.onBackPressed();
         }
@@ -350,31 +474,62 @@ public class UserHomeActivity extends AppCompatActivity
         return true;
     }
 
-    public void showDialog() {
-        new AppRatingDialog.Builder()
-                .setPositiveButtonText("Submit")
-                .setNegativeButtonText("Cancel")
-                .setNeutralButtonText("Later")
-                .setNoteDescriptions(Arrays.asList("Very Bad", "Not good", "Quite ok", "Very Good", "Excellent !!!"))
-                .setDefaultRating(2)
-                .setTitle("Rate your YummY Taste")
-                .setDescription("Please select some stars and give your feedback")
-                .setDefaultComment("It is delicious !")
-                .setStarColor(R.color.colorAccent)
-                .setNoteDescriptionTextColor(R.color.text)
-                .setTitleTextColor(R.color.light_tab)
-                .setDescriptionTextColor(R.color.light_tab)
-                .setHint("Please write your comment here ...")
-                .setHintTextColor(R.color.tab_color)
-                .setCommentTextColor(R.color.background)
-                .setCommentBackgroundColor(R.color.rvbackground)
-                .setWindowAnimation(R.style.MyDialogFadeAnimation)
-                .create(UserHomeActivity.this)
-                .show();
+    public void showDialog(UserReview userReview) {
+        if (userReview != null) {
+            mUserReview = userReview;
+            reviewId = userReview.getReviewId();
+            new AppRatingDialog.Builder()
+                    .setPositiveButtonText("Submit")
+                    .setNegativeButtonText("Cancel")
+                    .setNeutralButtonText("Later")
+                    .setNoteDescriptions(Arrays.asList("Very Bad",
+                            "Not good", "Quite ok",
+                            "Very Good",
+                            "Excellent !!!"))
+                    .setDefaultRating(1)
+                    .setTitle("Rate your YummY Taste")
+                    .setDescription("Please select some stars")
+                    .setDefaultComment("It is delicious !")
+                    .setStarColor(R.color.colorAccent)
+                    .setNoteDescriptionTextColor(R.color.text)
+                    .setTitleTextColor(R.color.light_tab)
+                    .setDescriptionTextColor(R.color.light_tab)
+                    .setHint("Please write your comment here ...")
+                    .setHintTextColor(R.color.tab_color)
+                    .setCommentTextColor(R.color.background)
+                    .setCommentBackgroundColor(R.color.rvbackground)
+                    .setWindowAnimation(R.style.MyDialogFadeAnimation)
+                    .create(UserHomeActivity.this)
+                    .show();
+
+        }
+
     }
 
     @Override
     public void onPositiveButtonClicked(int i, String s) {
+        if (mProgressDialog != null) {
+            mProgressDialog.setMessage("Please wait.....");
+            mProgressDialog.show();
+            RetrofitNetworksCalls calls = DataSingleton
+                    .getInstance().getRetrofitNetworksCallsObject();
+            if (calls != null) {
+                calls.updateReview(i, getApplicationContext(), reviewId);
+            }
+        }
+
+
+    }
+
+    private void removeItemsFromReviewList() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            RetrofitNetworksCalls calls = DataSingleton
+                    .getInstance().getRetrofitNetworksCallsObject();
+            if (calls != null) {
+                calls.updateReviewItemsList(mUserReview, getApplicationContext());
+            }
+        }
     }
 
     @Override

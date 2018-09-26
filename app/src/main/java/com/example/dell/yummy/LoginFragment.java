@@ -1,10 +1,15 @@
 package com.example.dell.yummy;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,8 +21,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.yummy.dbhandler.DbHandler;
+import com.example.dell.yummy.model.RetailerDetails;
+import com.example.dell.yummy.model.UserDetails;
 import com.example.dell.yummy.webservice.IApiInterface;
 import com.example.dell.yummy.model.UserResult;
+import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,7 +43,25 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private Button mLogin;
     private TextView mNewUser;
     private IMainViewListener mMainView;
-    DbHandler dbHandler ;
+    DbHandler dbHandler;
+    ProgressDialog progressDialog;
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null){
+                  String action = intent.getAction();
+                  switch (action){
+                      case Constants.NOTIFY_USER_DETAILS:
+                          showUserPage();
+                          break;
+                      case Constants.NOTIFY_RETAILER_DETAILS:
+                          showRetailerPage();
+                          break;
+                  }
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +71,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         initViews(view);
         mLogin.setOnClickListener(this);
         mNewUser.setOnClickListener(this);
-        dbHandler =new DbHandler(getActivity());
+        dbHandler = new DbHandler(getActivity());
         return view;
     }
 
@@ -54,6 +80,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         mPassword = view.findViewById(R.id.input_password);
         mLogin = view.findViewById(R.id.btn_login);
         mNewUser = view.findViewById(R.id.link_signup);
+        progressDialog = new ProgressDialog(getActivity());
+        IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_USER_DETAILS);
+        intentFilter.addAction(Constants.NOTIFY_RETAILER_DETAILS);
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(broadcastReceiver, intentFilter);
 
     }
 
@@ -82,7 +113,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private void validateUser() {
 
-        dbHandler.getToken(1);
+        //dbHandler.getToken(1);
 
         String strUserName = mUuid.getText().toString().trim();
         String strPassword = mPassword.getText().toString().trim();
@@ -97,7 +128,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+
         progressDialog.setMessage("Signing Up...");
         progressDialog.show();
 
@@ -114,7 +145,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             call.enqueue(new Callback<UserResult>() {
                 @Override
                 public void onResponse(Call<UserResult> call, Response<UserResult> response) {
-                    progressDialog.dismiss();
                     checkUser(response);
 //                    UserResult userResult1 = new UserResult();
 //                    userResult1.setLoginUsername("Athira");
@@ -139,67 +169,119 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private void checkUser(Response<UserResult> response) {
         if (response != null && response.code() == 200) {
-            UserResult userResult = response.body();
-            if (userResult != null) {
-                switch (userResult.getLoginRole()) {
-                    case 1:
-                        showUserPage(userResult);
-                        break;
-                    case 2:
-                        showRetailerPage(userResult);
-                        break;
-                    case 3:
-                        showadminPage(userResult);
-                        break;
+            RetrofitNetworksCalls calls = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
+            if (calls != null) {
+                UserResult userResult = response.body();
+                if (userResult != null) {
+                    switch (userResult.getLoginRole()) {
+                        case 1:
+                            calls.getUserDetails(getActivity(),userResult.getLoginId());
+                            updateToken(userResult, calls);
 
+                            break;
+                        case 2:
+                            calls.getRetailerDetails(getActivity(), userResult.getLoginId());
+                            updateToken(userResult, calls);
+                            break;
+                        case 3:
+                            showadminPage();
+                            break;
+
+                    }
+                } else {
+                    //TODO: Notify user result is null.
                 }
-            } else {
-                //TODO: Notify user result is null.
             }
+
         } else {
             Toast.makeText(getActivity(), response.code()
                     + response.message(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void showadminPage(UserResult userResult) {
-    }
+    private void updateToken(UserResult userResult, RetrofitNetworksCalls calls) {
+        if(userResult.getLoginRole() == 1
+                || userResult.getLoginRole() == 2){
 
-    private void showRetailerPage(UserResult userResult) {
-        //User page NEED CORRECTION
-        if (mMainView != null) {
-            SharedPreferences sharedpreferences
-                    = getActivity().getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
-                    Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString(Constants.KEY_USER_NAME, userResult.getLoginUsername());
-            editor.putInt(Constants.KEY_LOGIN_PIN, userResult.getLoginPin());
-            editor.putInt(Constants.KEY_WALLET, userResult.getUserWallet());
-            editor.commit();
-            mMainView.addActivityInfo(Constants.SCREEN_RETAILER_HOME,
-                    userResult.getLoginUsername(),
-                    userResult.getUserWallet(),
-                    userResult.getUserId());
+            if (userResult.getToken().isEmpty()) {
+                if(dbHandler != null){
+                    String token = dbHandler.getToken(1);
+                    userResult.setToken(token);
+                    calls.updateToken(getActivity(),userResult);
+                }
+            }else{
+                String token = userResult.getToken();
+            }
         }
 
     }
 
-    private void showUserPage(UserResult userResult) {
-        //User page
+    private void showadminPage() {
         if (mMainView != null) {
+            //addDetailsToSharedPreferance(userResult);
+            mMainView.addActivityInfo(Constants.SCREEN_ADMIN_HOME);
+        }
+    }
+
+    private void addUserDetailsToSharedPreferance(UserDetails userResult) {
+        if (userResult != null) {
+
             SharedPreferences sharedpreferences
                     = getActivity().getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
                     Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString(Constants.KEY_USER_NAME, userResult.getLoginUsername());
+            editor.putString(Constants.KEY_USER_NAME, userResult.getUserName());
             editor.putInt(Constants.KEY_LOGIN_PIN, userResult.getLoginPin());
             editor.putInt(Constants.KEY_WALLET, userResult.getUserWallet());
+            editor.putInt(Constants.KEY_ID, userResult.getUserId());
+            editor.putInt(Constants.KEY_ROLE, 1);
             editor.commit();
+        }
+    }
 
-            mMainView.addActivityInfo(Constants.SCREEN_USER_HOME,
-                    userResult.getLoginUsername(),
-                    userResult.getUserWallet(),
-                    userResult.getUserId());
+    private void showRetailerPage() {
+        //User page NEED CORRECTION
+        if (mMainView != null) {
+            if(progressDialog != null){
+                progressDialog.dismiss();
+            }
+            RetrofitNetworksCalls calls = DataSingleton
+                    .getInstance().getRetrofitNetworksCallsObject();
+            if(calls != null && calls.getmRetailerDetails() != null){
+
+                addRetailerDetailsToSharedPreferance(calls.getmRetailerDetails());
+                mMainView.addActivityInfo(Constants.SCREEN_RETAILER_HOME);
+            }
+        }
+
+    }
+    private void addRetailerDetailsToSharedPreferance(RetailerDetails retailerDetails){
+        if(retailerDetails != null){
+
+            SharedPreferences sharedpreferences
+                    = getActivity().getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                    Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString(Constants.KEY_USER_NAME, retailerDetails.getLoginUsername());
+            editor.putInt(Constants.KEY_LOGIN_PIN, retailerDetails.getLoginPin());
+            editor.putInt(Constants.KEY_WALLET, retailerDetails.getRetailWallet());
+            editor.putInt(Constants.KEY_ID, retailerDetails.getRetailId());
+            editor.putInt(Constants.KEY_ROLE, 2);
+            editor.commit();
+        }
+    }
+    private void showUserPage() {
+        //User page
+        if (mMainView != null) {
+            if(progressDialog != null){
+                progressDialog.dismiss();
+            }
+            RetrofitNetworksCalls calls = DataSingleton
+                    .getInstance().getRetrofitNetworksCallsObject();
+            if(calls != null && calls.getUsersDetails() != null){
+                addUserDetailsToSharedPreferance(calls.getUsersDetails());
+                mMainView.addActivityInfo(Constants.SCREEN_USER_HOME);
+            }
         }
     }
 }

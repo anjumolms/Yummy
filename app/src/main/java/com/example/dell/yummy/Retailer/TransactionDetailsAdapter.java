@@ -9,31 +9,40 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dell.yummy.Constants;
-import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.model.TransactionDetails;
 
 import java.util.List;
 
 class TransactionDetailsAdapter extends
-        RecyclerView.Adapter<TransactionDetailsAdapter.TransactionViewHolder>
-
-{
+        RecyclerView.Adapter<TransactionDetailsAdapter.TransactionViewHolder> {
 
     private Context mCtx;
     private List<TransactionDetails> transactionDetailsList;
     private TransactionDetails transactionDetails;
-    IFragmentListener iFragmentListener;
+    IRetailerFragmentListener retailerFragmentListener;
+    private boolean isConfirmOrderPage;
 
     public TransactionDetailsAdapter(Context mCtx,
                                      List<TransactionDetails> transactionDetailsList,
-                                     IFragmentListener iFragmentListener) {
+                                     IRetailerFragmentListener retailerFragmentListener) {
         this.mCtx = mCtx;
         this.transactionDetailsList = transactionDetailsList;
-        this.iFragmentListener = iFragmentListener;
+        this.retailerFragmentListener = retailerFragmentListener;
     }
 
+
+    @Override
+    public void onBindViewHolder(TransactionViewHolder holder, int position) {
+        if (transactionDetailsList != null) {
+
+            transactionDetails = transactionDetailsList.get(position);
+            holder.textViewUserId.setText("" + transactionDetails.getUserId());
+            holder.textViewTransactionId.setText("" + transactionDetails.getWalletTranId());
+            holder.textViewAmount.setText("" + transactionDetails.getOrderValue());
+            holder.textViewTransactionStatus.setText(transactionDetails.getOrderStatus());
+        }
+    }
 
     @Override
     public TransactionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -45,29 +54,30 @@ class TransactionDetailsAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(TransactionViewHolder holder, int position) {
-        //getting the product of the specified position
+    public int getItemCount() {
+        if (transactionDetailsList != null) {
 
-        transactionDetails = transactionDetailsList.get(position);
+            return transactionDetailsList.size();
+        } else {
+            return 0;
+        }
 
-        //binding the data with the viewholder views
-        holder.textViewUserId.setText(""+transactionDetails.getUserId());
-        holder.textViewTransactionId.setText(""+transactionDetails.getWalletTranId());
-        holder.textViewAmount.setText(""+transactionDetails.getOrderValue());
-        holder.textViewTransactionStatus.setText(transactionDetails.getOrderStatus());
     }
 
-    @Override
-    public int getItemCount() {
-        return transactionDetailsList.size();
+    public void setData(List<TransactionDetails> transactionDetails) {
+        this.transactionDetailsList = transactionDetails;
+    }
 
-     }
+    public void isRequestFromConfirmOrderFragment(boolean isConfirmOrderPage) {
+        this.isConfirmOrderPage = isConfirmOrderPage;
+    }
 
     class TransactionViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewUserId, textViewTransactionId, textViewAmount,
                 textViewTransactionStatus;
         CardView cardView;
+
         public TransactionViewHolder(View itemView) {
             super(itemView);
 
@@ -80,10 +90,15 @@ class TransactionDetailsAdapter extends
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mCtx, "success", Toast.LENGTH_SHORT).show();
-                    if(iFragmentListener != null){
-                        iFragmentListener.addFragment(Constants.SCREEN_RETAILER_EACH_TRANSACTION_DETAILS);
-                    }
+                    if (transactionDetailsList != null) {
+                        if (!isConfirmOrderPage) {
+                            int pos = getAdapterPosition();
+                            if (retailerFragmentListener != null) {
+                                retailerFragmentListener.loadEachTransactionFragment(pos);
+                            }
+                        }
 
+                    }
                 }
             });
         }

@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
 
 /**
@@ -28,6 +27,6 @@ public class PaymentDetailsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_payment_details, container, false);
     }
 
-    public void addListener(IFragmentListener mIFragmentListener) {
+    public void addListener(IUserFragmentListener mIUserFragmentListener) {
     }
 }

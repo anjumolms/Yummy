@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.user.IUserFragmentListener;
 import com.example.dell.yummy.model.DishesDetails;
 import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 
@@ -31,23 +31,23 @@ public class UserDishesFragment extends Fragment {
 
     private List<DishesDetails> dishesList;
     private RecyclerView recyclerView;
-    private IFragmentListener miFragmentListener;
+    private IUserFragmentListener miUserFragmentListener;
     private UserDishesAdapter adapter;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent != null
-                    && intent.getAction().equals(Constants.NOTIFY_DISH_DETAILS)){
-                showDishDetails();
+            if (intent != null
+                    && intent.getAction().equals(Constants.NOTIFY_DISH_DETAILS)) {
+                updateData();
             }
         }
     };
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -65,31 +65,43 @@ public class UserDishesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_DISH_DETAILS);
         LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(broadcastReceiver,intentFilter);
+                .registerReceiver(broadcastReceiver, intentFilter);
+        showDishDetails();
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    public void addListener(IUserFragmentListener miUserFragmentListener) {
+        this.miUserFragmentListener = miUserFragmentListener;
 
     }
 
-    public void addListener(IFragmentListener miFragmentListener) {
-        this.miFragmentListener = miFragmentListener;
 
-    }
-
-    public void showDishDetails(){
+    public void showDishDetails() {
         RetrofitNetworksCalls networksCalls = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
-        if(networksCalls != null){
+        if (networksCalls != null) {
             List<DishesDetails> dishesDetails = networksCalls.getDishDetailsList();
-            if (dishesDetails != null) {
+
                 adapter = new UserDishesAdapter(getActivity(),
-                        dishesDetails, miFragmentListener);
+                        dishesDetails, miUserFragmentListener);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        }
+    }
+    private void updateData() {
+        if(adapter != null){
+            RetrofitNetworksCalls calls = DataSingleton
+                    .getInstance().getRetrofitNetworksCallsObject();
+            if(calls != null){
+                adapter.setData(calls.getDishDetailsList());
+                adapter.notifyDataSetChanged();
             }
+
         }
     }
 }

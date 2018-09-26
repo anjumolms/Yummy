@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.user.IUserFragmentListener;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.model.UserReview;
 
@@ -19,14 +19,14 @@ public class UserAddReviewAdapter
 
     private Context mCtx;
     private List<UserReview> userReviews;
-    IFragmentListener iFragmentListener;
+    IUserFragmentListener iUserFragmentListener;
 
 
     public UserAddReviewAdapter(Context mCtx, List<UserReview> userReviews,
-                                IFragmentListener mIFragmentListener) {
+                                IUserFragmentListener mIUserFragmentListener) {
         this.mCtx = mCtx;
         this.userReviews = userReviews;
-        iFragmentListener = mIFragmentListener;
+        iUserFragmentListener = mIUserFragmentListener;
     }
 
     @Override
@@ -40,19 +40,25 @@ public class UserAddReviewAdapter
 
     @Override
     public void onBindViewHolder(UserAddReviewAdapter.ReviewViewHolder holder, int position) {
-        //getting the product of the specified position
-
-
-        //binding the data with the viewholder views
-        holder.storeName.setText(userReviews.get(position).getStoreName());
-        holder.itemName.setText(userReviews.get(position).getOrderItem());
-
+        if (userReviews != null) {
+            holder.storeName.setText(" " + userReviews.get(position).getRetailNumer());
+            holder.itemName.setText(userReviews.get(position).getOrderItem());
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return userReviews.size();
+        if (userReviews != null) {
+            return userReviews.size();
+        } else {
+            return 0;
+        }
+
+    }
+
+    public void setData(List<UserReview> userReviewDetails) {
+       userReviews = userReviewDetails;
     }
 
     class ReviewViewHolder extends RecyclerView.ViewHolder {
@@ -70,8 +76,12 @@ public class UserAddReviewAdapter
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (iFragmentListener != null) {
-                        iFragmentListener.showDialog();
+                    if (userReviews != null) {
+                        if (iUserFragmentListener != null) {
+                            int userClickPosition = getAdapterPosition();
+                            iUserFragmentListener
+                                    .showDialog(userReviews.get(userClickPosition));
+                        }
                     }
                 }
             });

@@ -1,27 +1,33 @@
 package com.example.dell.yummy.user.store;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
-import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.user.IUserFragmentListener;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.model.DishesDetails;
 import com.example.dell.yummy.webservice.IApiInterface;
 import com.example.dell.yummy.model.Order;
 import com.example.dell.yummy.model.UserResult;
+import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 
 import java.util.List;
 
@@ -29,24 +35,25 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ConfirmationFragment extends Fragment implements View.OnClickListener {
+public class ConfirmationFragment extends
+        Fragment implements View.OnClickListener {
 
-    private IFragmentListener mFragmentListener;
+    private IUserFragmentListener mFragmentListener;
     private List<DishesDetails> dishesDetails;
     private ConfirmationAdapter mConfirmationAdapter;
     private RecyclerView mRecyclerView;
     private TextView mTextViewTotal;
+    private TextView mWallet;
     private int mTotal = 0;
+    private LinearLayout linearLayout;
 
     private double ordervalue = 0;
     private int orderitemcount = 0;
     private Button mConfirmbutton;
-    private int userid;
     private String mMenuitem = "";
     private int retailid;
     private ProgressDialog mProgressDialog;
@@ -55,6 +62,24 @@ public class ConfirmationFragment extends Fragment implements View.OnClickListen
         // Required empty public constructor
     }
 
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                String action = intent.getAction();
+                switch (action) {
+                    case Constants.NOTIFY_USER_CONFIRM_ORDER:
+                        getUserWalletDetails();
+                        break;
+                    case Constants.NOTIFY_WALLET_UPDATED:
+                        showWalletUpdation();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,63 +124,20 @@ public class ConfirmationFragment extends Fragment implements View.OnClickListen
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mTextViewTotal = view.findViewById(R.id.tv_total_price);
         mConfirmbutton = view.findViewById(R.id.bt_confirm);
-    }
-
-    private void getUserWalletDetails() {
-        final SharedPreferences sharedpreferences
-                = getActivity().getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
-                Context.MODE_PRIVATE);
-
-        UserResult userResult = new UserResult();
-        userResult.setLoginUsername(sharedpreferences.getString(Constants.KEY_USER_NAME,
-                null));
-        userResult.setLoginPin(sharedpreferences.getInt(Constants.KEY_LOGIN_PIN,
-                0));
-
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
-        if (retrofit != null) {
-            IApiInterface service = retrofit.create(IApiInterface.class);
-            Call<UserResult> call = service.userLogin(userResult);
-            call.enqueue(new Callback<UserResult>() {
-                @Override
-                public void onResponse(Call<UserResult> call,
-                                       Response<UserResult> response) {
-                    if (response != null && response.code() == 200) {
-
-                        UserResult userResult = response.body();
-                        if (userResult != null) {
-                            SharedPreferences.Editor editor = sharedpreferences.edit();
-                            editor.putInt(Constants.KEY_WALLET,
-                                    userResult.getUserWallet());
-                            editor.commit();
-                            mProgressDialog.dismiss();
-                            if (mFragmentListener != null) {
-                                mFragmentListener.addFragment(Constants.SCREEN_ORDER_SUCCESSFULL);
-                            }
-
-                        } else if (response.code() == 204) {
-                            Toast.makeText(getActivity(), "Invalid email or password",
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getActivity(), response.code()
-                                    + response.message(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<UserResult> call, Throwable t) {
-
-                }
-            });
-
-        }
-
+        mProgressDialog = new ProgressDialog(getActivity());
+        linearLayout = view.findViewById(R.id.ll_wallet_updation);
+        mWallet = view.findViewById(R.id.user_wallet);
+        mTotal = 0;
+        linearLayout.setVisibility(View.GONE);
+        IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_USER_CONFIRM_ORDER);
+        intentFilter.addAction(Constants.NOTIFY_WALLET_UPDATED);
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(broadcastReceiver, intentFilter);
     }
 
 
-    public void addListener(IFragmentListener iFragmentListener) {
-        this.mFragmentListener = iFragmentListener;
+    public void addListener(IUserFragmentListener iUserFragmentListener) {
+        this.mFragmentListener = iUserFragmentListener;
     }
 
     public void setConfirmationDetails(List<DishesDetails> dishesDetails) {
@@ -174,54 +156,59 @@ public class ConfirmationFragment extends Fragment implements View.OnClickListen
     }
 
     private void confirmOrder() {
-        if (mFragmentListener != null) {
-            //TODO: Get user id from SharedPreferance.
+        SharedPreferences sharedpreferences
+                = getActivity()
+                .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                Context.MODE_PRIVATE);
+        int wallet = sharedpreferences.getInt(Constants.KEY_WALLET, 0);
+
+        if(wallet >= mTotal){
+            showProgress();
+            final Order orderDetails = new Order();
+
+            int userid = sharedpreferences.getInt(Constants.KEY_ID, 0);
+
+            orderDetails.setUser_id(userid);
+            orderDetails.setRetail_id(retailid);
+            orderDetails.setOrder_item_count(orderitemcount);
+            orderDetails.setOrder_value(mTotal);
+            orderDetails.setOrder_items_string(mMenuitem);
+            RetrofitNetworksCalls calls = DataSingleton
+                    .getInstance().getRetrofitNetworksCallsObject();
+            if (calls != null) {
+                calls.confirmOrder(getActivity(), orderDetails);
+            }
+
         }
-        showProgress();
-        final Order orderDetails = new Order();
-        orderDetails.setUser_id(userid);
-        orderDetails.setRetail_id(retailid);
-        orderDetails.setOrder_item_count(orderitemcount);
-        orderDetails.setOrder_value(mTotal);
-        orderDetails.setOrder_items_string(mMenuitem);
 
+    }
 
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
-        if (retrofit != null) {
-
-            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-            Call<Order> call = iApiInterface
-                    .getOrderDetails(orderDetails);//how to use userid defined in userhome ctivity here
-
-            call.enqueue(new Callback<Order>() {
-                @Override
-                public void onResponse(Call<Order> call, Response<Order> response) {
-                    if (response != null && response.code() == 200) {
-                        Order result = response.body();
-                        //TODO add order success variable
-                        if (result != null
-                                && result.getOrder_status()
-                                .equalsIgnoreCase("ORDER_SUCCESSFULL")) {
-                            Toast.makeText(getActivity(),
-                                    "Order successfull", Toast.LENGTH_SHORT).show();
-                            getUserWalletDetails();
-
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Order> call, Throwable t) {
-                    Toast.makeText(getActivity(), call.toString()
-                            + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+    private void getUserWalletDetails() {
+        RetrofitNetworksCalls calls = DataSingleton
+                .getInstance().getRetrofitNetworksCallsObject();
+        if (calls != null) {
+            calls.getUserWalletDetails(getActivity());
         }
     }
 
     private void showProgress() {
-        mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage("Loading...");
-        mProgressDialog.show();
+        if (mProgressDialog != null) {
+            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.show();
+        }
+
     }
+
+    private void showWalletUpdation() {
+        SharedPreferences sharedpreferences
+                = getActivity().getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                Context.MODE_PRIVATE);
+        int wallet = sharedpreferences.getInt(Constants.KEY_WALLET, 0);
+        mWallet.setText("" + wallet);
+        linearLayout.setVisibility(View.VISIBLE);
+        mConfirmbutton.setVisibility(View.GONE);
+        mProgressDialog.dismiss();
+    }
+
+
 }

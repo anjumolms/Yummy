@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.example.dell.yummy.DataSingleton;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.user.IUserFragmentListener;
 import com.example.dell.yummy.model.DishesDetails;
 import com.example.dell.yummy.webservice.IApiInterface;
 import com.example.dell.yummy.model.StoreDetails;
@@ -36,12 +36,13 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
 
     private List<DishesDetails> dishesList;
     private RecyclerView mRecyclerView;
-    private IFragmentListener miFragmentListener;
+    private IUserFragmentListener miUserFragmentListener;
     private TextView mStoreName;
     private StoreDetails mStoreDetails;
     private Button mProceed;
     private StoreDetailsAdapter adapter;
     private ProgressDialog mProgressDialog;
+    private StoreDetails selectedStore;
 
     public StoreDetailsFragment() {
         // Required empty public constructor
@@ -88,38 +89,42 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             // TODO Hardcoded menu Id.
-            Call<List<DishesDetails>> call = iApiInterface
-                    .getStoreMenu(2);
-            call.enqueue(new Callback<List<DishesDetails>>() {
-                @Override
-                public void onResponse(Call<List<DishesDetails>> call,
-                                       Response<List<DishesDetails>> response) {
-                    if (response != null && response.code() == 200) {
+            if(selectedStore != null){
+                Call<List<DishesDetails>> call = iApiInterface
+                        .getStoreMenu(selectedStore.getRetailId());
+                call.enqueue(new Callback<List<DishesDetails>>() {
+                    @Override
+                    public void onResponse(Call<List<DishesDetails>> call,
+                                           Response<List<DishesDetails>> response) {
+                        if (response != null && response.code() == 200) {
 
-                        dishesList = response.body();
+                            dishesList = response.body();
 
-                    } else {
-                        Toast.makeText(getActivity(), response.code()
-                                + response.message(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                        if (dishesList != null) {
+                            mProgressDialog.dismiss();
+                            adapter = new StoreDetailsAdapter(getActivity(), dishesList);
+                            mRecyclerView.setAdapter(adapter);
+                        }
                     }
-                    if (dishesList != null) {
+
+                    @Override
+                    public void onFailure(Call<List<DishesDetails>> call, Throwable t) {
                         mProgressDialog.dismiss();
-                        adapter = new StoreDetailsAdapter(getActivity(), dishesList);
-                        mRecyclerView.setAdapter(adapter);
+                        Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
                     }
-                }
+                });
+            }
 
-                @Override
-                public void onFailure(Call<List<DishesDetails>> call, Throwable t) {
-                    mProgressDialog.dismiss();
-                    Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
-                }
-            });
+
         }
     }
 
-    public void addListener(IFragmentListener mIFragmentListener) {
-        miFragmentListener = mIFragmentListener;
+    public void addListener(IUserFragmentListener mIUserFragmentListener) {
+        miUserFragmentListener = mIUserFragmentListener;
 
     }
 
@@ -127,7 +132,7 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_buy:
-                if (miFragmentListener != null && adapter != null) {
+                if (miUserFragmentListener != null && adapter != null) {
 
                     List<DishesDetails> dishesDetails = adapter.getDishesDetailsList();
                     List<DishesDetails> selectedItems = new ArrayList<>();
@@ -137,12 +142,16 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
                         }
                     }
                     if (selectedItems.size() > 0) {
-                        miFragmentListener.loadConformationFragment(dishesDetails);
+                        miUserFragmentListener.loadConformationFragment(selectedItems);
                     }
                 }
                 break;
             default:
                 break;
         }
+    }
+
+    public void selectedStore(StoreDetails storeDetails) {
+        selectedStore = storeDetails;
     }
 }

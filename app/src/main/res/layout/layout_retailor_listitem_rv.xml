@@ -3,11 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
 
     <TableLayout
         android:orientation="horizontal"
         android:weightSum="3"
+        android:layout_marginTop="5dp"
         >
 
     <TableRow>
@@ -29,10 +31,15 @@
 
         <Button
             android:id="@+id/bt_retailer_update"
-            android:text="UPDATE"/>
-        <Button
-            android:id="@+id/bt_retailer_delete"
-            android:text="Delete"/>
+            android:text="UPDATE"
+            android:textColor="#fff"
+            android:background="@color/tab_color"
+            android:layout_marginRight="10dp"/>
+        <CheckBox
+            android:id="@+id/checkbox_retailer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/MyCheckbox"/>
 
     </TableRow>
 

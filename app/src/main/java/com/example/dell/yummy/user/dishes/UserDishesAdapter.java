@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.user.IUserFragmentListener;
 import com.example.dell.yummy.model.DishesDetails;
 
 import java.util.List;
@@ -23,17 +23,21 @@ public class UserDishesAdapter extends
     //this context we will use to inflate the layout
     private Context mCtx;
 
-    IFragmentListener miFragmentListener;
+    IUserFragmentListener miUserFragmentListener;
     //we are storing all the products in a list
     private List<DishesDetails> dishesDetailsList;
 
 
     //getting the context and product list with constructor
     public UserDishesAdapter(Context mCtx, List<DishesDetails> dishesDetailsList,
-                             IFragmentListener miFragmentListener) {
+                             IUserFragmentListener miUserFragmentListener) {
         this.mCtx = mCtx;
         this.dishesDetailsList = dishesDetailsList;
-        this.miFragmentListener = miFragmentListener;
+        this.miUserFragmentListener = miUserFragmentListener;
+    }
+
+    public void setData(List<DishesDetails> data) {
+        dishesDetailsList = data;
     }
 
     @Override
@@ -47,18 +51,26 @@ public class UserDishesAdapter extends
     @Override
     public void onBindViewHolder(DishesViewHolder holder, int position) {
         //getting the product of the specified position
-        DishesDetails dishesDetails = dishesDetailsList.get(position);
+        if (dishesDetailsList != null) {
+            DishesDetails dishesDetails = dishesDetailsList.get(position);
 
-        //binding the data with the viewholder views
-        holder.textViewTitle.setText(dishesDetails.getItemName());
-        holder.textViewPrice.setText(String.valueOf(dishesDetails.getItemPrice()));
+            //binding the data with the viewholder views
+            holder.textViewTitle.setText(dishesDetails.getItemName());
+            holder.textViewPrice.setText(String.valueOf(dishesDetails.getItemPrice()));
+
+        }
 
     }
 
 
     @Override
     public int getItemCount() {
-        return dishesDetailsList.size();
+        if(dishesDetailsList != null){
+            return dishesDetailsList.size();
+        }else{
+            return 0;
+        }
+
     }
 
 
@@ -82,10 +94,13 @@ public class UserDishesAdapter extends
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mCtx, "success", Toast.LENGTH_SHORT).show();
-                    if (miFragmentListener != null) {
-                        int clickPosition = getAdapterPosition();
-                        DishesDetails dishesDetails = dishesDetailsList.get(clickPosition);
-                        miFragmentListener.addPopup(dishesDetails);
+                    if (miUserFragmentListener != null) {
+                        if(dishesDetailsList != null){
+                            int clickPosition = getAdapterPosition();
+                            DishesDetails dishesDetails = dishesDetailsList.get(clickPosition);
+                            miUserFragmentListener.addPopup(dishesDetails);
+                        }
+
                     }
                 }
             });

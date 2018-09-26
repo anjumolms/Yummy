@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.user.IUserFragmentListener;
 import com.example.dell.yummy.model.StoreDetails;
 import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 
@@ -30,8 +30,9 @@ import java.util.List;
  */
 public class UserStoresFragment extends Fragment {
     RecyclerView recyclerView;
-    IFragmentListener miFragmentListener;
+    IUserFragmentListener miUserFragmentListener;
     List<StoreDetails> StoreList;
+    UserStoresAdapter adapter;
 
 
     public UserStoresFragment() {
@@ -43,7 +44,7 @@ public class UserStoresFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             if (intent != null
                     && intent.getAction().equals(Constants.NOTIFY_STORE_DETAILS)) {
-                showStoreDetails();
+                updateData();
             }
         }
     };
@@ -69,11 +70,18 @@ public class UserStoresFragment extends Fragment {
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_STORE_DETAILS);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
+        showStoreDetails();
 
     }
 
-    public void addListener(IFragmentListener miFragmentListener) {
-        this.miFragmentListener = miFragmentListener;
+    public void addListener(IUserFragmentListener miUserFragmentListener) {
+        this.miUserFragmentListener = miUserFragmentListener;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     public void showStoreDetails() {
@@ -81,15 +89,36 @@ public class UserStoresFragment extends Fragment {
                 .getRetrofitNetworksCallsObject();
         if (retrofitNetworksCalls != null) {
             List<StoreDetails> details = retrofitNetworksCalls.getStoreDetailsList();
-            if (details != null) {
 
-                UserStoresAdapter adapter = new UserStoresAdapter(getActivity(),
-                        details, miFragmentListener);
-                //setting adapter to recyclerview
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            }
+            adapter = new UserStoresAdapter(getActivity(),
+                    details, miUserFragmentListener);
+            //setting adapter to recyclerview
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         }
 
+    }
+
+    private void updateData() {
+        if (adapter != null) {
+            RetrofitNetworksCalls retrofitNetworksCalls = DataSingleton.getInstance()
+                    .getRetrofitNetworksCallsObject();
+            if (retrofitNetworksCalls != null) {
+                adapter.setData(retrofitNetworksCalls.getStoreDetailsList());
+                adapter.notifyDataSetChanged();
+            }
+
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 }

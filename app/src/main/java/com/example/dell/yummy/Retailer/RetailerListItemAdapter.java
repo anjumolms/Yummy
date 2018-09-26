@@ -6,23 +6,34 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.model.DishesDetails;
 
+import java.util.ArrayList;
 import java.util.List;
 
-class RetailerListItemAdapter extends RecyclerView.Adapter<RetailerListItemAdapter.ListItemViewHolder> {
+class RetailerListItemAdapter extends
+        RecyclerView.Adapter<RetailerListItemAdapter.ListItemViewHolder> {
 
     private Context mCtx;
 
     private List<DishesDetails> retailordishesList;
+    private IRetailerFragmentListener mFragmentListener;
+    private List<DishesDetails> deletedItemsList = new ArrayList<>();
 
-    public RetailerListItemAdapter(Context mCtx, List<DishesDetails> retailordishesList) {
+    public RetailerListItemAdapter(Context mCtx, List<DishesDetails> retailordishesList,
+                                   IRetailerFragmentListener mFragmentListener) {
         this.mCtx = mCtx;
         this.retailordishesList = retailordishesList;
+        this.mFragmentListener = mFragmentListener;
+    }
+
+    public List<DishesDetails> getDeletedItemsList() {
+        return deletedItemsList;
     }
 
     @Override
@@ -35,12 +46,12 @@ class RetailerListItemAdapter extends RecyclerView.Adapter<RetailerListItemAdapt
 
     @Override
     public void onBindViewHolder(@NonNull ListItemViewHolder holder, int position) {
-        //getting the product of the specified position
-        DishesDetails dishesDetails = retailordishesList.get(position);
+        if (retailordishesList != null) {
 
-        //binding the data with the viewholder views
-        holder.textViewTitle.setText(dishesDetails.getItemName());
-        holder.textViewPrice.setText("" + dishesDetails.getItemPrice());
+            DishesDetails dishesDetails = retailordishesList.get(position);
+            holder.textViewTitle.setText(dishesDetails.getItemName());
+            holder.textViewPrice.setText("" + dishesDetails.getItemPrice());
+        }
     }
 
 
@@ -49,9 +60,15 @@ class RetailerListItemAdapter extends RecyclerView.Adapter<RetailerListItemAdapt
         return retailordishesList.size();
     }
 
+    public void setData(List<DishesDetails> retailerDishDetails) {
+        retailordishesList = retailerDishDetails;
+        deletedItemsList = null;
+    }
+
     class ListItemViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewTitle, textViewPrice, btnRetailerUpdate, btnRetailerDelete;
+        TextView textViewTitle, textViewPrice, btnRetailerUpdate;
+        CheckBox checkBox;
 
 
         public ListItemViewHolder(View itemView) {
@@ -60,26 +77,43 @@ class RetailerListItemAdapter extends RecyclerView.Adapter<RetailerListItemAdapt
             textViewTitle = itemView.findViewById(R.id.tv_retailer_each_item);
             textViewPrice = itemView.findViewById(R.id.tv_retailer_listitem_cost);
             btnRetailerUpdate = itemView.findViewById(R.id.bt_retailer_update);
-            btnRetailerDelete = itemView.findViewById(R.id.bt_retailer_delete);
+            checkBox = itemView.findViewById(R.id.checkbox_retailer);
 
-            btnRetailerUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(mCtx, "update popup", Toast.LENGTH_SHORT).show();
-//                    if (miFragmentListener != null) {
-//                        miFragmentListener.addFragment(Constants.SCREEN_STORE_DETAILS);
-//                    }
+            if (retailordishesList != null) {
 
-                }
-            });
-           btnRetailerDelete.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   Toast.makeText(mCtx, "update popup", Toast.LENGTH_SHORT).show();
-               }
-           });
+                btnRetailerUpdate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mFragmentListener != null) {
+                            int pos = getAdapterPosition();
+                            mFragmentListener.showItemUpdatePopup(retailordishesList.get(pos));
+                        }
+                        Toast.makeText(mCtx, "update popup", Toast.LENGTH_SHORT).show();
 
+                    }
+                });
+                checkBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = getAdapterPosition();
+                        if (checkBox.isChecked()) {
+
+                            if (deletedItemsList == null) {
+                                deletedItemsList = new ArrayList<>();
+                            }
+                            deletedItemsList.add(retailordishesList.get(pos));
+                        } else {
+                            if (deletedItemsList != null
+                                    && deletedItemsList
+                                    .contains(retailordishesList.get(pos))) {
+                                deletedItemsList
+                                        .remove(retailordishesList.get(pos));
+                            }
+                        }
+
+                    }
+                });
+            }
         }
     }
-
 }

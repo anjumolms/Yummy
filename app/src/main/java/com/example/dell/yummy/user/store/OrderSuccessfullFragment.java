@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.user.IUserFragmentListener;
 import com.example.dell.yummy.R;
 
 /**
@@ -15,7 +15,7 @@ import com.example.dell.yummy.R;
  */
 public class OrderSuccessfullFragment extends Fragment {
 
-    IFragmentListener iFragmentListener;
+    IUserFragmentListener iUserFragmentListener;
 
     public OrderSuccessfullFragment() {
         // Required empty public constructor
@@ -29,8 +29,8 @@ public class OrderSuccessfullFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_order_successfull, container, false);
     }
 
-    public void addListener(IFragmentListener iFragmentListener) {
-        this.iFragmentListener = iFragmentListener;
+    public void addListener(IUserFragmentListener iUserFragmentListener) {
+        this.iUserFragmentListener = iUserFragmentListener;
     }
 
 }

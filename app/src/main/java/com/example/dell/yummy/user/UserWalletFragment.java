@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.dell.yummy.Constants;
-import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
 
 /**
@@ -20,7 +19,7 @@ import com.example.dell.yummy.R;
  */
 public class UserWalletFragment extends Fragment {
 
-    IFragmentListener iFragmentListener;
+    IUserFragmentListener iUserFragmentListener;
     private int coins;
     private TextView mUserCoin;
 
@@ -51,7 +50,7 @@ public class UserWalletFragment extends Fragment {
         return view;
     }
 
-    public void addListener(IFragmentListener iFragmentListener) {
-        this.iFragmentListener = iFragmentListener;
+    public void addListener(IUserFragmentListener iUserFragmentListener) {
+        this.iUserFragmentListener = iUserFragmentListener;
     }
 }

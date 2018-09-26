@@ -39,8 +39,6 @@
         android:layout_height="wrap_content"
         >
 
-
-
     <TextView
         android:id="@+id/tv_retailer_item_cost"
         android:layout_width="wrap_content"
@@ -55,6 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:inputType="number"
            />
 
     </TableRow>
@@ -91,6 +90,7 @@
         <Button
             android:id="@+id/bt_add_item_retailer"
             android:text="Add"
+            android:background="@color/tab_color"
             android:layout_gravity="center"/>
     </TableRow>
 

@@ -2,21 +2,25 @@ package com.example.dell.yummy.user;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.DataSingleton;
 import com.example.dell.yummy.R;
+import com.example.dell.yummy.model.DishesDetails;
+import com.example.dell.yummy.model.StoreDetails;
+import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class UserAddCoinsFragment extends Fragment {
 
-    IFragmentListener iFragmentListener;
+    IUserFragmentListener iUserFragmentListener;
 
 
     @Override
@@ -27,11 +31,24 @@ public class UserAddCoinsFragment extends Fragment {
                 false);
 
 
+        RetrofitNetworksCalls calls = DataSingleton.getInstance()
+                .getRetrofitNetworksCallsObject();
+        if (calls != null) {
+            List<DishesDetails> details = calls.getDishDetailsList();
+            List<StoreDetails> storeDetails = calls.getStoreDetailsList();
+            if(details != null && !details.isEmpty()){
+                int size = details.size();
+            }
+            if(storeDetails != null && !storeDetails.isEmpty()){
+                int size = storeDetails.size();
+            }
+
+        }
         return view;
     }
 
-    public void addListener(IFragmentListener iFragmentListener) {
-        this.iFragmentListener = iFragmentListener;
+    public void addListener(IUserFragmentListener iUserFragmentListener) {
+        this.iUserFragmentListener = iUserFragmentListener;
     }
 
 

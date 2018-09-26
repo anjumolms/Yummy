@@ -22,6 +22,7 @@
         <item name="colorControlHighlight">@color/tab_color</item>
     </style>
 
+
     <!-- Dialog -->
     <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:background">@color/background</item>

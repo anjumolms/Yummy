@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.user.IUserFragmentListener;
 import com.example.dell.yummy.model.StoreDetails;
 
 import java.util.List;
@@ -24,37 +24,48 @@ public class UserStoresAdapter extends
 
     private List<StoreDetails> storeList;
 
-    IFragmentListener miFragmentListener;
+    IUserFragmentListener miUserFragmentListener;
 
     public UserStoresAdapter(Context mCtx, List<StoreDetails> productList,
-                             IFragmentListener miFragmentListener) {
+                             IUserFragmentListener miUserFragmentListener) {
         this.mCtx = mCtx;
         this.storeList = productList;
-        this.miFragmentListener = miFragmentListener;
+        this.miUserFragmentListener = miUserFragmentListener;
 
     }
+    public void setData(List<StoreDetails> data) {
+        storeList = data;
+    }
+
     @Override
     public StoreViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.layout_stores,parent,false );
+        View view = inflater.inflate(R.layout.layout_stores, parent, false);
         return new StoreViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(StoreViewHolder holder, int position) {
         //getting the product of the specified position
-        StoreDetails storeDetails = storeList.get(position);
-        //binding the data with the viewholder views
-        holder.textViewStoreName.setText(storeDetails.getRetailName());
-        holder.textViewStoreId.setText("Store ID  "+storeDetails.getRetailNumber());
+        if (storeList != null) {
+            StoreDetails storeDetails = storeList.get(position);
+            //binding the data with the viewholder views
+            holder.textViewStoreName.setText(storeDetails.getRetailName());
+            holder.textViewStoreId.setText("Store ID  " + storeDetails.getRetailNumber());
 
         }
+    }
 
     @Override
     public int getItemCount() {
-        return storeList.size();
+        if (storeList != null) {
+            return storeList.size();
+        } else {
+            return 0;
+        }
     }
+
     class StoreViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewStoreName, textViewStoreId;
@@ -74,11 +85,14 @@ public class UserStoresAdapter extends
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mCtx,"success",Toast.LENGTH_SHORT).show();
-                    if(miFragmentListener != null){
-                        int userClickPosition = getAdapterPosition();
-                        StoreDetails storeDetails = storeList.get(userClickPosition);
-                        miFragmentListener.passStoreDetails(Constants.SCREEN_STORE_DETAILS,storeDetails);
+                    Toast.makeText(mCtx, "success", Toast.LENGTH_SHORT).show();
+                    if (miUserFragmentListener != null) {
+                        if (storeList != null) {
+
+                            int userClickPosition = getAdapterPosition();
+                            StoreDetails storeDetails = storeList.get(userClickPosition);
+                            miUserFragmentListener.passStoreDetails(Constants.SCREEN_STORE_DETAILS, storeDetails);
+                        }
                     }
 
                 }
@@ -86,4 +100,6 @@ public class UserStoresAdapter extends
 
         }
     }
+
+
 }

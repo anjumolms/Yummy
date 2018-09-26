@@ -9,9 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.dell.yummy.IFragmentListener;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.model.DishesDetails;
 import com.example.dell.yummy.user.dishes.UserDishesFragment;
 import com.example.dell.yummy.user.reviews.UserReviewFragment;
 import com.example.dell.yummy.user.store.UserStoresFragment;
@@ -30,7 +28,7 @@ public class UserViewPagerFragment extends Fragment {
     private UserStoresFragment mUserStoresFragment;
     private UserDishesFragment mUserDishesFragment;
     private UserReviewFragment mUserReviewFragment;
-    private IFragmentListener miFragmentListener;
+    private IUserFragmentListener miUserFragmentListener;
     private List<StoreDetails> mStoreDetails;
 
 
@@ -58,13 +56,14 @@ public class UserViewPagerFragment extends Fragment {
 
     private void initFragments() {
         mUserStoresFragment = new UserStoresFragment();
-        mUserStoresFragment.addListener(miFragmentListener);
+        mUserStoresFragment.addListener(miUserFragmentListener);
 
         mUserDishesFragment = new UserDishesFragment();
-        mUserDishesFragment.addListener(miFragmentListener);
+        mUserDishesFragment.addListener(miUserFragmentListener);
 
         mUserReviewFragment = new UserReviewFragment();
-        mUserReviewFragment.addListener(miFragmentListener);
+        mUserReviewFragment.addListener(miUserFragmentListener);
+        //LoadDetails();
     }
 
     private void addTabs(ViewPager viewPager) {
@@ -75,10 +74,11 @@ public class UserViewPagerFragment extends Fragment {
         adapter.addFrag(mUserReviewFragment, "Review");
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(0);
+        viewPager.setOffscreenPageLimit(3);
     }
 
-    public void addListener(IFragmentListener iFragmentListener) {
-        miFragmentListener = iFragmentListener;
+    public void addListener(IUserFragmentListener iUserFragmentListener) {
+        miUserFragmentListener = iUserFragmentListener;
 
     }
 }

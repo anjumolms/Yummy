@@ -1,19 +1,26 @@
 package com.example.dell.yummy.Retailer;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.dell.yummy.IFragmentListener;
+import com.example.dell.yummy.Constants;
+import com.example.dell.yummy.DataSingleton;
+import com.example.dell.yummy.user.IUserFragmentListener;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.model.TransactionDetails;
+import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,10 +28,20 @@ import java.util.List;
  */
 public class RetailerTransactionDetailsFragment extends Fragment {
 
-    private IFragmentListener iFragmentListener;
+    private IRetailerFragmentListener retailerFragmentListener;
     private List<TransactionDetails> transactionDetailsList;
     private RecyclerView mRecyclerView;
+    private TransactionDetailsAdapter mAdapter;
 
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null
+                    && intent.getAction().equals(Constants.NOTIFY_TRANSACTION_DETAILS)) {
+                updateData();
+            }
+        }
+    };
 
 
     public RetailerTransactionDetailsFragment() {
@@ -39,62 +56,51 @@ public class RetailerTransactionDetailsFragment extends Fragment {
          View view = inflater.inflate(R.layout.fragment_retailer_transaction_details,
                  container, false);
          initViews(view);
-
-//        TransactionDetailsAdapter adapter = new TransactionDetailsAdapter(getActivity(),
-//                transactionDetailsList, iFragmentListener);
-//                   mRecyclerView.setAdapter(adapter);
-
-
-
-
-//        Retrofit retrofit = RetrofitClient.getClient();
-//
-//        IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-//        Call<List<TransactionDetails>> call = iApiInterface.getTransactionDetails(2);
-//
-//        call.enqueue(new Callback<List<TransactionDetails>>() {
-//
-//
-//            @Override
-//            public void onResponse(Call<List<TransactionDetails>> call,
-//                                   Response<List<TransactionDetails>> response) {
-//                if (response != null) {
-//                    if (response.code() == 200) {
-//                        transactionDetailsList = response.body();
-//
-//                    } else {
-//                        Toast.makeText(getActivity(), response.code()
-//                                + response.message(), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//
-//                if (transactionDetailsList != null) {
-//                    TransactionDetailsAdapter adapter = new TransactionDetailsAdapter(getActivity(), transactionDetailsList, iFragmentListener);
-//                    recyclerView.setAdapter(adapter);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<TransactionDetails>> call, Throwable t) {
-//
-//                Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
-//            }
-//
-//        });
-
-
-        return view;
+         return view;
     }
 
     private void initViews(View view) {
         mRecyclerView = view.findViewById(R.id.rv_transaction_details);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_TRANSACTION_DETAILS);
+        LocalBroadcastManager.getInstance(getActivity())
+                .registerReceiver(broadcastReceiver, intentFilter);
+        showStoreDetails();
+
     }
 
-    public void addListener(IFragmentListener iFragmentListener) {
+    public void showStoreDetails() {
+        RetrofitNetworksCalls retrofitNetworksCalls = DataSingleton.getInstance()
+                .getRetrofitNetworksCallsObject();
 
-        this.iFragmentListener = iFragmentListener;
+        if (retrofitNetworksCalls != null) {
+            List<TransactionDetails> details
+                    = retrofitNetworksCalls.getTransactionList();
+
+            mAdapter = new TransactionDetailsAdapter(getActivity(),
+                    details, retailerFragmentListener);
+            //setting adapter to recyclerview
+            mRecyclerView.setAdapter(mAdapter);
+
+        }
+
+    }
+    private void updateData() {
+        if (mAdapter != null) {
+            RetrofitNetworksCalls retrofitNetworksCalls = DataSingleton.getInstance()
+                    .getRetrofitNetworksCallsObject();
+            if (retrofitNetworksCalls != null) {
+                mAdapter.setData(retrofitNetworksCalls.getTransactionList());
+                mAdapter.notifyDataSetChanged();
+            }
+
+        }
+    }
+
+    public void addListener(IRetailerFragmentListener retailerFragmentListener) {
+
+        this.retailerFragmentListener = retailerFragmentListener;
 
     }
 }

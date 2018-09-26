@@ -2,26 +2,47 @@ package com.example.dell.yummy.webservice;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
-import com.example.dell.yummy.MainActivity;
-import com.example.dell.yummy.SplashActivity;
 import com.example.dell.yummy.model.DishesDetails;
+import com.example.dell.yummy.model.LocationDetails;
+import com.example.dell.yummy.model.Order;
+import com.example.dell.yummy.model.RegisterStore;
+import com.example.dell.yummy.model.RetailerDetails;
+import com.example.dell.yummy.model.RetailerMenu;
 import com.example.dell.yummy.model.StoreDetails;
+import com.example.dell.yummy.model.TransactionDetails;
+import com.example.dell.yummy.model.UserDetails;
+import com.example.dell.yummy.model.UserResult;
+import com.example.dell.yummy.model.UserReview;
 
+import retrofit2.Retrofit;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitNetworksCalls {
     private List<StoreDetails> storeDetails;
     private List<DishesDetails> dishesDetails;
+    private List<UserReview> mUserReviewList;
+    private List<TransactionDetails> mTransactionDetails;
+    private List<TransactionDetails> mConfirmOrderList = new ArrayList<>();
+    private Retrofit mRetrofit;
+    private List<DishesDetails> mRetailordishesList;
+    private UserDetails mUserDetails;
+    private RetailerDetails mRetailerDetails;
 
     public void getStoreDetails(final Context context) {
 
@@ -95,11 +116,623 @@ public class RetrofitNetworksCalls {
         }
     }
 
+    public void getReviewDetails(final Context context) {
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+
+            SharedPreferences sharedPreferences = context
+                    .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                            Context.MODE_PRIVATE);
+            int id = 0;
+            if (sharedPreferences != null) {
+                id = sharedPreferences.getInt(Constants.KEY_ID, 0);
+            }
+
+            Call<List<UserReview>> call = iApiInterface.getUserReview(id);
+
+
+            call.enqueue(new Callback<List<UserReview>>() {
+                @Override
+                public void onResponse(Call<List<UserReview>> call,
+                                       Response<List<UserReview>> response) {
+
+                    if (response != null) {
+                        if (response.code() == 200) {
+                            mUserReviewList = response.body();
+                            Intent intent = new Intent(Constants.NOTIFY_REVIEW_DETAILS);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        } else {
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<UserReview>> call, Throwable t) {
+
+                    Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
+                }
+
+            });
+        }
+    }
+
+    public void getTransactionDetails(final Context context, int id) {
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+            Call<List<TransactionDetails>> call = iApiInterface
+                    .getTransactionDetails(id);
+
+            call.enqueue(new Callback<List<TransactionDetails>>() {
+
+
+                @Override
+                public void onResponse(Call<List<TransactionDetails>> call,
+                                       Response<List<TransactionDetails>> response) {
+                    if (response != null) {
+                        if (response.code() == 200) {
+                            mTransactionDetails = response.body();
+                            Intent intent = new Intent(Constants.NOTIFY_TRANSACTION_DETAILS);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        } else {
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<TransactionDetails>> call, Throwable t) {
+
+                    Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
+                }
+
+            });
+        }
+
+    }
+
+    public void addOrderConfirmedTransaction(TransactionDetails transactionDetails) {
+        mConfirmOrderList.add(transactionDetails);
+    }
+
+    public void getRetailerMenuList(final Context context, final int isFromListUpdate) {
+        SharedPreferences sharedPreferences = context
+                .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                        Context.MODE_PRIVATE);
+        int id = 0;
+        if (sharedPreferences != null) {
+            id = sharedPreferences.getInt(Constants.KEY_ID, 0);
+        }
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+            Call<List<DishesDetails>> call = iApiInterface
+                    .getStoreMenu(id);
+
+            call.enqueue(new Callback<List<DishesDetails>>() {
+                @Override
+                public void onResponse(Call<List<DishesDetails>> call,
+                                       Response<List<DishesDetails>> response) {
+                    if (response != null && response.code() == 200) {
+                        mRetailordishesList = response.body();
+                        Intent intent = new Intent(Constants.NOTIFY_RETAILOR_DISH_DETAILS);
+                        intent.putExtra(Constants.KEY_LIST_UPDATE, isFromListUpdate);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                    } else {
+                        Toast.makeText(context, response.code()
+                                + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<DishesDetails>> call, Throwable t) {
+                    Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
+                }
+
+            });
+        }
+
+    }
+
+    public void updateReview(int rating, final Context context, int reviewId) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(IApiInterface.BASE_URL).build();
+
+        IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+
+        Call<String> call = iApiInterface.updateReview(reviewId, rating);
+
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call,
+                                   Response<String> response) {
+
+                if (response != null) {
+                    if (response.code() == 200) {
+                        if (response.body()
+                                .equalsIgnoreCase("Review Updated")) {
+
+                            Toast.makeText(context, response.code()
+                                    + response.toString(), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Constants.NOTIFY_REVIEW_UPDATED);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        }
+
+                    } else {
+                        Toast.makeText(context, response.code()
+                                + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+                Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+
+    }
+
     public List<StoreDetails> getStoreDetailsList() {
         return storeDetails;
     }
 
     public List<DishesDetails> getDishDetailsList() {
         return dishesDetails;
+    }
+
+    public List<UserReview> getUserReviewDetails() {
+        return mUserReviewList;
+    }
+
+    public List<DishesDetails> getRetailerDishDetails() {
+        return mRetailordishesList;
+    }
+
+    public List<TransactionDetails> getTransactionList() {
+        return mTransactionDetails;
+    }
+
+    public List<TransactionDetails> getConfirmOrderList() {
+        return mConfirmOrderList;
+    }
+
+    public void addItemsToList(RetailerMenu retailerMenu, final Context context) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(IApiInterface.BASE_URL).build();
+
+        IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+
+        Call<String> call = iApiInterface.addItem(retailerMenu);
+
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call,
+                                   Response<String> response) {
+
+                if (response != null) {
+                    if (response.code() == 200) {
+                        if (response.body()
+                                .equalsIgnoreCase("Item Added Successfully")) {
+
+                            Toast.makeText(context, "Item added Successfully",
+                                    Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Constants.NOTIFY_ITEM_ADDED);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        }
+
+                    } else {
+                        Toast.makeText(context, response.code()
+                                + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+                Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+
+    }
+
+    public void getUserDetails(final Context context, int loginId) {
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+            Call<UserDetails> call = iApiInterface.getUserDetails(loginId);
+
+
+            call.enqueue(new Callback<UserDetails>() {
+                @Override
+                public void onResponse(Call<UserDetails> call,
+                                       Response<UserDetails> response) {
+
+                    if (response != null) {
+                        if (response.code() == 200) {
+                            mUserDetails = response.body();
+                            Intent intent = new Intent(Constants.NOTIFY_USER_DETAILS);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        } else {
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UserDetails> call, Throwable t) {
+
+                    Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
+                }
+
+            });
+        }
+    }
+
+    public void getRetailerDetails(final Context context, int loginId) {
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+            Call<RetailerDetails> call = iApiInterface.getRetailerDetails(loginId);
+
+
+            call.enqueue(new Callback<RetailerDetails>() {
+                @Override
+                public void onResponse(Call<RetailerDetails> call,
+                                       Response<RetailerDetails> response) {
+
+                    if (response != null) {
+                        if (response.code() == 200) {
+                            mRetailerDetails = response.body();
+                            Intent intent = new Intent(Constants.NOTIFY_RETAILER_DETAILS);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        } else {
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<RetailerDetails> call, Throwable t) {
+
+                    Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
+                }
+
+            });
+        }
+    }
+
+    public UserDetails getUsersDetails() {
+        return mUserDetails;
+    }
+
+    public RetailerDetails getmRetailerDetails() {
+        return mRetailerDetails;
+    }
+
+    public void updateRetailerMenuItem(final Context context,
+                                       DishesDetails dishesDetails) {
+
+        if (dishesDetails != null) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .baseUrl(IApiInterface.BASE_URL).build();
+            if (retrofit != null) {
+                IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+                Call<String> call = iApiInterface.updateMenuItem(dishesDetails);
+
+
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call,
+                                           Response<String> response) {
+
+                        if (response != null) {
+                            if (response.code() == 200) {
+
+                                Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_UPDATED);
+                                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                            } else {
+                                Toast.makeText(context, response.code()
+                                        + response.message(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+
+                        Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+            }
+        }
+    }
+
+    public void deleteItemFromList(final Context context, ArrayList<Integer> list) {
+
+        if (list != null) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .baseUrl(IApiInterface.BASE_URL).build();
+            if (retrofit != null) {
+                IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+                Call<String> call = iApiInterface.deleteItemList(list);
+
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call,
+                                           Response<String> response) {
+
+                        if (response != null) {
+                            if (response.code() == 200) {
+
+                                Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_DELETED);
+                                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                            } else {
+                                Toast.makeText(context, response.code()
+                                        + response.message(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+
+                        Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+            }
+        }
+
+    }
+
+    public void confirmOrder(final Context context, Order orderDetails) {
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+
+            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+            Call<Order> call = iApiInterface
+                    .getOrderDetails(orderDetails);
+
+            call.enqueue(new Callback<Order>() {
+                @Override
+                public void onResponse(Call<Order> call, Response<Order> response) {
+                    if (response != null && response.code() == 200) {
+                        Order result = response.body();
+                        //TODO add order success variable
+                        if (result != null
+                                && result.getOrder_status()
+                                .equalsIgnoreCase("ORDER_SUCCESSFULL")) {
+                            Toast.makeText(context,
+                                    "Order successfull", Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(Constants.NOTIFY_USER_CONFIRM_ORDER);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Order> call, Throwable t) {
+                    Toast.makeText(context, call.toString()
+                            + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    public void getLocation(final Context context) {
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            IApiInterface service = retrofit.create(IApiInterface.class);
+            Call<LocationDetails> call = service.getLocations();
+            call.enqueue(new Callback<LocationDetails>() {
+                @Override
+                public void onResponse(Call<LocationDetails> call,
+                                       Response<LocationDetails> response) {
+                    if (response != null && response.code() == 200) {
+
+                        LocationDetails places = response.body();
+                        if (places != null) {
+//                            Intent intent = new Intent(Constants.NOTIFY_GET_LOCATION);
+//                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        } else if (response.code() == 204) {
+                            Toast.makeText(context, "Invalid email or password",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LocationDetails> call, Throwable t) {
+                    Toast.makeText(context,
+                            "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+    }
+
+    public void getUserWalletDetails(final Context context) {
+        final SharedPreferences sharedpreferences
+                = context.getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                Context.MODE_PRIVATE);
+
+        int id = sharedpreferences.getInt(Constants.KEY_ID, 0);
+        int role = sharedpreferences.getInt(Constants.KEY_ROLE, 0);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            Call<String> call = null;
+            IApiInterface service = retrofit.create(IApiInterface.class);
+            if (role == 1) {
+                call = service.getWallet(id);
+            }
+            if (role == 2) {
+                call = service.getRetailWallet(id);
+            }
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call,
+                                       Response<String> response) {
+                    if (response != null && response.code() == 200) {
+
+                        if (response.body() != null) {
+                            String wallet = response.body();
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putInt(Constants.KEY_WALLET,
+                                    Integer.parseInt(wallet));
+                            editor.commit();
+
+                            Intent intent = new Intent(Constants.NOTIFY_WALLET_UPDATED);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        } else if (response.code() == 204) {
+                            Toast.makeText(context, "Invalid email or password",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Toast.makeText(context,
+                            "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+
+    }
+
+    public void updateReviewItemsList(UserReview userReview, Context context) {
+        if (mUserReviewList != null && !mUserReviewList.isEmpty()) {
+            if (mUserReviewList.contains(userReview)) {
+                mUserReviewList.remove(userReview);
+                Intent intent = new Intent(Constants.NOTIFY_REVIEW_DETAILS);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            }
+        }
+    }
+
+    public void addStoreDetails(final Context context, RegisterStore registerStore) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(IApiInterface.BASE_URL).build();
+        if (retrofit != null) {
+            IApiInterface service = retrofit.create(IApiInterface.class);
+            Call<String> call = service.addStoreDetails(registerStore);
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call,
+                                       Response<String> response) {
+                    if (response != null) {
+                        if (response.code() == 200) {
+                            Toast.makeText(context, response.body()
+                                    , Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Constants.NOTIFY_STORE_ADDED);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        } else {
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                    Toast.makeText(context, t.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            Log.w("LoginFragment ", "Retrofit object is null ");
+        }
+
+    }
+
+    public void updateToken(final Context context, UserResult userResult) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(IApiInterface.BASE_URL).build();
+        if(retrofit != null){
+            IApiInterface service = retrofit.create(IApiInterface.class);
+            Call<String> call = service.updateToken(userResult);
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call,
+                                       Response<String> response) {
+                    if (response != null) {
+                        if (response.code() == 200) {
+
+                            Toast.makeText(context, response.body()
+                                    , Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                    Toast.makeText(context, t.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+
     }
 }
