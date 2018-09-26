@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp">
+            <TableRow>
+                <TextView
+                    android:id="@+id/popup_retailer_store_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textSize="18dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="#000000"
+                    android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow
+                android:layout_marginTop="15dp">
+
+                <TextView
+                    android:id="@+id/popup_retailer_item_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/popup_dish_retailer_item_count"
+                    android:layout_width="0dp"
+                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3" />
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/popup_retailer_im_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/additem" />
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/popup_retailer_im_rem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/removeitem" />
+
+            </TableRow>
+
+            <TableRow android:layout_marginTop="5dp">
+
+                <EditText
+                    android:id="@+id/popup_retailer_item_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="18sp"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="right"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:id="@+id/popup_retailer_buy"
+                    android:text="Update"
+                    android:textColor="@color/tab_color"
+                    android:layout_marginRight="10dp"/>
+
+                <TextView
+                    android:id="@+id/popup_retailer_cancel"
+                    android:text="Cancel"
+                    android:textColor="@color/tab_color"
+                    android:layout_marginRight="10dp"/>
+            </TableRow>
+
+        </TableLayout>
+    </LinearLayout>
+
+</LinearLayout>
