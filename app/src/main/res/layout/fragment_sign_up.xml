@@ -1,103 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/cl_registration_fragment"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".RegistrationFragment"
-    android:background="#fff">
-
+    android:layout_height="match_parent">
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+        android:layout_height="match_parent"
+        tools:context=".RegistrationFragment"
+        android:background="#fff">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginTop="20dp"
-            android:textSize="50sp"
-            android:src="@drawable/yummyimage"
-            android:gravity="center" />
-
-        <!-- Email Label -->
-        <android.support.design.widget.TextInputLayout
-            android:theme="@style/EditTextHint"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/register_username"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="20dp"
+                android:textSize="50sp"
+                android:src="@drawable/yummyimage"
+                android:gravity="center" />
+
+            <!-- Email Label -->
+            <android.support.design.widget.TextInputLayout
+                android:theme="@style/EditTextHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:hint="Name" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
 
-        <android.support.design.widget.TextInputLayout
-            android:theme="@style/EditTextHint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/register_uid"
+                <EditText
+                    android:id="@+id/register_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:hint="Name" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:theme="@style/EditTextHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="Email"/>
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
 
-        <android.support.design.widget.TextInputLayout
-            android:theme="@style/EditTextHint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/register_password"
+                <EditText
+                    android:id="@+id/register_uid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:hint="Email" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:theme="@style/EditTextHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Password" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
 
-        <!-- Password Label -->
-        <android.support.design.widget.TextInputLayout
-            android:theme="@style/EditTextHint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/confirm_password"
+                <EditText
+                    android:id="@+id/register_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:hint="Password" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- Password Label -->
+            <android.support.design.widget.TextInputLayout
+                android:theme="@style/EditTextHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Confirm Password"/>
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
 
-        <android.support.design.widget.TextInputLayout
-            android:theme="@style/EditTextHint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/register_mobile"
+                <EditText
+                    android:id="@+id/confirm_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:hint="Confirm Password" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:theme="@style/EditTextHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="Mobile"/>
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/register_login"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:padding="12dp"
-            android:text="Register"
-            android:textColor="#fff"
-            android:background="@color/tab_color"/>
+                <EditText
+                    android:id="@+id/register_mobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Mobile" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/register_login"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:padding="12dp"
+                android:text="Register"
+                android:textColor="#fff"
+                android:background="@color/tab_color" />
+        </LinearLayout>
+
     </LinearLayout>
-
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

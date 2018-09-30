@@ -2,7 +2,12 @@ package com.example.dell.yummy;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -35,6 +40,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     private EditText mMobile;
     private Button mlogin;
     private ProgressDialog mProgressDialog;
+    private CoordinatorLayout mCoordinatorLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +59,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         mConfirmPassword = view.findViewById(R.id.confirm_password);
         mMobile = view.findViewById(R.id.register_mobile);
         mlogin = view.findViewById(R.id.register_login);
+        mCoordinatorLayout = view.findViewById(R.id.cl_registration_fragment);
     }
 
 
@@ -118,8 +125,17 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         registrationResult.setUserEmail(strEmail);
         registrationResult.setLoginUsername(strMobile);
         registrationResult.setUserName(strUserName);
-        showProgress();
-        registerUser(registrationResult);
+
+        if (isNetworkAvailable()) {
+            showProgress();
+            registerUser(registrationResult);
+        } else {
+            Snackbar snackbar = Snackbar
+                    .make(mCoordinatorLayout, "Sorry you are offline",
+                            Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+
     }
 
     private void registerUser(RegistrationResult registrationResult) {
@@ -132,12 +148,21 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                 public void onResponse(Call<RegistrationResult> call,
                                        Response<RegistrationResult> response) {
                     mProgressDialog.dismiss();
-                    if (response != null && response.code() == 200) {
+                    if (response != null) {
 
-                        RegistrationResult registrationResult = response.body();
-                        if (registrationResult != null && mainView != null) {
-                            mainView.addFragment(Constants.SCREEN_LOGIN);
+                        if (response.code() == 200) {
+
+                            RegistrationResult registrationResult = response.body();
+                            if (registrationResult != null && mainView != null) {
+                                mainView.addFragment(Constants.SCREEN_LOGIN);
+                            }
+                        } else {
+                            Toast.makeText(getContext(),
+                                    "" + response.code(), Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Toast.makeText(getContext(),
+                                "response null", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -156,6 +181,19 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage("Loading...");
         mProgressDialog.show();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager ConnectionManager
+                = (ConnectivityManager) getActivity()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected() == true) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }
 

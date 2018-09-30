@@ -7,6 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -66,8 +68,12 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
                     listItemUpdated();
                 }
 
-                if(intent.getAction().equals(Constants.NOTIFY_LIST_ITEM_DELETED)){
-                   listItemUpdated();
+                if (intent.getAction().equals(Constants.NOTIFY_LIST_ITEM_DELETED)) {
+                    listItemUpdated();
+                }
+
+                if (intent.getAction().equals(Constants.NOTIFY_UPDATE_ITEM_ERROR)) {
+                    stopProgress();
                 }
             }
 
@@ -100,6 +106,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_RETAILOR_DISH_DETAILS);
         intentFilter.addAction(Constants.NOTIFY_LIST_ITEM_UPDATED);
         intentFilter.addAction(Constants.NOTIFY_LIST_ITEM_DELETED);
+        intentFilter.addAction(Constants.NOTIFY_UPDATE_ITEM_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
         actionButton.setOnClickListener(this);
@@ -143,6 +150,12 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
         }
     }
 
+    private void stopProgress() {
+        if(progressDialog != null && progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+    }
+
     private void listItemUpdated() {
         RetrofitNetworksCalls calls = DataSingleton
                 .getInstance().getRetrofitNetworksCallsObject();
@@ -163,10 +176,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
             TextView storeName = dialog.findViewById(R.id.popup_retailer_store_name);
             final TextView itemName = dialog.findViewById(R.id.popup_retailer_item_name);
             final EditText itemPrice = dialog.findViewById(R.id.popup_retailer_item_price);
-            final TextView itemCount = dialog
-                    .findViewById(R.id.popup_dish_retailer_item_count);
-            ImageButton addBt = dialog.findViewById(R.id.popup_retailer_im_add);
-            ImageButton removeBt = dialog.findViewById(R.id.popup_retailer_im_rem);
+            final EditText itemCount = dialog.findViewById(R.id.et_dishes_count);
 
             TextView btUpdate = dialog.findViewById(R.id.popup_retailer_buy);
             TextView btCancel = dialog.findViewById(R.id.popup_retailer_cancel);
@@ -174,52 +184,38 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
             itemName.setText(dishesDetails.getItemName());
             itemPrice.setText("" + dishesDetails.getItemPrice());
 
-
-            addBt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    counter = counter + 1;
-                    dishesDetails.setCounter(counter);
-                    itemCount.setText(String.valueOf(counter));
-
-                }
-            });
-            removeBt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    if (counter > 0) {
-                        counter--;
-                    }
-                    dishesDetails.setCounter(counter);
-                    itemCount.setText(String.valueOf(counter));
-
-                }
-            });
             btUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    counter = 0;
-
                     dishesDetails.setItemName(itemName.getText().toString());
-                    dishesDetails.setItemPrice(Integer.parseInt(itemPrice.getText().toString()));
-                    dishesDetails.setItemStock(Integer.parseInt(itemCount.getText().toString()));
-                    RetrofitNetworksCalls calls = DataSingleton
-                            .getInstance().getRetrofitNetworksCallsObject();
-                    if (calls != null) {
-                        calls.updateRetailerMenuItem(getActivity(), dishesDetails);
-                        progressDialog.setMessage("Please wait..");
-                        progressDialog.show();
+                    String price = itemPrice.getText().toString().trim();
+                    String count = itemCount.getText().toString().trim();
+                    if (!price.isEmpty() && !count.isEmpty()) {
+
+                        dishesDetails.setItemPrice(Integer.parseInt(price));
+                        dishesDetails.setItemStock(Integer.parseInt(count));
+                        if (isNetworkAvailable()) {
+
+                            RetrofitNetworksCalls calls = DataSingleton
+                                    .getInstance().getRetrofitNetworksCallsObject();
+                            if (calls != null) {
+                                calls.updateRetailerMenuItem(getActivity(), dishesDetails);
+                                progressDialog.setMessage("Please wait..");
+                                progressDialog.show();
+                            }
+                            dialog.dismiss();
+                        } else {
+                            if (mFragmentListener != null) {
+                                mFragmentListener.showSnackBar();
+                            }
+                        }
                     }
-                    dialog.dismiss();
                 }
             });
 
             btCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    counter = 0;
                     dialog.dismiss();
                 }
             });
@@ -244,22 +240,41 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
     }
 
     private void deleteItemFromList() {
+        if (isNetworkAvailable()) {
 
-        if (adapter != null) {
-            progressDialog.setMessage("Please wait..");
-            progressDialog.show();
-            List<DishesDetails> deletedItemsList = adapter.getDeletedItemsList();
-            if (deletedItemsList != null && !deletedItemsList.isEmpty()) {
-                ArrayList<Integer> list = new ArrayList<>();
-                for (DishesDetails details : deletedItemsList) {
-                    list.add(details.getMenuId());
-                }
-                RetrofitNetworksCalls calls = DataSingleton
-                        .getInstance().getRetrofitNetworksCallsObject();
-                if (calls != null) {
-                    calls.deleteItemFromList(getActivity(), list);
+            if (adapter != null) {
+                progressDialog.setMessage("Please wait..");
+                progressDialog.show();
+                List<DishesDetails> deletedItemsList = adapter.getDeletedItemsList();
+                if (deletedItemsList != null && !deletedItemsList.isEmpty()) {
+                    ArrayList<Integer> list = new ArrayList<>();
+                    for (DishesDetails details : deletedItemsList) {
+                        list.add(details.getMenuId());
+                    }
+                    RetrofitNetworksCalls calls = DataSingleton
+                            .getInstance().getRetrofitNetworksCallsObject();
+                    if (calls != null) {
+                        calls.deleteItemFromList(getActivity(), list);
+                    }
                 }
             }
+        } else {
+            if (mFragmentListener != null) {
+                mFragmentListener.showSnackBar();
+            }
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager ConnectionManager
+                = (ConnectivityManager) getActivity()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected() == true) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }

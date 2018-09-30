@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".admin.RegisterStoresFragment">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -126,7 +129,12 @@
                 android:hint="Mobile"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
-
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/select"
+            android:layout_margin="5dp"/>
         <Button
             android:id="@+id/bt_admin_store_register"
             android:layout_width="match_parent"
@@ -137,7 +145,7 @@
             android:background="@color/tab_color"/>
 
     </LinearLayout>
-
+    </ScrollView>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fb_mail"
         android:layout_width="wrap_content"

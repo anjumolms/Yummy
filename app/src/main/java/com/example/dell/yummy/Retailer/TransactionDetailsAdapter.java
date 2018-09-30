@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.model.TransactionDetails;
+import com.example.dell.yummy.model.Order;
 
 import java.util.List;
 
@@ -18,13 +18,13 @@ class TransactionDetailsAdapter extends
         RecyclerView.Adapter<TransactionDetailsAdapter.TransactionViewHolder> {
 
     private Context mCtx;
-    private List<TransactionDetails> transactionDetailsList;
-    private TransactionDetails transactionDetails;
+    private List<Order> transactionDetailsList;
+    private Order transactionDetails;
     IRetailerFragmentListener retailerFragmentListener;
     private boolean isConfirmOrderPage;
 
     public TransactionDetailsAdapter(Context mCtx,
-                                     List<TransactionDetails> transactionDetailsList,
+                                     List<Order> transactionDetailsList,
                                      IRetailerFragmentListener retailerFragmentListener) {
         this.mCtx = mCtx;
         this.transactionDetailsList = transactionDetailsList;
@@ -37,10 +37,10 @@ class TransactionDetailsAdapter extends
         if (transactionDetailsList != null) {
 
             transactionDetails = transactionDetailsList.get(position);
-            holder.textViewUserId.setText("" + transactionDetails.getUserId());
-            holder.textViewTransactionId.setText("" + transactionDetails.getWalletTranId());
-            holder.textViewAmount.setText("" + transactionDetails.getOrderValue());
-            holder.textViewTransactionStatus.setText(transactionDetails.getOrderStatus());
+            holder.textViewUserId.setText("" + transactionDetails.getUser_id());
+            holder.textViewTransactionId.setText("" + transactionDetails.getWallet_tran_id());
+            holder.textViewAmount.setText("" + transactionDetails.getOrder_value());
+            holder.textViewTransactionStatus.setText(transactionDetails.getOrder_status());
         }
     }
 
@@ -64,7 +64,7 @@ class TransactionDetailsAdapter extends
 
     }
 
-    public void setData(List<TransactionDetails> transactionDetails) {
+    public void setData(List<Order> transactionDetails) {
         this.transactionDetailsList = transactionDetails;
     }
 

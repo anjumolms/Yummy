@@ -8,9 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.dell.yummy.DataSingleton;
+import com.example.dell.yummy.model.StoreDetails;
 import com.example.dell.yummy.user.IUserFragmentListener;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.model.UserReview;
+import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 
 import java.util.List;
 
@@ -20,6 +23,7 @@ public class UserAddReviewAdapter
     private Context mCtx;
     private List<UserReview> userReviews;
     IUserFragmentListener iUserFragmentListener;
+    List<StoreDetails> mStores;
 
 
     public UserAddReviewAdapter(Context mCtx, List<UserReview> userReviews,
@@ -39,9 +43,12 @@ public class UserAddReviewAdapter
     }
 
     @Override
-    public void onBindViewHolder(UserAddReviewAdapter.ReviewViewHolder holder, int position) {
+    public void onBindViewHolder(UserAddReviewAdapter
+                                             .ReviewViewHolder holder, int position) {
         if (userReviews != null) {
-            holder.storeName.setText(" " + userReviews.get(position).getRetailNumer());
+
+            holder.storeName.setText(" "
+                    + userReviews.get(position).getRetailName());
             holder.itemName.setText(userReviews.get(position).getOrderItem());
         }
 
@@ -58,7 +65,7 @@ public class UserAddReviewAdapter
     }
 
     public void setData(List<UserReview> userReviewDetails) {
-       userReviews = userReviewDetails;
+        userReviews = userReviewDetails;
     }
 
     class ReviewViewHolder extends RecyclerView.ViewHolder {

@@ -12,4 +12,7 @@ public interface IUserFragmentListener {
     void addPopup(DishesDetails dishesDetails);
     void loadConformationFragment(List<DishesDetails> dishesDetails);
     void showDialog(UserReview userReview);
+    void showSnackBar();
+    void showNavigationDrawer();
+    int getLocationId();
 }

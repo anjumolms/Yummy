@@ -30,6 +30,10 @@ public class UserReview {
     @SerializedName("user_rating")
     @Expose
     private int userRating;
+    @SerializedName("retail_name")
+    @Expose
+    private String retailName;
+
 
     public int getMenuId() {
         return menuId;
@@ -95,5 +99,12 @@ public class UserReview {
         this.userRating = userRating;
     }
 
+    public String getRetailName() {
+        return retailName;
+    }
+
+    public void setRetailName(String retailName) {
+        this.retailName = retailName;
+    }
 }
 

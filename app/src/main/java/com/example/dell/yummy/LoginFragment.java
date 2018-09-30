@@ -6,8 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -44,21 +48,22 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private TextView mNewUser;
     private IMainViewListener mMainView;
     DbHandler dbHandler;
+    private CoordinatorLayout mCoordinatorLayout;
     ProgressDialog progressDialog;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent != null){
-                  String action = intent.getAction();
-                  switch (action){
-                      case Constants.NOTIFY_USER_DETAILS:
-                          showUserPage();
-                          break;
-                      case Constants.NOTIFY_RETAILER_DETAILS:
-                          showRetailerPage();
-                          break;
-                  }
+            if (intent != null) {
+                String action = intent.getAction();
+                switch (action) {
+                    case Constants.NOTIFY_USER_DETAILS:
+                        showUserPage();
+                        break;
+                    case Constants.NOTIFY_RETAILER_DETAILS:
+                        showRetailerPage();
+                        break;
+                }
             }
         }
     };
@@ -67,7 +72,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container,
+                false);
         initViews(view);
         mLogin.setOnClickListener(this);
         mNewUser.setOnClickListener(this);
@@ -80,6 +86,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         mPassword = view.findViewById(R.id.input_password);
         mLogin = view.findViewById(R.id.btn_login);
         mNewUser = view.findViewById(R.id.link_signup);
+        mCoordinatorLayout = view.findViewById(R.id.cl_login_fragment);
         progressDialog = new ProgressDialog(getActivity());
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_USER_DETAILS);
         intentFilter.addAction(Constants.NOTIFY_RETAILER_DETAILS);
@@ -89,6 +96,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     public void addListener(IMainViewListener iMainViewListener) {
+
         mMainView = iMainViewListener;
     }
 
@@ -128,54 +136,66 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
+        if (isNetworkAvailable()) {
 
-        progressDialog.setMessage("Signing Up...");
-        progressDialog.show();
+            progressDialog.setMessage("Signing Up...");
+            progressDialog.show();
 
-        final UserResult userResult = new UserResult();
-        userResult.setLoginUsername(strUserName);
-        userResult.setLoginPin(Integer.parseInt(strPassword));
+            final UserResult userResult = new UserResult();
+            userResult.setLoginUsername(strUserName);
+            userResult.setLoginPin(Integer.parseInt(strPassword));
 
 
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
-        if (retrofit != null) {
-            IApiInterface service = retrofit.create(IApiInterface.class);
-            Call<UserResult> call = service.userLogin(userResult);
+            Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+            if (retrofit != null) {
+                IApiInterface service = retrofit.create(IApiInterface.class);
+                Call<UserResult> call = service.userLogin(userResult);
 
-            call.enqueue(new Callback<UserResult>() {
-                @Override
-                public void onResponse(Call<UserResult> call, Response<UserResult> response) {
-                    checkUser(response);
+                call.enqueue(new Callback<UserResult>() {
+                    @Override
+                    public void onResponse(Call<UserResult> call,
+                                           Response<UserResult> response) {
+                        checkUser(response);
 //                    UserResult userResult1 = new UserResult();
 //                    userResult1.setLoginUsername("Athira");
 //                    userResult1.setUserWallet(20);
 //                    userResult1.setLoginPin(123);
-//                    showUserPage(userResult1);
+//                    mMainView.addActivityInfo(Constants.SCREEN_USER_HOME);
+//                    mMainView.addActivityInfo(Constants.SCREEN_RETAILER_HOME);
 
-                }
+                    }
 
-                @Override
-                public void onFailure(Call<UserResult> call, Throwable t) {
-                    progressDialog.dismiss();
-                    Toast.makeText(getActivity(), t.getMessage(),
-                            Toast.LENGTH_LONG).show();
-                }
-            });
+                    @Override
+                    public void onFailure(Call<UserResult> call, Throwable t) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getActivity(), t.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else {
+                Log.w("LoginFragment ", "Retrofit object is null ");
+            }
         } else {
-            Log.w("LoginFragment ", "Retrofit object is null ");
+
+            Snackbar snackbar = Snackbar
+                    .make(mCoordinatorLayout, "Sorry you are offline",
+                            Snackbar.LENGTH_LONG);
+            snackbar.show();
+
         }
 
     }
 
     private void checkUser(Response<UserResult> response) {
         if (response != null && response.code() == 200) {
-            RetrofitNetworksCalls calls = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
+            RetrofitNetworksCalls calls = DataSingleton.getInstance()
+                    .getRetrofitNetworksCallsObject();
             if (calls != null) {
                 UserResult userResult = response.body();
                 if (userResult != null) {
                     switch (userResult.getLoginRole()) {
                         case 1:
-                            calls.getUserDetails(getActivity(),userResult.getLoginId());
+                            calls.getUserDetails(getActivity(), userResult.getLoginId());
                             updateToken(userResult, calls);
 
                             break;
@@ -194,22 +214,25 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             }
 
         } else {
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
             Toast.makeText(getActivity(), response.code()
                     + response.message(), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void updateToken(UserResult userResult, RetrofitNetworksCalls calls) {
-        if(userResult.getLoginRole() == 1
-                || userResult.getLoginRole() == 2){
+        if (userResult.getLoginRole() == 1
+                || userResult.getLoginRole() == 2) {
 
             if (userResult.getToken().isEmpty()) {
-                if(dbHandler != null){
+                if (dbHandler != null) {
                     String token = dbHandler.getToken(1);
                     userResult.setToken(token);
-                    calls.updateToken(getActivity(),userResult);
+                    calls.updateToken(getActivity(), userResult);
                 }
-            }else{
+            } else {
                 String token = userResult.getToken();
             }
         }
@@ -242,12 +265,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void showRetailerPage() {
         //User page NEED CORRECTION
         if (mMainView != null) {
-            if(progressDialog != null){
+            if (progressDialog != null) {
                 progressDialog.dismiss();
             }
             RetrofitNetworksCalls calls = DataSingleton
                     .getInstance().getRetrofitNetworksCallsObject();
-            if(calls != null && calls.getmRetailerDetails() != null){
+            if (calls != null && calls.getmRetailerDetails() != null) {
 
                 addRetailerDetailsToSharedPreferance(calls.getmRetailerDetails());
                 mMainView.addActivityInfo(Constants.SCREEN_RETAILER_HOME);
@@ -255,8 +278,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }
 
     }
-    private void addRetailerDetailsToSharedPreferance(RetailerDetails retailerDetails){
-        if(retailerDetails != null){
+
+    private void addRetailerDetailsToSharedPreferance(RetailerDetails retailerDetails) {
+        if (retailerDetails != null) {
 
             SharedPreferences sharedpreferences
                     = getActivity().getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
@@ -270,18 +294,32 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             editor.commit();
         }
     }
+
     private void showUserPage() {
         //User page
         if (mMainView != null) {
-            if(progressDialog != null){
+            if (progressDialog != null) {
                 progressDialog.dismiss();
             }
             RetrofitNetworksCalls calls = DataSingleton
                     .getInstance().getRetrofitNetworksCallsObject();
-            if(calls != null && calls.getUsersDetails() != null){
+            if (calls != null && calls.getUsersDetails() != null) {
                 addUserDetailsToSharedPreferance(calls.getUsersDetails());
                 mMainView.addActivityInfo(Constants.SCREEN_USER_HOME);
             }
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager ConnectionManager
+                = (ConnectivityManager) getActivity()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected() == true) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }

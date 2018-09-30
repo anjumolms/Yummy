@@ -2,8 +2,12 @@ package com.example.dell.yummy.user.store;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -61,11 +65,19 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_store_details, container, false);
+        View view = inflater.inflate(R.layout.fragment_store_details,
+                container, false);
         initViews(view);
         mProceed.setOnClickListener(this);
         dishesList = new ArrayList<>();
-        getStoreDishes();
+        if (isNetworkAvailable()) {
+            getStoreDishes();
+
+        } else {
+            if (miUserFragmentListener != null) {
+                miUserFragmentListener.showSnackBar();
+            }
+        }
         return view;
     }
 
@@ -73,14 +85,17 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
         mRecyclerView = view.findViewById(R.id.rv_storedetails);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mStoreName = view.findViewById(R.id.tv_store_name);
+        //mStoreName = view.findViewById(R.id.tv_store_name);
         mProceed = view.findViewById(R.id.bt_buy);
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage("Loading...");
         mProgressDialog.show();
 
+        CollapsingToolbarLayout collapsingToolbarLayout =
+                view.findViewById(R.id.toolbar_layout);
+
         if (mStoreDetails != null) {
-            mStoreName.setText(mStoreDetails.getRetailName());
+            collapsingToolbarLayout.setTitle(mStoreDetails.getRetailName());
         }
     }
 
@@ -88,8 +103,7 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-            // TODO Hardcoded menu Id.
-            if(selectedStore != null){
+            if (selectedStore != null) {
                 Call<List<DishesDetails>> call = iApiInterface
                         .getStoreMenu(selectedStore.getRetailId());
                 call.enqueue(new Callback<List<DishesDetails>>() {
@@ -101,6 +115,7 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
                             dishesList = response.body();
 
                         } else {
+                            mProgressDialog.dismiss();
                             Toast.makeText(getActivity(), response.code()
                                     + response.message(), Toast.LENGTH_SHORT).show();
                         }
@@ -114,7 +129,8 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
                     @Override
                     public void onFailure(Call<List<DishesDetails>> call, Throwable t) {
                         mProgressDialog.dismiss();
-                        Toast.makeText(getActivity(), "invalid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),
+                                "invalid", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -149,6 +165,19 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
             default:
                 break;
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager ConnectionManager
+                = (ConnectivityManager) getActivity()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected() == true) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     public void selectedStore(StoreDetails storeDetails) {

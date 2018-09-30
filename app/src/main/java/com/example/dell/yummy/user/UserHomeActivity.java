@@ -8,7 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
@@ -32,6 +37,7 @@ import android.widget.Toast;
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
 import com.example.dell.yummy.R;
+import com.example.dell.yummy.model.LocationDetails;
 import com.example.dell.yummy.model.Order;
 import com.example.dell.yummy.model.UserReview;
 import com.example.dell.yummy.user.store.OrderSuccessfullFragment;
@@ -43,12 +49,13 @@ import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class UserHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        IUserFragmentListener, RatingDialogListener {
+        IUserFragmentListener, RatingDialogListener, DrawerLayout.DrawerListener {
 
     private UserViewPagerFragment mUserViewPagerFragment;
     private StoreDetailsFragment mStoreDetailsFragment;
@@ -60,11 +67,17 @@ public class UserHomeActivity extends AppCompatActivity
     private FrameLayout mFrameLayout;
     private TextView mProfileName;
     private UserReview mUserReview;
+    private CoordinatorLayout mCoordinatorLayout;
     int reviewId;
+    List<LocationDetails> places = null;
     DrawerLayout drawer;
     int counter = 0;
     DishesDetails dishFromApi;
     private ProgressDialog mProgressDialog;
+    private Menu mMenuList;
+    private MenuItem mMenuItemWallet;
+    private String mUserSelectedLocation;
+    private int mLocationId;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -81,6 +94,9 @@ public class UserHomeActivity extends AppCompatActivity
                     case Constants.NOTIFY_REVIEW_UPDATED:
                         removeItemsFromReviewList();
                         break;
+                    case Constants.NOTIFY_GET_LOCATION:
+                        showPlacesList();
+                        break;
                     default:
                         break;
                 }
@@ -94,24 +110,37 @@ public class UserHomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_home);
         mFrameLayout = findViewById(R.id.fl_userhome_fragment_container);
+        mCoordinatorLayout = findViewById(R.id.cl_user_home_activity);
         setTabColor();
         setupNavigationDrawer();
         initFragments();
         addFragment(Constants.SCREEN_USER);
-        LoadDetails();
-        showPlacesList();
+        //LoadDetails();
+        //showPlacesList();
 
     }
 
     private void LoadDetails() {
-        RetrofitNetworksCalls retrofitNetworksCalls
-                = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
-        if (retrofitNetworksCalls != null) {
-            retrofitNetworksCalls.getStoreDetails(getApplicationContext());
-            retrofitNetworksCalls.getDishDetails(getApplicationContext());
-            retrofitNetworksCalls.getReviewDetails(getApplicationContext());
+        if (isNetworkAvailable()) {
 
+            RetrofitNetworksCalls retrofitNetworksCalls
+                    = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
+            if (retrofitNetworksCalls != null) {
+                retrofitNetworksCalls.getStoreDetails(getApplicationContext(), mLocationId);
+                retrofitNetworksCalls.getDishDetails(getApplicationContext(), mLocationId);
+                retrofitNetworksCalls.getReviewDetails(getApplicationContext());
+
+            }
+        } else {
+            showSnackBar();
         }
+    }
+
+    public void showSnackBar() {
+        Snackbar snackbar = Snackbar
+                .make(mCoordinatorLayout, "Sorry you are offline",
+                        Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     private void initFragments() {
@@ -141,8 +170,15 @@ public class UserHomeActivity extends AppCompatActivity
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_USER_CONFIRM_ORDER);
         intentFilter.addAction(Constants.NOTIFY_WALLET_UPDATED);
         intentFilter.addAction(Constants.NOTIFY_REVIEW_UPDATED);
+        intentFilter.addAction(Constants.NOTIFY_GET_LOCATION);
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(broadcastReceiver, intentFilter);
+        RetrofitNetworksCalls calls = DataSingleton
+                .getInstance().getRetrofitNetworksCallsObject();
+        if (calls != null) {
+            calls.getLocation(getApplicationContext());
+            mProgressDialog.show();
+        }
     }
 
     private void setTabColor() {
@@ -220,11 +256,23 @@ public class UserHomeActivity extends AppCompatActivity
     @Override
     public void passStoreDetails(int screenId, StoreDetails storeDetails) {
 
-        if(mStoreDetailsFragment != null){
+        if (mStoreDetailsFragment != null) {
             mStoreDetailsFragment.selectedStore(storeDetails);
         }
         addFragment(Constants.SCREEN_STORE_DETAILS);
 
+    }
+
+    @Override
+    public void showNavigationDrawer() {
+        int wallet = getWallet();
+        mMenuItemWallet.setTitle("Wallet " + wallet);
+        drawer.openDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public int getLocationId() {
+        return mLocationId;
     }
 
     @Override
@@ -242,29 +290,58 @@ public class UserHomeActivity extends AppCompatActivity
 
 
     private void showPlacesList() {
-        AlertDialog.Builder b = new AlertDialog.Builder(this);
-        b.setTitle("Choose your location");
-        String[] types = {"Campus ", "Bhavani"};
-        b.setItems(types, new DialogInterface.OnClickListener() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        RetrofitNetworksCalls calls = DataSingleton
+                .getInstance().getRetrofitNetworksCallsObject();
+        if (calls != null) {
+            places = calls.getLocations();
+        }
+        if (places != null) {
 
-                dialog.dismiss();
-                switch (which) {
-                    case 0:
-                        //onZipRequested();
-                        break;
-                    case 1:
-                        //onCategoryRequested();
-                        break;
-                }
+            Dialog dialog;
+            List<String> items = new ArrayList<>();
+            for (LocationDetails locationDetails : places) {
+                items.add(locationDetails.getLocationName());
             }
+            mLocationId = places.get(0).getLocationId();
+            final String[] placesList = items.toArray(new String[items.size()]);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Choose your location: ");
+            builder.setSingleChoiceItems(placesList, 0,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mUserSelectedLocation = placesList[which];
 
-        });
+                            for (LocationDetails locationDetails : places) {
+                                if (locationDetails.getLocationName().equals(mUserSelectedLocation)) {
+                                    mLocationId = locationDetails.getLocationId();
+                                    break;
+                                }
+                            }
+                        }
+                    });
 
-        b.show();
+            builder.setPositiveButton("Done!", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    //Your logic when OK button is clicked
+                    LoadDetails();
+                }
+            })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
+            dialog = builder.create();
+            dialog.show();
+        }
     }
+
 
     private void showPopup(final DishesDetails dishFromApi) {
         if (dishFromApi != null) {
@@ -331,13 +408,18 @@ public class UserHomeActivity extends AppCompatActivity
                         orderDetails.setOrder_item_count(numberOfItems);
                         orderDetails.setOrder_value(total);
                         orderDetails.setOrder_items_string("" + dishFromApi.getMenuId());
-                        RetrofitNetworksCalls calls = DataSingleton
-                                .getInstance().getRetrofitNetworksCallsObject();
-                        if (calls != null) {
-                            calls.confirmOrder(getApplicationContext(), orderDetails);
+                        if (isNetworkAvailable()) {
+                            RetrofitNetworksCalls calls = DataSingleton
+                                    .getInstance().getRetrofitNetworksCallsObject();
+                            if (calls != null) {
+                                calls.confirmOrder(getApplicationContext(), orderDetails);
+                            }
+                            showProgress();
+                            dialog.dismiss();
+                        } else {
+                            showSnackBar();
                         }
-                        showProgress();
-                        dialog.dismiss();
+
                     } else {
                         Toast.makeText(getApplicationContext(),
                                 "Please select dish count ", Toast.LENGTH_SHORT).show();
@@ -394,12 +476,27 @@ public class UserHomeActivity extends AppCompatActivity
                 R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        drawer.addDrawerListener(this);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View hView = navigationView.getHeaderView(0);
         navigationView.setItemIconTintList(null);
         mProfileName = hView.findViewById(R.id.tv_profilename);
+        mMenuList = navigationView.getMenu();
+        mMenuItemWallet = mMenuList.findItem(R.id.nav_wallet);
+        int wallet = getWallet();
+        mMenuItemWallet.setTitle("Wallet " + wallet);
         navigationView.setNavigationItemSelectedListener(this);
+
+    }
+
+    private int getWallet() {
+        SharedPreferences sharedpreferences
+                = getApplicationContext()
+                .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                        Context.MODE_PRIVATE);
+        int wallet = sharedpreferences.getInt(Constants.KEY_WALLET, 0);
+        return wallet;
     }
 
     @Override
@@ -426,6 +523,19 @@ public class UserHomeActivity extends AppCompatActivity
             super.onBackPressed();
         }
 
+
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager ConnectionManager
+                = (ConnectivityManager) this
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected() == true) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
@@ -467,6 +577,8 @@ public class UserHomeActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
 
+        } else if (id == R.id.nav_places_list) {
+            showPlacesList();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -538,6 +650,27 @@ public class UserHomeActivity extends AppCompatActivity
 
     @Override
     public void onNeutralButtonClicked() {
+
+    }
+
+    @Override
+    public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+    }
+
+    @Override
+    public void onDrawerOpened(@NonNull View drawerView) {
+        int wallet = getWallet();
+        mMenuItemWallet.setTitle("Wallet " + wallet);
+    }
+
+    @Override
+    public void onDrawerClosed(@NonNull View drawerView) {
+
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
 
     }
 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,7 @@ public class UserDishesAdapter extends
             //binding the data with the viewholder views
             holder.textViewTitle.setText(dishesDetails.getItemName());
             holder.textViewPrice.setText(String.valueOf(dishesDetails.getItemPrice()));
+            holder.ratingBar.setRating(dishesDetails.getReview());
 
         }
 
@@ -79,6 +81,7 @@ public class UserDishesAdapter extends
         TextView textViewTitle, textViewPrice;
         CardView cardView;
         ImageView storeImg;
+        RatingBar ratingBar;
 
 
         public DishesViewHolder(View itemView) {
@@ -88,6 +91,7 @@ public class UserDishesAdapter extends
             textViewPrice = itemView.findViewById(R.id.textViewPrice);
             cardView = itemView.findViewById(R.id.cv_disheitem);
             storeImg = itemView.findViewById(R.id.iv_dish);
+            ratingBar = itemView.findViewById(R.id.rtbProductRating);
 
 
             cardView.setOnClickListener(new View.OnClickListener() {

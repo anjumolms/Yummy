@@ -3,7 +3,6 @@ package com.example.dell.yummy.webservice;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -17,7 +16,6 @@ import com.example.dell.yummy.model.RegisterStore;
 import com.example.dell.yummy.model.RetailerDetails;
 import com.example.dell.yummy.model.RetailerMenu;
 import com.example.dell.yummy.model.StoreDetails;
-import com.example.dell.yummy.model.TransactionDetails;
 import com.example.dell.yummy.model.UserDetails;
 import com.example.dell.yummy.model.UserResult;
 import com.example.dell.yummy.model.UserReview;
@@ -37,19 +35,24 @@ public class RetrofitNetworksCalls {
     private List<StoreDetails> storeDetails;
     private List<DishesDetails> dishesDetails;
     private List<UserReview> mUserReviewList;
-    private List<TransactionDetails> mTransactionDetails;
-    private List<TransactionDetails> mConfirmOrderList = new ArrayList<>();
+    private List<Order> mTransactionDetails;
+    private List<Order> mConfirmOrderList = new ArrayList<>();
     private Retrofit mRetrofit;
     private List<DishesDetails> mRetailordishesList;
     private UserDetails mUserDetails;
     private RetailerDetails mRetailerDetails;
+    private Order mOrders;
+    private List<Order> mConfirmedOrders;
+    private List<Order> allTransactions;
+    List<LocationDetails> places;
+    private List<LocationDetails> mGetAllLocationDetails;
 
-    public void getStoreDetails(final Context context) {
+    public void getStoreDetails(final Context context, int locationId) {
 
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-            Call<List<StoreDetails>> call = iApiInterface.getStores();
+            Call<List<StoreDetails>> call = iApiInterface.getStores(locationId);
 
             call.enqueue(new Callback<List<StoreDetails>>() {
 
@@ -63,16 +66,25 @@ public class RetrofitNetworksCalls {
                             Intent intent = new Intent(Constants.NOTIFY_STORE_DETAILS);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                         } else {
+                            Intent intent = new Intent(Constants.NOTIFY_STORE_DETAILS_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                             Toast.makeText(context, response.code()
                                     + response.message(), Toast.LENGTH_SHORT).show();
                         }
 
+                    } else {
+                        Intent intent = new Intent(Constants.NOTIFY_STORE_DETAILS_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        Toast.makeText(context,
+                                "response is null", Toast.LENGTH_SHORT).show();
                     }
 
                 }
 
                 @Override
                 public void onFailure(Call<List<StoreDetails>> call, Throwable t) {
+                    Intent intent = new Intent(Constants.NOTIFY_STORE_DETAILS_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -81,11 +93,11 @@ public class RetrofitNetworksCalls {
     }
 
 
-    public void getDishDetails(final Context context) {
+    public void getDishDetails(final Context context, int location_id) {
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-            Call<List<DishesDetails>> call = iApiInterface.getallMenu();
+            Call<List<DishesDetails>> call = iApiInterface.getallMenu(location_id);
 
 
             call.enqueue(new Callback<List<DishesDetails>>() {
@@ -96,19 +108,37 @@ public class RetrofitNetworksCalls {
                     if (response != null) {
                         if (response.code() == 200) {
                             dishesDetails = response.body();
+
                             Intent intent = new Intent(Constants.NOTIFY_DISH_DETAILS);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
-                        } else {
+                        } else if (response.code() == 204) {
+
+                            Intent intent = new Intent(Constants.NOTIFY_DISH_DETAILS_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
                             Toast.makeText(context, response.code()
                                     + response.message(), Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            Intent intent = new Intent(Constants.NOTIFY_DISH_DETAILS_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            Toast.makeText(context,
+                                    "Response failed", Toast.LENGTH_SHORT).show();
                         }
+
+                    } else {
+                        Intent intent = new Intent(Constants.NOTIFY_DISH_DETAILS_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        Toast.makeText(context,
+                                "Response failed", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<List<DishesDetails>> call, Throwable t) {
-
+                    Intent intent = new Intent(Constants.NOTIFY_DISH_DETAILS_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
                 }
 
@@ -144,15 +174,23 @@ public class RetrofitNetworksCalls {
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
                         } else {
+                            Intent intent = new Intent(Constants.NOTIFY_REVIEW_DETAILS_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                             Toast.makeText(context, response.code()
                                     + response.message(), Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Intent intent = new Intent(Constants.NOTIFY_REVIEW_DETAILS_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        Toast.makeText(context, "Response is null",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<List<UserReview>> call, Throwable t) {
-
+                    Intent intent = new Intent(Constants.NOTIFY_REVIEW_DETAILS_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
                 }
 
@@ -160,20 +198,20 @@ public class RetrofitNetworksCalls {
         }
     }
 
-    public void getTransactionDetails(final Context context, int id) {
+    public void getTransactionPendingOrders(final Context context, int id) {
 
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-            Call<List<TransactionDetails>> call = iApiInterface
-                    .getTransactionDetails(id);
+            Call<List<Order>> call = iApiInterface
+                    .getTransactionPendingOrders(id);
 
-            call.enqueue(new Callback<List<TransactionDetails>>() {
+            call.enqueue(new Callback<List<Order>>() {
 
 
                 @Override
-                public void onResponse(Call<List<TransactionDetails>> call,
-                                       Response<List<TransactionDetails>> response) {
+                public void onResponse(Call<List<Order>> call,
+                                       Response<List<Order>> response) {
                     if (response != null) {
                         if (response.code() == 200) {
                             mTransactionDetails = response.body();
@@ -188,7 +226,7 @@ public class RetrofitNetworksCalls {
                 }
 
                 @Override
-                public void onFailure(Call<List<TransactionDetails>> call, Throwable t) {
+                public void onFailure(Call<List<Order>> call, Throwable t) {
 
                     Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
                 }
@@ -198,7 +236,121 @@ public class RetrofitNetworksCalls {
 
     }
 
-    public void addOrderConfirmedTransaction(TransactionDetails transactionDetails) {
+
+    public void getConfirmedOrders(final Context context, int id) {
+
+        Retrofit retrofit = DataSingleton
+                .getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+            Call<List<Order>> call = iApiInterface
+                    .getConfirmedOrders(id);
+
+            call.enqueue(new Callback<List<Order>>() {
+
+
+                @Override
+                public void onResponse(Call<List<Order>> call,
+                                       Response<List<Order>> response) {
+                    if (response != null) {
+                        if (response.code() == 200) {
+                            mConfirmedOrders = response.body();
+                            Intent intent = new Intent(Constants.NOTIFY_CONFIRMED_TRANSACTIONS);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        } else {
+
+                            Intent intent = new Intent(Constants.NOTIFY_CONFIRMED_TRANSACTIONS_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Intent intent = new Intent(Constants.NOTIFY_CONFIRMED_TRANSACTIONS_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        Toast.makeText(context, "Response is null",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Order>> call, Throwable t) {
+                    Intent intent = new Intent(Constants.NOTIFY_CONFIRMED_TRANSACTIONS_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
+                }
+
+            });
+        }
+
+    }
+
+    public void getAllTransactionDetails(final Context context, int id) {
+
+        Retrofit retrofit = DataSingleton
+                .getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+            Call<List<Order>> call = iApiInterface
+                    .getAllTransactionDetails(id);
+
+            call.enqueue(new Callback<List<Order>>() {
+
+
+                @Override
+                public void onResponse(Call<List<Order>> call,
+                                       Response<List<Order>> response) {
+                    if (response != null) {
+                        if (response.code() == 200) {
+                            allTransactions = response.body();
+                            Intent intent = new Intent(Constants.NOTIFY_ALL_TRANSACTIONS);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        } else {
+
+                            Intent intent = new Intent(Constants.NOTIFY_ALL_TRANSACTIONS_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Intent intent = new Intent(Constants.NOTIFY_ALL_TRANSACTIONS_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        Toast.makeText(context, "Response is null",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Order>> call, Throwable t) {
+                    Intent intent = new Intent(Constants.NOTIFY_CONFIRMED_TRANSACTIONS_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
+                }
+
+            });
+        }
+
+    }
+
+    public List<Order> getAllTransactionList() {
+        return allTransactions;
+    }
+
+    public void resetTransactionList() {
+        if (allTransactions != null) {
+
+            allTransactions.clear();
+        }
+    }
+
+    public List<Order> getConfirmedOrdersList() {
+        return mConfirmedOrders;
+    }
+
+    public void addOrderConfirmedTransaction(Order transactionDetails) {
         mConfirmOrderList.add(transactionDetails);
     }
 
@@ -227,6 +379,8 @@ public class RetrofitNetworksCalls {
                         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
                     } else {
+                        Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                         Toast.makeText(context, response.code()
                                 + response.message(), Toast.LENGTH_SHORT).show();
                     }
@@ -234,6 +388,8 @@ public class RetrofitNetworksCalls {
 
                 @Override
                 public void onFailure(Call<List<DishesDetails>> call, Throwable t) {
+                    Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
                 }
 
@@ -303,11 +459,11 @@ public class RetrofitNetworksCalls {
         return mRetailordishesList;
     }
 
-    public List<TransactionDetails> getTransactionList() {
+    public List<Order> getTransactionList() {
         return mTransactionDetails;
     }
 
-    public List<TransactionDetails> getConfirmOrderList() {
+    public List<Order> getConfirmOrderList() {
         return mConfirmOrderList;
     }
 
@@ -343,12 +499,16 @@ public class RetrofitNetworksCalls {
                         Toast.makeText(context, response.code()
                                 + response.message(), Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Intent intent = new Intent(Constants.NOTIFY_ITEM_ADDED_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-
+                Intent intent = new Intent(Constants.NOTIFY_ITEM_ADDED_ERROR);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
             }
 
@@ -460,15 +620,23 @@ public class RetrofitNetworksCalls {
                                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
                             } else {
+                                Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
+                                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                                 Toast.makeText(context, response.code()
                                         + response.message(), Toast.LENGTH_SHORT).show();
                             }
+                        } else {
+                            Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            Toast.makeText(context, "Response is null",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
+                        Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                         Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
                     }
 
@@ -500,15 +668,23 @@ public class RetrofitNetworksCalls {
                                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
                             } else {
+                                Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
+                                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                                 Toast.makeText(context, response.code()
                                         + response.message(), Toast.LENGTH_SHORT).show();
                             }
+                        } else {
+                            Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            Toast.makeText(context, "Response is null",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
+                        Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                         Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
                     }
 
@@ -543,11 +719,18 @@ public class RetrofitNetworksCalls {
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
                         }
+                    } else {
+                        Intent intent = new Intent(Constants.NOTIFY_USER_CONFIRM_ORDER_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        Toast.makeText(context,
+                                "Response is null", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Order> call, Throwable t) {
+                    Intent intent = new Intent(Constants.NOTIFY_USER_CONFIRM_ORDER_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     Toast.makeText(context, call.toString()
                             + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -559,20 +742,20 @@ public class RetrofitNetworksCalls {
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
-            Call<LocationDetails> call = service.getLocations();
-            call.enqueue(new Callback<LocationDetails>() {
+            Call<List<LocationDetails>> call = service.getLocations();
+            call.enqueue(new Callback<List<LocationDetails>>() {
                 @Override
-                public void onResponse(Call<LocationDetails> call,
-                                       Response<LocationDetails> response) {
+                public void onResponse(Call<List<LocationDetails>> call,
+                                       Response<List<LocationDetails>> response) {
                     if (response != null && response.code() == 200) {
 
-                        LocationDetails places = response.body();
+                        places = response.body();
                         if (places != null) {
-//                            Intent intent = new Intent(Constants.NOTIFY_GET_LOCATION);
-//                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            Intent intent = new Intent(Constants.NOTIFY_GET_LOCATION);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
                         } else if (response.code() == 204) {
-                            Toast.makeText(context, "Invalid email or password",
+                            Toast.makeText(context, "Invalid",
                                     Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(context, response.code()
@@ -582,13 +765,17 @@ public class RetrofitNetworksCalls {
                 }
 
                 @Override
-                public void onFailure(Call<LocationDetails> call, Throwable t) {
+                public void onFailure(Call<List<LocationDetails>> call, Throwable t) {
                     Toast.makeText(context,
                             "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
 
         }
+    }
+
+    public List<LocationDetails> getLocations() {
+        return places;
     }
 
     public void getUserWalletDetails(final Context context) {
@@ -627,9 +814,13 @@ public class RetrofitNetworksCalls {
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
                         } else if (response.code() == 204) {
+                            Intent intent = new Intent(Constants.NOTIFY_WALLET_UPDATED_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                             Toast.makeText(context, "Invalid email or password",
                                     Toast.LENGTH_LONG).show();
                         } else {
+                            Intent intent = new Intent(Constants.NOTIFY_WALLET_UPDATED_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                             Toast.makeText(context, response.code()
                                     + response.message(), Toast.LENGTH_SHORT).show();
                         }
@@ -638,6 +829,8 @@ public class RetrofitNetworksCalls {
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
+                    Intent intent = new Intent(Constants.NOTIFY_WALLET_UPDATED_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     Toast.makeText(context,
                             "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -703,7 +896,7 @@ public class RetrofitNetworksCalls {
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(IApiInterface.BASE_URL).build();
-        if(retrofit != null){
+        if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
             Call<String> call = service.updateToken(userResult);
 
@@ -735,4 +928,174 @@ public class RetrofitNetworksCalls {
         }
 
     }
+
+    public void addPlaces(LocationDetails locationDetails, final Context context) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(IApiInterface.BASE_URL).build();
+        if (retrofit != null) {
+            IApiInterface service = retrofit.create(IApiInterface.class);
+            Call<String> call = service.addLocation(locationDetails);
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call,
+                                       Response<String> response) {
+                    if (response != null) {
+                        if (response.code() == 200) {
+
+                            Toast.makeText(context, response.body()
+                                    , Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                    Toast.makeText(context, t.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+    }
+
+
+    public void getAllLocations(final Context context) {
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            IApiInterface service = retrofit.create(IApiInterface.class);
+            Call<List<LocationDetails>> call = service.getAllLocations();
+
+            call.enqueue(new Callback<List<LocationDetails>>() {
+                @Override
+                public void onResponse(Call<List<LocationDetails>> call,
+                                       Response<List<LocationDetails>> response) {
+                    if (response != null) {
+                        if (response.code() == 200) {
+                          mGetAllLocationDetails  = response.body();
+
+                            Intent intent = new Intent(Constants.NOTIFY_GET_ALL_LOCATIONS_LIST);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        } else {
+                            Intent intent = new Intent(Constants.NOTIFY_GET_ALL_LOCATIONS_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Intent intent = new Intent(Constants.NOTIFY_GET_ALL_LOCATIONS_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        Toast.makeText(context, response.code()
+                                + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<LocationDetails>> call, Throwable t) {
+                    Intent intent = new Intent(Constants.NOTIFY_GET_ALL_LOCATIONS_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    Toast.makeText(context, t.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+    }
+
+    public  List<LocationDetails> getmGetAllLocationDetails(){
+        return mGetAllLocationDetails;
+    }
+    public void updateDelivery(int orderId, final Context context) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(IApiInterface.BASE_URL).build();
+        if (retrofit != null) {
+            IApiInterface service = retrofit.create(IApiInterface.class);
+            Call<String> call = service.updateDelivery(orderId);
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call,
+                                       Response<String> response) {
+                    if (response != null) {
+                        if (response.code() == 200) {
+
+                            Toast.makeText(context, response.body()
+                                    , Toast.LENGTH_SHORT).show();
+
+
+                        } else {
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                    Toast.makeText(context, t.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+    }
+
+    public void getTransactionOrders(final Context context, int orderId) {
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            IApiInterface service = retrofit.create(IApiInterface.class);
+
+            Call<Order> call = service.getTransactionOrders(orderId);
+
+            call.enqueue(new Callback<Order>() {
+                @Override
+                public void onResponse(Call<Order> call,
+                                       Response<Order> response) {
+                    if (response != null && response.code() == 200) {
+
+                        if (response.body() != null) {
+                            mOrders = response.body();
+                            Intent intent = new Intent(Constants.NOTIFY_TRANSACTION_ORDER);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        } else if (response.code() == 204) {
+                            Toast.makeText(context, "Invalid",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Order> call, Throwable t) {
+                    Toast.makeText(context,
+                            "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+    }
+
+    public Order getOrderInfo() {
+        return mOrders;
+    }
+
+    public void updateOrderInfo() {
+        mOrders = null;
+    }
+
 }

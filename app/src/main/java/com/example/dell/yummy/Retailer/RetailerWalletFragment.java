@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -36,15 +38,25 @@ public class RetailerWalletFragment extends Fragment {
 
     ProgressDialog progressDialog;
     TextView remainingCoins;
+    private IRetailerFragmentListener mFragmentListener;
+
     public RetailerWalletFragment() {
         // Required empty public constructor
     }
+
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent != null
-                    && intent.getAction().equals(Constants.NOTIFY_WALLET_UPDATED)) {
-                updateData();
+            if (intent != null) {
+                String action = intent.getAction();
+                switch (action) {
+                    case Constants.NOTIFY_WALLET_UPDATED:
+                        updateData();
+                        break;
+                    case Constants.NOTIFY_WALLET_UPDATED_ERROR:
+                        stopProgress();
+                        break;
+                }
             }
         }
     };
@@ -53,7 +65,7 @@ public class RetailerWalletFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_retailer_wallet,
+        View view = inflater.inflate(R.layout.fragment_retailer_wallet,
                 container, false);
         initViews(view);
 
@@ -68,29 +80,61 @@ public class RetailerWalletFragment extends Fragment {
         progressDialog.setMessage("Loading...");
         progressDialog.show();
         //getUserWalletDetails();
-        RetrofitNetworksCalls calls = DataSingleton
-                .getInstance().getRetrofitNetworksCallsObject();
-        if(calls != null){
-            calls.getUserWalletDetails(getActivity());
+        if (isNetworkAvailable()) {
+            RetrofitNetworksCalls calls = DataSingleton
+                    .getInstance().getRetrofitNetworksCallsObject();
+            if (calls != null) {
+                calls.getUserWalletDetails(getActivity());
+            }
+        } else {
+            if (mFragmentListener != null) {
+                mFragmentListener.showSnackBar();
+            }
         }
 
+
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_WALLET_UPDATED);
+        intentFilter.addAction(Constants.NOTIFY_WALLET_UPDATED_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
     }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager ConnectionManager
+                = (ConnectivityManager) getActivity()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected() == true) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    private void stopProgress() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     private void updateData() {
 
-        if(progressDialog != null){
+        if (progressDialog != null) {
             progressDialog.dismiss();
         }
         SharedPreferences sharedpreferences
                 = getActivity().getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
                 Context.MODE_PRIVATE);
-        if(sharedpreferences != null){
+        if (sharedpreferences != null) {
             int wallet = sharedpreferences
                     .getInt(Constants.KEY_WALLET, 0);
-            remainingCoins.setText("" + wallet);
+            remainingCoins.setText("Wallet : " + wallet);
 
         }
+    }
+
+    public void addListener(IRetailerFragmentListener retailerFragmentListener) {
+        this.mFragmentListener = retailerFragmentListener;
     }
 }

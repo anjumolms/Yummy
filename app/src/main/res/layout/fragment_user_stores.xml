@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
-    tools:context=".user.store.UserStoresFragment">
+    tools:context=".user.store.UserStoresFragment"
+    android:id="@+id/rl_user_stores_fragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_stores"
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_user_stores"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="90dp">
-    </android.support.v7.widget.RecyclerView>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_stores"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
 </RelativeLayout>
+
+
+
+

@@ -8,4 +8,5 @@ public interface IRetailerFragmentListener {
     void loadEachTransactionFragment(int position);
 
     void showItemUpdatePopup(DishesDetails dishesDetails);
+    void showSnackBar();
 }

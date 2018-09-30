@@ -10,20 +10,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.model.TransactionDetails;
+import com.example.dell.yummy.model.Order;
 
 import java.util.List;
 
 public class AdminStoreTransactionAdapter extends
         RecyclerView.Adapter<AdminStoreTransactionAdapter.TransactionViewHolder>{
     private Context mCtx;
-    private List<TransactionDetails> transactionDetailsList;
-    private TransactionDetails transactionDetails;
+    private List<Order> transactionDetailsList;
+    private Order transactionDetails;
     IAdminFragmentListener iAdminFragmentListener;
     private boolean isConfirmOrderPage;
 
     public AdminStoreTransactionAdapter(Context mCtx,
-                                     List<TransactionDetails> transactionDetailsList,
+                                     List<Order> transactionDetailsList,
                                      IAdminFragmentListener iAdminFragmentListener) {
         this.mCtx = mCtx;
         this.transactionDetailsList = transactionDetailsList;
@@ -36,10 +36,11 @@ public class AdminStoreTransactionAdapter extends
         if (transactionDetailsList != null) {
 
             transactionDetails = transactionDetailsList.get(position);
-            holder.textViewUserId.setText("" + transactionDetails.getUserId());
-            holder.textViewTransactionId.setText("" + transactionDetails.getWalletTranId());
-            holder.textViewAmount.setText("" + transactionDetails.getOrderValue());
-            holder.textViewTransactionStatus.setText(transactionDetails.getOrderStatus());
+            holder.textViewUserId.setText("" + transactionDetails.getUser_id());
+            holder.textViewTransactionId.setText("" + transactionDetails.getOrder_id());
+            holder.textViewAmount.setText("" + transactionDetails.getOrder_value());
+            holder.textViewTransactionStatus.setText(transactionDetails.getOrder_status());
+
         }
     }
 
@@ -63,7 +64,7 @@ public class AdminStoreTransactionAdapter extends
 
     }
 
-    public void setData(List<TransactionDetails> transactionDetails) {
+    public void setData(List<Order> transactionDetails) {
         this.transactionDetailsList = transactionDetails;
     }
 
@@ -74,7 +75,7 @@ public class AdminStoreTransactionAdapter extends
     class TransactionViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewUserId, textViewTransactionId, textViewAmount,
-                textViewTransactionStatus;
+                textViewTransactionStatus,wallet;
         CardView cardView;
 
         public TransactionViewHolder(View itemView) {
@@ -83,6 +84,7 @@ public class AdminStoreTransactionAdapter extends
             textViewUserId = itemView.findViewById(R.id.tv_user_id);
             textViewTransactionId = itemView.findViewById(R.id.tv_transaction_id);
             textViewAmount = itemView.findViewById(R.id.tv_amount);
+
             textViewTransactionStatus = itemView.findViewById(R.id.tv_transaction_status);
             cardView = itemView.findViewById(R.id.cv_transaction_details);
             cardView.setOnClickListener(new View.OnClickListener() {

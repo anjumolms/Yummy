@@ -2,20 +2,20 @@ package com.example.dell.yummy;
 
 public class Constants {
 
-    public static final int SCREEN_LOGIN =0;
-    public static final int SCREEN_REGISTRATION =1;
-    public static final int SCREEN_USER_HOME =2;
-    public  static final int SCREEN_USER = 3;
+    public static final int SCREEN_LOGIN = 0;
+    public static final int SCREEN_REGISTRATION = 1;
+    public static final int SCREEN_USER_HOME = 2;
+    public static final int SCREEN_USER = 3;
     public static final int SCREEN_STORE_DETAILS = 4;
     public static final int SCREEN_PAYMENT_DETAILS = 5;
     public static final int SCREEN_USER_ADD_COINS = 6;
     public static final int SCREEN_USER_WALLET = 7;
     public static final int SCREEN_RETAILER_HOME = 8;
     public static final int SCREEN_RETAILER_TRANSACTION_DETAILS = 9;
-    public static final int SCREEN_RETAILER_EACH_TRANSACTION_DETAILS =10;
-    public static final int SCREEN_RETAILER_ADD_ITEMS =11;
-    public static final int SCREEN_RETAILER_LIST_ITEMS =12;
-    public static final int SCREEN_WALLET =13;
+    public static final int SCREEN_RETAILER_EACH_TRANSACTION_DETAILS = 10;
+    public static final int SCREEN_RETAILER_ADD_ITEMS = 11;
+    public static final int SCREEN_RETAILER_LIST_ITEMS = 12;
+    public static final int SCREEN_WALLET = 13;
     public static final int SCREEN_CONFIRMATION = 14;
     public static final int SCREEN_ORDER_SUCCESSFULL = 15;
     public static final int SCREEN_ADMIN_HOME = 16;
@@ -64,4 +64,20 @@ public class Constants {
     public static final String NOTIFY_RETAILER_DETAILS = "NOTIFY_RETAILER_DETAILS";
     public static final String NOTIFY_REVIEW_UPDATED = "NOTIFY_REVIEW_UPDATED";
     public static final String NOTIFY_STORE_ADDED = "NOTIFY_STORE_ADDED";
+    public static final String NOTIFY_TRANSACTION_ORDER = "NOTIFY_TRANSACTION_ORDER";
+    public static final String NOTIFY_GET_LOCATION = "NOTIFY_GET_LOCATION";
+    public static final String NOTIFY_DISH_DETAILS_ERROR = "NOTIFY_DISH_DETAILS_ERROR";
+    public static final String NOTIFY_STORE_DETAILS_ERROR = "NOTIFY_STORE_DETAILS_ERROR";
+    public static final String NOTIFY_REVIEW_DETAILS_ERROR = "NOTIFY_REVIEW_DETAILS_ERROR";
+    public static final String NOTIFY_USER_CONFIRM_ORDER_ERROR = "NOTIFY_USER_CONFIRM_ORDER_ERROR";
+    public static final String NOTIFY_ITEM_ADDED_ERROR = "NOTIFY_ITEM_ADDED_ERROR";
+    public static final String NOTIFY_UPDATE_ITEM_ERROR = "NOTIFY_UPDATE_ITEM_ERROR";
+    public static final String NOTIFY_WALLET_UPDATED_ERROR = "NOTIFY_WALLET_UPDATED_ERROR";
+    public static final String NOTIFY_CONFIRMED_TRANSACTIONS = "NOTIFY_CONFIRMED_TRANSACTIONS";
+    public static final String NOTIFY_CONFIRMED_TRANSACTIONS_ERROR = "NOTIFY_CONFIRMED_TRANSACTIONS_ERROR";
+    public static final String NOTIFY_ALL_TRANSACTIONS = "NOTIFY_ALL_TRANSACTIONS";
+    public static final String NOTIFY_ALL_TRANSACTIONS_ERROR = "NOTIFY_ALL_TRANSACTIONS_ERROR";
+    public static final String NOTIFY_GET_ALL_LOCATIONS = "NOTIFY_GET_ALL_LOCATIONS";
+    public static final String NOTIFY_GET_ALL_LOCATIONS_LIST = "NOTIFY_GET_ALL_LOCATIONS";
+    public static final String NOTIFY_GET_ALL_LOCATIONS_ERROR = "NOTIFY_GET_ALL_LOCATIONS_ERROR";
 }

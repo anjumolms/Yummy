@@ -68,13 +68,90 @@
                 android:layout_weight="1"
                 android:gravity="center" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:weightSum="2">
 
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Order Status"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:layout_marginLeft="5dp"
+                />
+            <TextView
+                android:id="@+id/tv_each_transaction_order_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:weightSum="2">
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date "
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:layout_marginLeft="5dp"
+                />
+            <TextView
+                android:id="@+id/tv_order_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:weightSum="2">
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Order Id"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:layout_marginLeft="5dp"
+                />
+            <TextView
+                android:id="@+id/tv_order_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="10dp"
+            android:background="#e0e0e0" />
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_each_transaction_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginLeft="5dp">
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp">
 
         </android.support.v7.widget.RecyclerView>
 

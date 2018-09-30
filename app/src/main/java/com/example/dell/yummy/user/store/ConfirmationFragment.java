@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -50,8 +52,6 @@ public class ConfirmationFragment extends
     private TextView mWallet;
     private int mTotal = 0;
     private LinearLayout linearLayout;
-
-    private double ordervalue = 0;
     private int orderitemcount = 0;
     private Button mConfirmbutton;
     private String mMenuitem = "";
@@ -73,6 +73,9 @@ public class ConfirmationFragment extends
                         break;
                     case Constants.NOTIFY_WALLET_UPDATED:
                         showWalletUpdation();
+                        break;
+                    case Constants.NOTIFY_USER_CONFIRM_ORDER_ERROR:
+                        stopProgress();
                         break;
                     default:
                         break;
@@ -104,18 +107,28 @@ public class ConfirmationFragment extends
 
     private void setTotalPrice() {
         for (DishesDetails dishdetail : dishesDetails) {
-            if (dishdetail.getCounter() > 0) {
-                mTotal = mTotal + (dishdetail.getItemPrice() * dishdetail.getCounter());
-                orderitemcount = orderitemcount + dishdetail.getCounter();
-                if (mMenuitem.equalsIgnoreCase("")) {
-                    mMenuitem = "" + dishdetail.getMenuId();
-                } else {
-                    mMenuitem = mMenuitem + "," + dishdetail.getMenuId();
+            int dishCount = dishdetail.getCounter();
+            if (dishCount > 0) {
+                mTotal = mTotal + (dishdetail.getItemPrice() * dishCount);
+                orderitemcount = orderitemcount + dishCount;
+                for (int i = 0; i < dishCount; i++) {
+
+                    if (mMenuitem.equalsIgnoreCase("")) {
+                        mMenuitem = "" + dishdetail.getMenuId();
+                    } else {
+                        mMenuitem = mMenuitem + "," + dishdetail.getMenuId();
+                    }
                 }
                 retailid = dishdetail.getRetailId();
             }
         }
         mTextViewTotal.setText(" " + mTotal);
+    }
+
+    private void stopProgress() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 
     private void initViews(View view) {
@@ -128,9 +141,13 @@ public class ConfirmationFragment extends
         linearLayout = view.findViewById(R.id.ll_wallet_updation);
         mWallet = view.findViewById(R.id.user_wallet);
         mTotal = 0;
+        orderitemcount = 0;
+        mMenuitem = "";
+        retailid = 0;
         linearLayout.setVisibility(View.GONE);
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_USER_CONFIRM_ORDER);
         intentFilter.addAction(Constants.NOTIFY_WALLET_UPDATED);
+        intentFilter.addAction(Constants.NOTIFY_USER_CONFIRM_ORDER_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
     }
@@ -159,11 +176,11 @@ public class ConfirmationFragment extends
         SharedPreferences sharedpreferences
                 = getActivity()
                 .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
-                Context.MODE_PRIVATE);
+                        Context.MODE_PRIVATE);
         int wallet = sharedpreferences.getInt(Constants.KEY_WALLET, 0);
 
-        if(wallet >= mTotal){
-            showProgress();
+        if (wallet >= mTotal) {
+
             final Order orderDetails = new Order();
 
             int userid = sharedpreferences.getInt(Constants.KEY_ID, 0);
@@ -173,12 +190,22 @@ public class ConfirmationFragment extends
             orderDetails.setOrder_item_count(orderitemcount);
             orderDetails.setOrder_value(mTotal);
             orderDetails.setOrder_items_string(mMenuitem);
-            RetrofitNetworksCalls calls = DataSingleton
-                    .getInstance().getRetrofitNetworksCallsObject();
-            if (calls != null) {
-                calls.confirmOrder(getActivity(), orderDetails);
+            if (isNetworkAvailable()) {
+                RetrofitNetworksCalls calls = DataSingleton
+                        .getInstance().getRetrofitNetworksCallsObject();
+                if (calls != null) {
+                    calls.confirmOrder(getActivity(), orderDetails);
+                }
+            } else {
+                if (mFragmentListener != null) {
+                    mFragmentListener.showSnackBar();
+                }
             }
 
+
+        } else {
+            Toast.makeText(getActivity(),
+                    "Insufficient Balance", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -210,5 +237,17 @@ public class ConfirmationFragment extends
         mProgressDialog.dismiss();
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager ConnectionManager
+                = (ConnectivityManager) getActivity()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected() == true) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 
 }

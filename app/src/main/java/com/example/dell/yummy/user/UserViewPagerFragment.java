@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.user.dishes.UserDishesFragment;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UserViewPagerFragment extends Fragment {
+public class UserViewPagerFragment extends Fragment implements View.OnClickListener {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -30,8 +31,7 @@ public class UserViewPagerFragment extends Fragment {
     private UserReviewFragment mUserReviewFragment;
     private IUserFragmentListener miUserFragmentListener;
     private List<StoreDetails> mStoreDetails;
-
-
+    private TextView mTextView;
 
     public UserViewPagerFragment() {
         // Required empty public constructor
@@ -46,15 +46,17 @@ public class UserViewPagerFragment extends Fragment {
                false);
         initFragments();
         viewPager =  view.findViewById(R.id.viewpager);
+        mTextView = view.findViewById(R.id.tv_nav_icon);
         addTabs(viewPager);
         tabLayout =  view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
+        mTextView.setOnClickListener(this);
         return view;
 
     }
 
     private void initFragments() {
+
         mUserStoresFragment = new UserStoresFragment();
         mUserStoresFragment.addListener(miUserFragmentListener);
 
@@ -80,5 +82,16 @@ public class UserViewPagerFragment extends Fragment {
     public void addListener(IUserFragmentListener iUserFragmentListener) {
         miUserFragmentListener = iUserFragmentListener;
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.tv_nav_icon:
+                if(miUserFragmentListener != null){
+                    miUserFragmentListener.showNavigationDrawer();
+                }
+                break;
+        }
     }
 }

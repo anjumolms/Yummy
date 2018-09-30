@@ -52,6 +52,8 @@ public class AdminStoresAdapter extends
             //binding the data with the viewholder views
             holder.textViewStoreName.setText(storeDetails.getRetailName());
             holder.textViewStoreId.setText("Store ID  " + storeDetails.getRetailNumber());
+            holder.wallet.setText("Wallet " + storeDetails.getRetailWallet());
+
 
         }
     }
@@ -67,7 +69,7 @@ public class AdminStoresAdapter extends
 
     class StoreViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewStoreName, textViewStoreId;
+        TextView textViewStoreName, textViewStoreId,wallet;
         CardView cardView;
         ImageView storeImg;
 
@@ -80,7 +82,7 @@ public class AdminStoresAdapter extends
             cardView = itemView.findViewById(R.id.cv_storedetails);
             storeImg = itemView.findViewById(R.id.iv_store);
 
-
+            wallet = itemView.findViewById(R.id.wallet_info);
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -3,7 +3,11 @@ package com.example.dell.yummy.Retailer;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
@@ -36,6 +40,7 @@ public class RetailerHomeActivity extends AppCompatActivity
     private RetailerWalletFragment mretailerWalletFragment;
     private ConfirmOrdersFragment mConfirmOrdersFragment;
     private int counter;
+    private CoordinatorLayout mCoordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,7 @@ public class RetailerHomeActivity extends AppCompatActivity
     }
 
     private void initFragments() {
+        mCoordinatorLayout = findViewById(R.id.cl_retailer_activity);
         mretailerTransactionDetailsFragment = new RetailerTransactionDetailsFragment();
         meachTransactionFragment = new EachTransactionFragment();
         mretailerTransactionDetailsFragment.addListener(this);
@@ -66,26 +72,40 @@ public class RetailerHomeActivity extends AppCompatActivity
         mretailerListItemFragment = new RetailerListItemFragment();
         mretailerListItemFragment.addListener(this);
         mretailerWalletFragment = new RetailerWalletFragment();
+        mretailerWalletFragment.addListener(this);
         mConfirmOrdersFragment = new ConfirmOrdersFragment();
         mConfirmOrdersFragment.addListener(this);
+
         loadDetails();
     }
 
+    public void showSnackBar() {
+        Snackbar snackbar = Snackbar
+                .make(mCoordinatorLayout, "Sorry you are offline",
+                        Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+
     private void loadDetails() {
-        RetrofitNetworksCalls retrofitNetworksCalls
-                = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
-        if (retrofitNetworksCalls != null) {
+        if (isNetworkAvailable()) {
 
-            SharedPreferences sharedPreferences = getApplicationContext()
-                    .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
-                            Context.MODE_PRIVATE);
-            int id = 0;
-            if (sharedPreferences != null) {
-                id = sharedPreferences.getInt(Constants.KEY_ID, 0);
+            RetrofitNetworksCalls retrofitNetworksCalls
+                    = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
+            if (retrofitNetworksCalls != null) {
+
+                SharedPreferences sharedPreferences = getApplicationContext()
+                        .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                                Context.MODE_PRIVATE);
+                int id = 0;
+                if (sharedPreferences != null) {
+                    id = sharedPreferences.getInt(Constants.KEY_ID, 0);
+                }
+
+                retrofitNetworksCalls.getTransactionPendingOrders(getApplicationContext(), id);
+                retrofitNetworksCalls.getRetailerMenuList(getApplicationContext(), 0);
             }
-
-            retrofitNetworksCalls.getTransactionDetails(getApplicationContext(), id);
-            retrofitNetworksCalls.getRetailerMenuList(getApplicationContext(),0);
+        } else {
+            showSnackBar();
         }
     }
 
@@ -143,9 +163,22 @@ public class RetailerHomeActivity extends AppCompatActivity
 
     @Override
     public void showItemUpdatePopup(final DishesDetails dishesDetails) {
-         if(mretailerListItemFragment != null){
-             mretailerListItemFragment.showUpdatePopup(dishesDetails);
-         }
+        if (mretailerListItemFragment != null) {
+            mretailerListItemFragment.showUpdatePopup(dishesDetails);
+        }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager ConnectionManager
+                = (ConnectivityManager) this
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = ConnectionManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected() == true) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     private void setupNavigationDrawer() {
@@ -175,6 +208,7 @@ public class RetailerHomeActivity extends AppCompatActivity
                 || mretailerAddItemFragment.isVisible()
                 || meachTransactionFragment.isVisible()) {
             addFragment(Constants.SCREEN_RETAILER_TRANSACTION_DETAILS);
+
         } else {
             super.onBackPressed();
         }

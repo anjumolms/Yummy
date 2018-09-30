@@ -1,6 +1,7 @@
 package com.example.dell.yummy.admin;
 
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +18,8 @@ import android.view.ViewGroup;
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
 import com.example.dell.yummy.R;
-import com.example.dell.yummy.model.TransactionDetails;
+import com.example.dell.yummy.model.Order;
+import com.example.dell.yummy.model.StoreDetails;
 import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 
 import java.util.List;
@@ -28,16 +30,22 @@ import java.util.List;
 public class AdminStoreTransactionsFragment extends Fragment {
 
     private IAdminFragmentListener iAdminFragmentListener;
-    private List<TransactionDetails> transactionDetailsList;
+    private List<Order> transactionDetailsList;
     private RecyclerView mRecyclerView;
     private AdminStoreTransactionAdapter mAdapter;
+    private ProgressDialog mProgressDialog;
+    private StoreDetails storeDetails;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent != null
-                    && intent.getAction().equals(Constants.NOTIFY_TRANSACTION_DETAILS)) {
+                    && intent.getAction().equals(Constants.NOTIFY_ALL_TRANSACTIONS)) {
                 updateData();
+            }
+            if (intent != null
+                    && intent.getAction().equals(Constants.NOTIFY_ALL_TRANSACTIONS_ERROR)) {
+                dismissProgress();
             }
         }
     };
@@ -62,9 +70,20 @@ public class AdminStoreTransactionsFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.rv_admin_stores_transaction);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_TRANSACTION_DETAILS);
+        mProgressDialog = new ProgressDialog(getActivity());
+        IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_ALL_TRANSACTIONS);
+        intentFilter.addAction(Constants.NOTIFY_ALL_TRANSACTIONS_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
+
+        RetrofitNetworksCalls calls = DataSingleton
+                .getInstance().getRetrofitNetworksCallsObject();
+        if (calls != null && storeDetails != null) {
+            mProgressDialog.setMessage("Loading....");
+            mProgressDialog.show();
+            calls.getAllTransactionDetails(getActivity(),
+                    storeDetails.getRetailId());
+        }
         showStoreDetails();
 
     }
@@ -74,23 +93,37 @@ public class AdminStoreTransactionsFragment extends Fragment {
                 .getRetrofitNetworksCallsObject();
 
         if (retrofitNetworksCalls != null) {
-            List<TransactionDetails> details
-                    = retrofitNetworksCalls.getTransactionList();
+            List<Order> details
+                    = retrofitNetworksCalls.getAllTransactionList();
 
             mAdapter = new AdminStoreTransactionAdapter(getActivity(),
                     details, iAdminFragmentListener);
             //setting adapter to recyclerview
             mRecyclerView.setAdapter(mAdapter);
+             /*else {
+                mProgressDialog.setMessage("Loading.....");
+                mProgressDialog.show();
+
+            }*/
+
 
         }
 
     }
+
+    private void dismissProgress() {
+        if (mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
     private void updateData() {
+        dismissProgress();
         if (mAdapter != null) {
             RetrofitNetworksCalls retrofitNetworksCalls = DataSingleton.getInstance()
                     .getRetrofitNetworksCallsObject();
             if (retrofitNetworksCalls != null) {
-                mAdapter.setData(retrofitNetworksCalls.getTransactionList());
+                mAdapter.setData(retrofitNetworksCalls.getAllTransactionList());
                 mAdapter.notifyDataSetChanged();
             }
 
@@ -103,4 +136,7 @@ public class AdminStoreTransactionsFragment extends Fragment {
 
     }
 
+    public void setStores(StoreDetails storeDetails) {
+        this.storeDetails = storeDetails;
+    }
 }

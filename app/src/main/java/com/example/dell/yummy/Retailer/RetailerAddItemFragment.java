@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.example.dell.yummy.Constants;
@@ -31,7 +32,7 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
     IRetailerFragmentListener retailerFragmentListener;
     private EditText mItimeName;
     private EditText mItemPrice;
-    private EditText mSignatureDish;
+    private CheckBox mSignatureDish;
     private Button mAddItem;
     private ProgressDialog progressDialog;
 
@@ -42,10 +43,18 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent != null
-                    && intent.getAction().equals(Constants.NOTIFY_ITEM_ADDED)) {
-                dismissProgress();
+            if (intent != null) {
+                String action = intent.getAction();
+                switch (action) {
+                    case Constants.NOTIFY_ITEM_ADDED:
+                        dismissProgress();
+                        break;
+                    case Constants.NOTIFY_ITEM_ADDED_ERROR:
+                        stopProgress();
+                        break;
+                }
             }
+
         }
     };
 
@@ -67,6 +76,7 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
         mAddItem = view.findViewById(R.id.bt_add_item_retailer);
         progressDialog = new ProgressDialog(getActivity());
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_ITEM_ADDED);
+        intentFilter.addAction(Constants.NOTIFY_ITEM_ADDED_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
         mAddItem.setOnClickListener(this);
@@ -92,9 +102,8 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
         RetailerMenu retailerMenu = new RetailerMenu();
         String itemName = mItimeName.getText().toString().trim();
         String itemCost = mItemPrice.getText().toString().trim();
-        String signatureDish = mSignatureDish.getText().toString().trim();
         int signature = 0;
-        if (signatureDish.equalsIgnoreCase("yes")) {
+        if (mSignatureDish.isChecked()) {
             signature = 1;
         }
         SharedPreferences sharedPreferences = getActivity()
@@ -121,13 +130,19 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
 
     private void dismissProgress() {
         progressDialog.dismiss();
-        mSignatureDish.setText("");
+        mSignatureDish.setChecked(false);
         mItimeName.setText("");
         mItemPrice.setText("");
         RetrofitNetworksCalls calls = DataSingleton
                 .getInstance().getRetrofitNetworksCallsObject();
-        if(calls != null){
+        if (calls != null) {
             calls.getRetailerMenuList(getActivity(), 0);
+        }
+    }
+
+    private void stopProgress() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
         }
     }
 

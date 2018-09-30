@@ -17,16 +17,16 @@ public class LocationDetails {
         this.locationId = locationId;
     }
 
-    public String getItemPrice() {
-        return itemPrice;
+    public String getLocationName() {
+        return locationName;
     }
 
-    public void setItemPrice(String itemPrice) {
-        this.itemPrice = itemPrice;
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 
     @SerializedName("location_name")
     @Expose
 
-    private String itemPrice;
+    private String locationName;
 }
