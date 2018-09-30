@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp">
+            <TableRow>
+                <TextView
+                    android:text="Add Location"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="18dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="#000000"
+                    android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow
+                android:layout_marginTop="15dp">
+
+                <Spinner
+                    android:id="@+id/sp_admin_spinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:prompt="@string/select"
+                    android:layout_margin="5dp"/>
+
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="right"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:id="@+id/popup_admin_add_place"
+                    android:text="Add"
+                    android:textColor="@color/tab_color"
+                    android:layout_marginRight="10dp"/>
+
+                <TextView
+                    android:id="@+id/popup_admin_places_cancel"
+                    android:text="Cancel"
+                    android:textColor="@color/tab_color"
+                    android:layout_marginRight="10dp"/>
+            </TableRow>
+
+        </TableLayout>
+    </LinearLayout>
+
+</LinearLayout>
