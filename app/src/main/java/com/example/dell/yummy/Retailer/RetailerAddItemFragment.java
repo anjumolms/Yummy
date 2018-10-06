@@ -10,12 +10,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.SwitchCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
@@ -32,9 +35,12 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
     IRetailerFragmentListener retailerFragmentListener;
     private EditText mItimeName;
     private EditText mItemPrice;
-    private CheckBox mSignatureDish;
+    private SwitchCompat mSignatureDish;
+    private SwitchCompat mCombo;
     private Button mAddItem;
+    private EditText stock;
     private ProgressDialog progressDialog;
+    private TextView back;
 
     public RetailerAddItemFragment() {
         // Required empty public constructor
@@ -74,12 +80,16 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
         mItemPrice = view.findViewById(R.id.et_retailer_cost);
         mSignatureDish = view.findViewById(R.id.et_signature_dish);
         mAddItem = view.findViewById(R.id.bt_add_item_retailer);
+        mCombo = view.findViewById(R.id.et_combo_dish);
+        stock = view.findViewById(R.id.stock);
+        back = view.findViewById(R.id.add_item_back);
         progressDialog = new ProgressDialog(getActivity());
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_ITEM_ADDED);
         intentFilter.addAction(Constants.NOTIFY_ITEM_ADDED_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
         mAddItem.setOnClickListener(this);
+        back.setOnClickListener(this);
     }
 
 
@@ -93,6 +103,11 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
             case R.id.bt_add_item_retailer:
                 addItemToList();
                 break;
+            case R.id.add_item_back:
+                if (retailerFragmentListener != null) {
+                    retailerFragmentListener.onBackPress();
+                }
+                break;
             default:
                 break;
         }
@@ -102,6 +117,21 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
         RetailerMenu retailerMenu = new RetailerMenu();
         String itemName = mItimeName.getText().toString().trim();
         String itemCost = mItemPrice.getText().toString().trim();
+        String stockNumber = stock.getText().toString().trim();
+
+        if (TextUtils.isEmpty(itemName)) {
+            mItimeName.setError(Constants.FIELD_EMPTY_WARNING);
+            return;
+        }
+        if (TextUtils.isEmpty(itemCost)) {
+            mItemPrice.setError(Constants.FIELD_EMPTY_WARNING);
+            return;
+        }
+        if (TextUtils.isEmpty(stockNumber)) {
+            stock.setError(Constants.FIELD_EMPTY_WARNING);
+            return;
+        }
+
         int signature = 0;
         if (mSignatureDish.isChecked()) {
             signature = 1;
@@ -117,6 +147,7 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
         retailerMenu.setItemPrice(Integer.parseInt(itemCost));
         retailerMenu.setItemSignature(signature);
         retailerMenu.setRetailId(id);
+        retailerMenu.setStock(Integer.parseInt(stockNumber));
         RetrofitNetworksCalls calls = DataSingleton.getInstance()
                 .getRetrofitNetworksCallsObject();
         if (calls != null) {
@@ -133,6 +164,8 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
         mSignatureDish.setChecked(false);
         mItimeName.setText("");
         mItemPrice.setText("");
+        stock.setText("");
+        mItimeName.requestFocus();
         RetrofitNetworksCalls calls = DataSingleton
                 .getInstance().getRetrofitNetworksCallsObject();
         if (calls != null) {

@@ -7,4 +7,8 @@ public interface IAdminFragmentListener {
 
     void passStoreDetails(int screenRetailerTransactionDetails,
                           StoreDetails storeDetails);
+
+    void showNavigationDrawer();
+
+    void onBackPress();
 }

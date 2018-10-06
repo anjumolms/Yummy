@@ -22,6 +22,9 @@ public class RegisterStore {
     @SerializedName("retail_wallet")
     @Expose
     private int retailWallet;
+    @SerializedName("location_id")
+    @Expose
+    private int location_id;
 
     public int getLoginPin() {
         return loginPin;
@@ -69,5 +72,13 @@ public class RegisterStore {
 
     public void setRetailWallet(int retailWallet) {
         this.retailWallet = retailWallet;
+    }
+
+    public int getLocation_id() {
+        return location_id;
+    }
+
+    public void setLocation_id(int location_id) {
+        this.location_id = location_id;
     }
 }

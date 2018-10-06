@@ -36,14 +36,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Order Status" />
+                        android:text="Order Status"
+                        android:textColor="#000"/>
 
                     <TextView
                         android:id="@+id/tv_transaction_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Order Status" />
+                        android:text="Order Status"
+                        android:textStyle="bold"/>
                 </TableRow>
 
                 <TableRow
@@ -55,14 +57,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="User Id " />
+                        android:text="Order Id "
+                        android:textColor="#000"/>
 
                     <TextView
                         android:id="@+id/tv_user_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Order Status" />
+                        android:text="Order Status"
+                        android:textColor="#000"/>
                 </TableRow>
 
                 <TableRow
@@ -73,14 +77,35 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Transaction Id " />
+                        android:text="Transaction Id "
+                        android:textColor="#000"/>
 
                     <TextView
                         android:id="@+id/tv_transaction_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Order Status" />
+                        android:text="Order Status"
+                        android:textColor="#000"/>
+                </TableRow>
+                <TableRow
+                    android:layout_marginBottom="5dp"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Date "
+                        android:textColor="#000"/>
+
+                    <TextView
+                        android:id="@+id/tv_date_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Order Status"
+                        android:textColor="#000"/>
                 </TableRow>
             </TableLayout>
 
@@ -94,12 +119,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Amount"
-                android:layout_marginBottom="5dp"/>
+                android:layout_marginBottom="5dp"
+                android:textColor="#000"/>
             <TextView
                 android:id="@+id/tv_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Amount"/>
+                android:text="Amount"
+                android:textColor="#000"/>
 
         </LinearLayout>
         </LinearLayout>

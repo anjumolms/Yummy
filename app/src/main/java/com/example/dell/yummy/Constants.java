@@ -7,7 +7,7 @@ public class Constants {
     public static final int SCREEN_USER_HOME = 2;
     public static final int SCREEN_USER = 3;
     public static final int SCREEN_STORE_DETAILS = 4;
-    public static final int SCREEN_PAYMENT_DETAILS = 5;
+    public static final int SCREEN_PURCHASE_DETAILS = 5;
     public static final int SCREEN_USER_ADD_COINS = 6;
     public static final int SCREEN_USER_WALLET = 7;
     public static final int SCREEN_RETAILER_HOME = 8;
@@ -23,6 +23,8 @@ public class Constants {
     public static final int SCREEN_ADMIN_STORE_LIST = 18;
     public static final int SCREEN_ADMIN_TRANSACTION_DETAILS = 19;
     public static final int SCREEN_REGISTER_RETAILER = 20;
+    public static final int SCREEN_PURCHASE_HISTORY_ITEM = 21;
+    public static final int SCREEN_REFUND_FRAGMENT = 22;
 
     public static final String CHANNEL_ID = "my_channel_01";
     public static final String CHANNEL_NAME = "Simplified Coding Notification";
@@ -40,6 +42,7 @@ public class Constants {
     public static final String KEY_WALLET = "Wallet";
     public static final String KEY_ID = "Id";
     public static final String KEY_ROLE = "keyRole";
+    public static final String KEY_LOCATION = "location";
 
     //Database constants
     public static final String COLOUM_USER_NAME = "username";
@@ -80,4 +83,15 @@ public class Constants {
     public static final String NOTIFY_GET_ALL_LOCATIONS = "NOTIFY_GET_ALL_LOCATIONS";
     public static final String NOTIFY_GET_ALL_LOCATIONS_LIST = "NOTIFY_GET_ALL_LOCATIONS";
     public static final String NOTIFY_GET_ALL_LOCATIONS_ERROR = "NOTIFY_GET_ALL_LOCATIONS_ERROR";
+    public static final String NOTIFY_GET_PURCHASE_HISTORY = "NOTIFY_GET_PURCHASE_HISTORY";
+    public static final String NOTIFY_GET_PURCHASE_HISTORY_ERROR = "NOTIFY_GET_PURCHASE_HISTORY_ERROR";
+    public static final String NOTIFY_TRANSACTION_ORDER_ERROR = "NOTIFY_TRANSACTION_ORDER_ERROR";
+    public static final String NOTIFY_REFUND_ERROR = "NOTIFY_REFUND_ERROR";
+    public static final String NOTIFY_REFUND = "NOTIFY_REFUND";
+    public static final String INVALID_EMAIL_WARNING = "Enter Valid Email";
+    public static final String MOBILE_NUMBER_WARNING = "Enter 10 digit Mobile Number";
+    public static final String PASSWORD_MINIMUM_WARNING = "Minimum 4 Digits Required";
+    public static final String KEY_RETAIL_NAME = "KEY_RETAIL_NAME";
+    public static final String SELECT_LOCATION_WARNING = "Select Store Location";
+    public static final String INVALID_UST_EMAIL_WARNING = "Enter Valid UST Email Address";
 }

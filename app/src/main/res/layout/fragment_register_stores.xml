@@ -25,12 +25,14 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             <TextView
+                android:id="@+id/tv_register_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawablePadding="10dp"
                 android:text="@string/yummy"
                 android:textColor="#fff"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:drawableLeft="@drawable/backthree"/>
         </android.support.v7.widget.Toolbar>
 
         <!-- Email Label -->
@@ -45,7 +47,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Store Name"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:theme="@style/AppTheme"/>
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -58,7 +61,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Store Id"
-                android:inputType="textPersonName" />
+                android:inputType="number"
+                android:theme="@style/AppTheme"/>
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -71,7 +75,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Account"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:theme="@style/AppTheme"/>
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -84,21 +89,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
-                android:inputType="text" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:theme="@style/EditTextHint">
-
-            <EditText
-                android:id="@+id/admin_store_user_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="User Name"
-                android:inputType="text" />
+                android:inputType="textEmailAddress"
+                android:theme="@style/AppTheme"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password Label -->
@@ -113,7 +105,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
-                android:inputType="textPassword" />
+                android:inputType="number"
+                android:theme="@style/AppTheme"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -127,14 +120,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Mobile"
-                android:inputType="number" />
+                android:inputType="number"
+                android:theme="@style/AppTheme"/>
         </android.support.design.widget.TextInputLayout>
+
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:prompt="@string/select"
-            android:layout_margin="5dp"/>
+            android:layout_margin="5dp"
+            />
         <Button
             android:id="@+id/bt_admin_store_register"
             android:layout_width="match_parent"
@@ -146,15 +142,4 @@
 
     </LinearLayout>
     </ScrollView>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fb_mail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="bottom|end|right"
-        android:layout_margin="16dp"
-        android:background="@color/tab_color"
-        android:src="@drawable/mail"
-        app:layout_anchorGravity="bottom|right|end" />
 </RelativeLayout>

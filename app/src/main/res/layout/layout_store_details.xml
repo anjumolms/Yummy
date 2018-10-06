@@ -21,16 +21,17 @@
 
                 <TableRow
                     android:layout_marginTop="10dp">
-                <TextView
-                    android:id="@+id/dish_item_name"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="5dp"
-                    android:gravity="center_vertical"/>
+
+                    <TextView
+                        android:id="@+id/dish_item_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_dish_item_count"
@@ -69,13 +70,27 @@
                     android:gravity="center_vertical" />
 
                 </TableRow>
+                <TableRow
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center_vertical"
+                        android:text="Stock           " />
 
+                    <TextView
+                        android:id="@+id/dish_stock_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center_vertical"
+                        android:text="50"/>
+
+                </TableRow>
             </TableLayout>
-
-
-
-
-
         </android.support.v7.widget.CardView>
 
     </LinearLayout>

@@ -1,6 +1,7 @@
 package com.example.dell.yummy.user.dishes;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -57,9 +58,14 @@ public class UserDishesAdapter extends
 
             //binding the data with the viewholder views
             holder.textViewTitle.setText(dishesDetails.getItemName());
-            holder.textViewPrice.setText(String.valueOf(dishesDetails.getItemPrice()));
+            holder.textViewPrice.setText("₹ " + dishesDetails.getItemPrice());
             holder.ratingBar.setRating(dishesDetails.getReview());
-
+            holder.stock.setText("Stock    " + dishesDetails.getItemStock());
+            if (dishesDetails.getItemSignature() == 1) {
+                holder.textViewTitle.setTextColor(Color.parseColor("#E91E63"));
+            } else {
+                holder.textViewTitle.setTextColor(Color.parseColor("#000000"));
+            }
         }
 
     }
@@ -67,9 +73,9 @@ public class UserDishesAdapter extends
 
     @Override
     public int getItemCount() {
-        if(dishesDetailsList != null){
+        if (dishesDetailsList != null) {
             return dishesDetailsList.size();
-        }else{
+        } else {
             return 0;
         }
 
@@ -78,7 +84,7 @@ public class UserDishesAdapter extends
 
     class DishesViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewTitle, textViewPrice;
+        TextView textViewTitle, textViewPrice,stock;
         CardView cardView;
         ImageView storeImg;
         RatingBar ratingBar;
@@ -92,14 +98,14 @@ public class UserDishesAdapter extends
             cardView = itemView.findViewById(R.id.cv_disheitem);
             storeImg = itemView.findViewById(R.id.iv_dish);
             ratingBar = itemView.findViewById(R.id.rtbProductRating);
-
+            stock = itemView.findViewById(R.id.dish_item_stock);
 
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mCtx, "success", Toast.LENGTH_SHORT).show();
                     if (miUserFragmentListener != null) {
-                        if(dishesDetailsList != null){
+                        if (dishesDetailsList != null) {
                             int clickPosition = getAdapterPosition();
                             DishesDetails dishesDetails = dishesDetailsList.get(clickPosition);
                             miUserFragmentListener.addPopup(dishesDetails);

@@ -46,6 +46,7 @@ public class RetrofitNetworksCalls {
     private List<Order> allTransactions;
     List<LocationDetails> places;
     private List<LocationDetails> mGetAllLocationDetails;
+    private List<Order> mPurchaseHistory;
 
     public void getStoreDetails(final Context context, int locationId) {
 
@@ -325,7 +326,7 @@ public class RetrofitNetworksCalls {
 
                 @Override
                 public void onFailure(Call<List<Order>> call, Throwable t) {
-                    Intent intent = new Intent(Constants.NOTIFY_CONFIRMED_TRANSACTIONS_ERROR);
+                    Intent intent = new Intent(Constants.NOTIFY_ALL_TRANSACTIONS_ERROR);
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
                 }
@@ -738,7 +739,7 @@ public class RetrofitNetworksCalls {
         }
     }
 
-    public void getLocation(final Context context) {
+    public void getLocation(final Context context, final int firstCalling) {
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
@@ -752,6 +753,7 @@ public class RetrofitNetworksCalls {
                         places = response.body();
                         if (places != null) {
                             Intent intent = new Intent(Constants.NOTIFY_GET_LOCATION);
+                            intent.putExtra("Flag", firstCalling);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
                         } else if (response.code() == 204) {
@@ -850,7 +852,7 @@ public class RetrofitNetworksCalls {
         }
     }
 
-    public void addStoreDetails(final Context context, RegisterStore registerStore) {
+    public void addStoreDetails(final Context context, final RegisterStore registerStore) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
@@ -871,9 +873,12 @@ public class RetrofitNetworksCalls {
                             Intent intent = new Intent(Constants.NOTIFY_STORE_ADDED);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
+                        } else if (response.code() == 409) {
+                            Toast.makeText(context, "Already existing store id/store name",
+                                    Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(context, response.code()
-                                    + response.message(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Store registration failed. Try after some time !!",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -979,7 +984,7 @@ public class RetrofitNetworksCalls {
                                        Response<List<LocationDetails>> response) {
                     if (response != null) {
                         if (response.code() == 200) {
-                          mGetAllLocationDetails  = response.body();
+                            mGetAllLocationDetails = response.body();
 
                             Intent intent = new Intent(Constants.NOTIFY_GET_ALL_LOCATIONS_LIST);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
@@ -1010,9 +1015,10 @@ public class RetrofitNetworksCalls {
         }
     }
 
-    public  List<LocationDetails> getmGetAllLocationDetails(){
+    public List<LocationDetails> getmGetAllLocationDetails() {
         return mGetAllLocationDetails;
     }
+
     public void updateDelivery(int orderId, final Context context) {
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
@@ -1071,9 +1077,14 @@ public class RetrofitNetworksCalls {
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
                         } else if (response.code() == 204) {
+                            Intent intent = new Intent(Constants.NOTIFY_TRANSACTION_ORDER_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                             Toast.makeText(context, "Invalid",
                                     Toast.LENGTH_LONG).show();
                         } else {
+
+                            Intent intent = new Intent(Constants.NOTIFY_TRANSACTION_ORDER_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                             Toast.makeText(context, response.code()
                                     + response.message(), Toast.LENGTH_SHORT).show();
                         }
@@ -1082,6 +1093,8 @@ public class RetrofitNetworksCalls {
 
                 @Override
                 public void onFailure(Call<Order> call, Throwable t) {
+                    Intent intent = new Intent(Constants.NOTIFY_TRANSACTION_ORDER_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     Toast.makeText(context,
                             "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -1098,4 +1111,103 @@ public class RetrofitNetworksCalls {
         mOrders = null;
     }
 
+
+    public void getPurchaseHistory(final Context context) {
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            IApiInterface service = retrofit.create(IApiInterface.class);
+            SharedPreferences sharedPreferences = context
+                    .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                            Context.MODE_PRIVATE);
+            int id = 0;
+            if (sharedPreferences != null) {
+                id = sharedPreferences.getInt(Constants.KEY_ID, 0);
+            }
+            Call<List<Order>> call = service.getPurchaseHistory(id);
+
+            call.enqueue(new Callback<List<Order>>() {
+                @Override
+                public void onResponse(Call<List<Order>> call,
+                                       Response<List<Order>> response) {
+                    if (response != null) {
+                        if (response.code() == 200) {
+                            mPurchaseHistory = response.body();
+
+                            Intent intent = new Intent(Constants.NOTIFY_GET_PURCHASE_HISTORY);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        } else {
+                            Intent intent = new Intent(Constants.NOTIFY_GET_PURCHASE_HISTORY_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Intent intent = new Intent(Constants.NOTIFY_GET_PURCHASE_HISTORY_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        Toast.makeText(context, response.code()
+                                + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Order>> call, Throwable t) {
+                    Intent intent = new Intent(Constants.NOTIFY_GET_PURCHASE_HISTORY_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    Toast.makeText(context, t.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+
+    }
+
+    public List<Order> getPurchaseHistoryList(){
+        return mPurchaseHistory;
+    }
+
+//    public void callRefundApi(final Context context, String number) {
+//        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+//        if (retrofit != null) {
+//            IApiInterface service = retrofit.create(IApiInterface.class);
+//
+//            Call<List<Order>> call = service.callRefundApi();
+//
+//            call.enqueue(new Callback<List<Order>>() {
+//                @Override
+//                public void onResponse(Call<List<Order>> call,
+//                                       Response<List<Order>> response) {
+//                    if (response != null) {
+//                        if (response.code() == 200) {
+//                            mPurchaseHistory = response.body();
+//
+//                            Intent intent = new Intent(Constants.NOTIFY_GET_PURCHASE_HISTORY);
+//                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+//
+//                        } else {
+//                            Intent intent = new Intent(Constants.NOTIFY_GET_PURCHASE_HISTORY_ERROR);
+//                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+//                            Toast.makeText(context, response.code()
+//                                    + response.message(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    } else {
+//                        Intent intent = new Intent(Constants.NOTIFY_GET_PURCHASE_HISTORY_ERROR);
+//                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+//                        Toast.makeText(context, response.code()
+//                                + response.message(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<List<Order>> call, Throwable t) {
+//                    Intent intent = new Intent(Constants.NOTIFY_GET_PURCHASE_HISTORY_ERROR);
+//                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+//                    Toast.makeText(context, t.getMessage(),
+//                            Toast.LENGTH_LONG).show();
+//                }
+//            });
+//
+//        }
+//    }
 }

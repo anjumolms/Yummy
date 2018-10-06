@@ -139,7 +139,7 @@ public class UserDishesFragment extends Fragment implements SwipeRefreshLayout.O
             RetrofitNetworksCalls retrofitNetworksCalls = DataSingleton.getInstance()
                     .getRetrofitNetworksCallsObject();
             if (retrofitNetworksCalls != null && miUserFragmentListener != null) {
-                int locationId = miUserFragmentListener.getLocationId();
+                int locationId = miUserFragmentListener.getLocationIdFromSharedPreferance();
                 retrofitNetworksCalls.getDishDetails(getActivity(), locationId);
             }
         } else {

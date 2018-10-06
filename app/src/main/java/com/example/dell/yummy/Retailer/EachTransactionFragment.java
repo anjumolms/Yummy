@@ -40,6 +40,8 @@ public class EachTransactionFragment extends Fragment implements View.OnClickLis
     private TextView orderStatus;
     private TextView orederId;
     private TextView date;
+    private TextView back;
+    IRetailerFragmentListener iRetailerFragmentListener;
 
 
     public EachTransactionFragment() {
@@ -66,6 +68,10 @@ public class EachTransactionFragment extends Fragment implements View.OnClickLis
         return view;
     }
 
+    public void addListener(IRetailerFragmentListener retailerFragmentListener) {
+        this.iRetailerFragmentListener = retailerFragmentListener;
+    }
+
 
     private void initViews(View view) {
         mUserId = view.findViewById(R.id.tv_user_id_each_transaction_details);
@@ -78,6 +84,7 @@ public class EachTransactionFragment extends Fragment implements View.OnClickLis
         orderStatus = view.findViewById(R.id.tv_each_transaction_order_id);
         date = view.findViewById(R.id.tv_order_date);
         orederId = view.findViewById(R.id.tv_order_id);
+        back = view.findViewById(R.id.tv_order_back);
 
         if (mListPosition != -1) {
             RetrofitNetworksCalls retrofitNetworksCalls = DataSingleton
@@ -97,6 +104,7 @@ public class EachTransactionFragment extends Fragment implements View.OnClickLis
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
         mConfirmOrder.setOnClickListener(this);
+        back.setOnClickListener(this);
         setData();
     }
 
@@ -152,6 +160,11 @@ public class EachTransactionFragment extends Fragment implements View.OnClickLis
                             getActivity());
                 }
                 mConfirmOrder.setVisibility(View.GONE);
+                break;
+            case R.id.tv_order_back:
+                if(iRetailerFragmentListener != null){
+                    iRetailerFragmentListener.onBackPress();
+                }
                 break;
             default:
                 break;

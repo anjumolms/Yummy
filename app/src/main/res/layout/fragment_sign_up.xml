@@ -39,7 +39,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
-                    android:hint="Name" />
+                    android:hint="Name"
+                    android:theme="@style/AppTheme"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -53,8 +54,10 @@
                     android:id="@+id/register_uid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:hint="Email" />
+                    android:inputType="textEmailAddress"
+                    android:hint="Email"
+                    android:theme="@style/AppTheme"
+                    />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -69,7 +72,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:hint="Password" />
+                    android:hint="Password"
+                    android:theme="@style/AppTheme"/>
             </android.support.design.widget.TextInputLayout>
 
             <!-- Password Label -->
@@ -85,7 +89,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:hint="Confirm Password" />
+                    android:hint="Confirm Password"
+                    android:theme="@style/AppTheme"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -100,7 +105,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    android:hint="Mobile" />
+                    android:hint="Mobile"
+                    android:theme="@style/AppTheme"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.v7.widget.AppCompatButton

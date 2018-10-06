@@ -37,8 +37,7 @@ dependencies {
     implementation 'com.stepstone.apprating:app-rating:2.2.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-
-
+    implementation 'com.bignerdranch.android:expandablerecyclerview:1.0.3'
 }
 
 apply plugin: 'com.google.gms.google-services'

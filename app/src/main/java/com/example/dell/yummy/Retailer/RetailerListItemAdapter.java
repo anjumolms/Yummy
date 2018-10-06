@@ -57,7 +57,10 @@ class RetailerListItemAdapter extends
 
     @Override
     public int getItemCount() {
-        return retailordishesList.size();
+        if(retailordishesList!=null)
+            return retailordishesList.size();
+        else
+            return 0;
     }
 
     public void setData(List<DishesDetails> retailerDishDetails) {
@@ -67,7 +70,7 @@ class RetailerListItemAdapter extends
 
     class ListItemViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewTitle, textViewPrice, btnRetailerUpdate;
+        TextView textViewTitle, textViewPrice, btnRetailerUpdate,stock;
         CheckBox checkBox;
 
 

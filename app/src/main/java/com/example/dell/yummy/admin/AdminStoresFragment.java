@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
@@ -28,12 +29,13 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AdminStoresFragment extends Fragment {
+public class AdminStoresFragment extends Fragment implements View.OnClickListener {
 
     RecyclerView recyclerView;
     IAdminFragmentListener mIAdminFragmentListener;
     List<StoreDetails> StoreList;
     AdminStoresAdapter adapter;
+    TextView textView;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -63,9 +65,11 @@ public class AdminStoresFragment extends Fragment {
     private void initViews(View view) {
         recyclerView = view.findViewById(R.id.rv_admin_stores_fragment);
         recyclerView.setHasFixedSize(true);
+        textView = view.findViewById(R.id.tool_admin);
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_STORE_DETAILS);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
+        textView.setOnClickListener(this);
         showStoreDetails();
 
     }
@@ -118,4 +122,16 @@ public class AdminStoresFragment extends Fragment {
         super.onStop();
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.tool_admin:
+                if(mIAdminFragmentListener != null){
+                    mIAdminFragmentListener.showNavigationDrawer();
+                }
+                break;
+             default:
+                 break;
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.dell.yummy.user.store;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,9 +29,10 @@ public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapte
     public StoreDetailsAdapter.DishesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.layout_store_details, parent,false);
+        View view = inflater.inflate(R.layout.layout_store_details, parent, false);
         return new StoreDetailsAdapter.DishesViewHolder(view);
     }
+
     @Override
     public void onBindViewHolder(StoreDetailsAdapter.DishesViewHolder holder, int position) {
         //getting the product of the specified position
@@ -38,9 +40,16 @@ public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapte
         //binding the data with the viewholder views
         holder.textViewTitle.setText(dishesDetails.getItemName());
         holder.textViewPrice.setText("₹ " + dishesDetails.getItemPrice());
-        holder. textViewCount.setText(String.valueOf(counter));
+        holder.textViewCount.setText(String.valueOf(counter));
+        holder.stock.setText("" + dishesDetails.getItemStock());
 
+        if (dishesDetails.getItemSignature() == 1) {
+            holder.textViewTitle.setTextColor(Color.parseColor("#E91E63"));
+        } else {
+            holder.textViewTitle.setTextColor(Color.parseColor("#000000"));
         }
+
+    }
 
     @Override
     public int getItemCount() {
@@ -53,8 +62,8 @@ public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapte
 
     class DishesViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewTitle,textViewPrice,textViewCount;
-        ImageButton addimage,removeimage;
+        TextView textViewTitle, textViewPrice, textViewCount,stock;
+        ImageButton addimage, removeimage;
 
 
         public DishesViewHolder(View itemView) {
@@ -65,8 +74,7 @@ public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapte
             addimage = itemView.findViewById(R.id.im_add);
             removeimage = itemView.findViewById(R.id.im_rem);
             textViewCount = itemView.findViewById(R.id.tv_dish_item_count);
-
-
+            stock = itemView.findViewById(R.id.dish_stock_count);
 
             addimage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -77,7 +85,7 @@ public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapte
                     counter++;
                     dishesDetailsList.get(position).setCounter(counter);
                     textViewCount.setText(String.valueOf(counter));
-                    }
+                }
             });
 
             removeimage.setOnClickListener(new View.OnClickListener() {
@@ -86,12 +94,12 @@ public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapte
                     int position;
                     position = getAdapterPosition();
                     counter = dishesDetailsList.get(position).getCounter();
-                    if(counter>0) {
+                    if (counter > 0) {
                         counter--;
                     }
                     dishesDetailsList.get(position).setCounter(counter);
                     textViewCount.setText(String.valueOf(counter));
-                    }
+                }
             });
         }
     }

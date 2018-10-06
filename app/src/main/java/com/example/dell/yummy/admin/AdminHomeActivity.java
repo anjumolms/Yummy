@@ -8,7 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -52,7 +54,9 @@ public class AdminHomeActivity extends AppCompatActivity
     private String mUserSelectedLocation;
     private int mLocationId;
     List<LocationDetails> places = null;
+    private SharedPreferences sharedPreferences;
     private ProgressDialog mProgressDialog;
+    DrawerLayout drawer;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -61,7 +65,10 @@ public class AdminHomeActivity extends AppCompatActivity
                 String action = intent.getAction();
                 switch (action) {
                     case Constants.NOTIFY_GET_LOCATION:
-                        showPlacesList();
+                        int flag = intent.getIntExtra("Flag", 0);
+                        if (flag == 1) {
+                            showPlacesList();
+                        }
                         break;
                     case Constants.NOTIFY_GET_ALL_LOCATIONS_LIST:
                         showAddPlacesPopup();
@@ -94,6 +101,7 @@ public class AdminHomeActivity extends AppCompatActivity
         adminStoreTransactionsFragment.addListener(this);
 
         registerStoresFragment = new RegisterStoresFragment();
+        registerStoresFragment.addListener(this);
         mProgressDialog = new ProgressDialog(getApplicationContext());
 
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_GET_LOCATION);
@@ -101,11 +109,15 @@ public class AdminHomeActivity extends AppCompatActivity
         intentFilter.addAction(Constants.NOTIFY_GET_ALL_LOCATIONS_ERROR);
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(broadcastReceiver, intentFilter);
+        sharedPreferences
+                = this.getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                Context.MODE_PRIVATE);
 
+        checkLocation();
         RetrofitNetworksCalls calls = DataSingleton
                 .getInstance().getRetrofitNetworksCallsObject();
         if (calls != null) {
-            calls.getLocation(getApplicationContext());
+            calls.getLocation(getApplicationContext(), 0);
         }
 
     }
@@ -114,7 +126,8 @@ public class AdminHomeActivity extends AppCompatActivity
         RetrofitNetworksCalls calls = DataSingleton
                 .getInstance().getRetrofitNetworksCallsObject();
         if (calls != null) {
-            calls.getStoreDetails(getApplicationContext(), mLocationId);
+            int id = getLocationIdFromSharedPreferance();
+            calls.getStoreDetails(getApplicationContext(), id);
         }
     }
 
@@ -131,9 +144,11 @@ public class AdminHomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -152,6 +167,7 @@ public class AdminHomeActivity extends AppCompatActivity
             addFragment(Constants.SCREEN_ADMIN_STORE_LIST);
         } else {
             super.onBackPressed();
+            finish();
         }
     }
 
@@ -178,6 +194,9 @@ public class AdminHomeActivity extends AppCompatActivity
     }
 
     private void showPlacesList() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
         RetrofitNetworksCalls calls
                 = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
         if (calls != null) {
@@ -213,6 +232,7 @@ public class AdminHomeActivity extends AppCompatActivity
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             //Your logic when OK button is clicked
+                            addLocationTosharedPreferance();
                             loadDetails();
                             dialog.dismiss();
                         }
@@ -221,13 +241,53 @@ public class AdminHomeActivity extends AppCompatActivity
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int id) {
+                                    addLocationTosharedPreferance();
+                                    loadDetails();
+                                    dialog.dismiss();
                                 }
                             });
             dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         }
     }
 
+    private void addLocationTosharedPreferance() {
+        if (sharedPreferences != null) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt(Constants.KEY_LOCATION, mLocationId);
+            editor.commit();
+        }
+    }
+
+    private void checkLocation() {
+
+        if (sharedPreferences != null) {
+            int atnIn = sharedPreferences.getInt(Constants.KEY_LOCATION, 0);
+            if (atnIn == 0) {
+                RetrofitNetworksCalls calls = DataSingleton
+                        .getInstance().getRetrofitNetworksCallsObject();
+                if (calls != null) {
+                    calls.getLocation(getApplicationContext(), 1);
+                    // mProgressDialog.show();
+                }
+            } else {
+                loadDetails();
+            }
+        }
+
+    }
+
+    public int getLocationIdFromSharedPreferance() {
+        int location = 0;
+        if (sharedPreferences != null) {
+            location = sharedPreferences.getInt(Constants.KEY_LOCATION, 0);
+        }
+        return location;
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -253,6 +313,10 @@ public class AdminHomeActivity extends AppCompatActivity
                     calls.getAllLocations(getApplicationContext());
                 }
             }
+        } else if (id == R.id.admin_nav_logout) {
+            finishAffinity();
+        } else if (id == R.id.nav_admin_location) {
+            showPlacesList();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -383,5 +447,15 @@ public class AdminHomeActivity extends AppCompatActivity
 //            }
 //
 //        }
+    }
+
+    @Override
+    public void showNavigationDrawer() {
+        drawer.openDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void onBackPress() {
+        onBackPressed();
     }
 }

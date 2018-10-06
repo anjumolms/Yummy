@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -41,11 +43,17 @@ public class RetailerHomeActivity extends AppCompatActivity
     private ConfirmOrdersFragment mConfirmOrdersFragment;
     private int counter;
     private CoordinatorLayout mCoordinatorLayout;
+    private RefundFragment mRefundFragment;
+    private SharedPreferences sharedPreferences;
+    DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_retailer_home);
+        sharedPreferences
+                = this.getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                Context.MODE_PRIVATE);
         setTabColor();
         setupNavigationDrawer();
         initFragments();
@@ -63,9 +71,11 @@ public class RetailerHomeActivity extends AppCompatActivity
     }
 
     private void initFragments() {
+
         mCoordinatorLayout = findViewById(R.id.cl_retailer_activity);
         mretailerTransactionDetailsFragment = new RetailerTransactionDetailsFragment();
         meachTransactionFragment = new EachTransactionFragment();
+        meachTransactionFragment.addListener(this);
         mretailerTransactionDetailsFragment.addListener(this);
         mretailerAddItemFragment = new RetailerAddItemFragment();
         mretailerAddItemFragment.addListener(this);
@@ -76,6 +86,8 @@ public class RetailerHomeActivity extends AppCompatActivity
         mConfirmOrdersFragment = new ConfirmOrdersFragment();
         mConfirmOrdersFragment.addListener(this);
 
+        mRefundFragment = new RefundFragment();
+
         loadDetails();
     }
 
@@ -84,6 +96,16 @@ public class RetailerHomeActivity extends AppCompatActivity
                 .make(mCoordinatorLayout, "Sorry you are offline",
                         Snackbar.LENGTH_LONG);
         snackbar.show();
+    }
+
+    @Override
+    public void showNavigationDrawer() {
+        drawer.openDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void onBackPress() {
+     onBackPressed();
     }
 
     private void loadDetails() {
@@ -147,7 +169,11 @@ public class RetailerHomeActivity extends AppCompatActivity
                         mConfirmOrdersFragment);
                 fragmentTransaction.commit();
                 break;
-
+            case Constants.SCREEN_REFUND_FRAGMENT:
+                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container,
+                        mRefundFragment);
+                fragmentTransaction.commit();
+                break;
             default:
                 break;
         }
@@ -185,7 +211,7 @@ public class RetailerHomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
@@ -193,8 +219,16 @@ public class RetailerHomeActivity extends AppCompatActivity
 
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.retailer_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
+        View hView = navigationView.getHeaderView(0);
+
+        TextView mProfileName = hView.findViewById(R.id.tv_retailer_profilename);
+        if (sharedPreferences != null) {
+            String name = sharedPreferences.getString(Constants.KEY_RETAIL_NAME, "");
+            mProfileName.setText(name);
+        }
         navigationView.setItemIconTintList(null);
     }
 
@@ -206,7 +240,8 @@ public class RetailerHomeActivity extends AppCompatActivity
         } else if (mretailerWalletFragment.isVisible()
                 || mretailerListItemFragment.isVisible()
                 || mretailerAddItemFragment.isVisible()
-                || meachTransactionFragment.isVisible()) {
+                || meachTransactionFragment.isVisible()
+                || mConfirmOrdersFragment.isVisible()) {
             addFragment(Constants.SCREEN_RETAILER_TRANSACTION_DETAILS);
 
         } else {
@@ -236,6 +271,7 @@ public class RetailerHomeActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -256,10 +292,11 @@ public class RetailerHomeActivity extends AppCompatActivity
             addFragment(Constants.SCREEN_WALLET);
 
         } else if (id == R.id.retailer_logout) {
-
-
+            finishAffinity();
         } else if (id == R.id.confirm_orders) {
             addFragment(Constants.SCREEN_CONFIRM_ORDERS);
+        } else if (id == R.id.refund_orders) {
+            addFragment(Constants.SCREEN_REFUND_FRAGMENT);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

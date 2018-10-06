@@ -22,6 +22,15 @@
         <item name="colorControlHighlight">@color/tab_color</item>
     </style>
 
+    <style name="SwitchCompatTheme" >
+        <item name="colorControlActivated">@color/tab_color</item>
+    </style>
+
+    <style name="AppThemeError" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="textColorError"> @color/tab_color </item>
+    </style>
+
 
     <!-- Dialog -->
     <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">

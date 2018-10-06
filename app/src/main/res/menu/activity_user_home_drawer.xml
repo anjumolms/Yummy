@@ -14,15 +14,20 @@
             android:title="Wallet" />
         <item
             android:id="@+id/nav_places_list"
-            android:icon="@drawable/retailerwallet"
+            android:icon="@drawable/location"
             android:title="Location" />
+
+        <item
+            android:id="@+id/nav_purchase_history_list"
+            android:icon="@drawable/purchasehistory"
+            android:title="Purchase History" />
     </group>
     <item android:title="Communicate">
         <menu>
             <!--<item-->
-                <!--android:id="@+id/nav_share"-->
-                <!--android:icon="@drawable/ic_menu_share"-->
-                <!--android:title="Share" />-->
+            <!--android:id="@+id/nav_share"-->
+            <!--android:icon="@drawable/ic_menu_share"-->
+            <!--android:title="Share" />-->
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/logout"

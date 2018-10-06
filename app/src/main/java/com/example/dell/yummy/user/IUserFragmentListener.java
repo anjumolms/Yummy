@@ -1,6 +1,7 @@
 package com.example.dell.yummy.user;
 
 import com.example.dell.yummy.model.DishesDetails;
+import com.example.dell.yummy.model.Order;
 import com.example.dell.yummy.model.StoreDetails;
 import com.example.dell.yummy.model.UserReview;
 
@@ -14,5 +15,9 @@ public interface IUserFragmentListener {
     void showDialog(UserReview userReview);
     void showSnackBar();
     void showNavigationDrawer();
-    int getLocationId();
+    int getLocationIdFromSharedPreferance();
+
+    void showPurchaseHistory(Order order);
+
+    void onBackPress();
 }

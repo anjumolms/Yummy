@@ -17,6 +17,10 @@ public class RetailerMenu {
     @Expose
     private int retailId;
 
+    @SerializedName("item_stock")
+    @Expose
+    private int stock;
+
     public String getItemName() {
         return itemName;
     }
@@ -47,5 +51,13 @@ public class RetailerMenu {
 
     public void setRetailId(int retailId) {
         this.retailId = retailId;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 }

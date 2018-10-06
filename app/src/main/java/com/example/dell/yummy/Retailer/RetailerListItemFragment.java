@@ -54,6 +54,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
     private int counter;
     private ProgressDialog progressDialog;
     private FloatingActionButton actionButton;
+    private TextView back;
 
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -103,6 +104,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         actionButton = view.findViewById(R.id.fb_retailer_item_delete);
         progressDialog = new ProgressDialog(getActivity());
+        back = view.findViewById(R.id.tv_list_back);
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_RETAILOR_DISH_DETAILS);
         intentFilter.addAction(Constants.NOTIFY_LIST_ITEM_UPDATED);
         intentFilter.addAction(Constants.NOTIFY_LIST_ITEM_DELETED);
@@ -110,6 +112,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
         actionButton.setOnClickListener(this);
+        back.setOnClickListener(this);
         showStoreDetails();
 
     }
@@ -234,6 +237,11 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
             case R.id.fb_retailer_item_delete:
                 deleteItemFromList();
                 break;
+            case R.id.tv_list_back:
+                if(mFragmentListener != null){
+                    mFragmentListener.onBackPress();
+                }
+                break;
             default:
                 break;
         }
@@ -243,8 +251,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
         if (isNetworkAvailable()) {
 
             if (adapter != null) {
-                progressDialog.setMessage("Please wait..");
-                progressDialog.show();
+
                 List<DishesDetails> deletedItemsList = adapter.getDeletedItemsList();
                 if (deletedItemsList != null && !deletedItemsList.isEmpty()) {
                     ArrayList<Integer> list = new ArrayList<>();
@@ -254,6 +261,8 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
                     RetrofitNetworksCalls calls = DataSingleton
                             .getInstance().getRetrofitNetworksCallsObject();
                     if (calls != null) {
+                        progressDialog.setMessage("Please wait..");
+                        progressDialog.show();
                         calls.deleteItemFromList(getActivity(), list);
                     }
                 }

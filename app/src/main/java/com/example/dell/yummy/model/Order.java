@@ -30,6 +30,12 @@ public class Order {
     private String order_deliverd;
     @Expose
     private Timestamp order_delivery_time;
+    @Expose
+    private int retail_number;
+
+    @Expose
+
+    private String retail_name;
 
     public void setOrder_delivery_time(Timestamp order_delivery_time) {
         this.order_delivery_time = order_delivery_time;
@@ -111,15 +117,15 @@ public class Order {
         return order_items_string;
     }
 
-    //TODO
 
+    //TODO
     public void setOrder_items_string(String order_items_string) {
         this.order_items_string = order_items_string;
     }
+
     public List<DishesDetails> getMenus() {
         return menus;
     }
-
     public void setMenus(List<DishesDetails> menus) {
         this.menus = menus;
     }
@@ -134,5 +140,21 @@ public class Order {
 
     public Timestamp getOrder_delivery_time() {
         return order_delivery_time;
+    }
+
+    public int getRetail_number() {
+        return retail_number;
+    }
+
+    public void setRetail_number(int retail_number) {
+        this.retail_number = retail_number;
+    }
+
+    public String getRetail_name() {
+        return retail_name;
+    }
+
+    public void setRetail_name(String retail_name) {
+        this.retail_name = retail_name;
     }
 }

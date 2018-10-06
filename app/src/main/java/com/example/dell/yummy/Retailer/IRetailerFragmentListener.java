@@ -9,4 +9,7 @@ public interface IRetailerFragmentListener {
 
     void showItemUpdatePopup(DishesDetails dishesDetails);
     void showSnackBar();
+
+    void showNavigationDrawer();
+    void onBackPress();
 }

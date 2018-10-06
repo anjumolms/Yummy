@@ -1,94 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   android:layout_margin="20dp"
-    tools:context=".Retailer.RetailerAddItemFragment">
+    android:orientation="vertical">
 
-    <TableRow
-        android:orientation="horizontal"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/tab_color"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-
-
-    <TextView
-        android:id="@+id/tv_retailer_item_name"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:textStyle="bold"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:text="Item Name" />
-
-        <EditText
-            android:id="@+id/et_retailer_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            />
-
-    </TableRow>
-
-    <TableRow
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
-    <TextView
-        android:id="@+id/tv_retailer_item_cost"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:textStyle="bold"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:text="Item Cost" />
-
-        <EditText
-            android:id="@+id/et_retailer_cost"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:inputType="number"
-           />
-
-    </TableRow>
-
-    <TableRow
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-
-    <TextView
-        android:id="@+id/tv_signature_dish"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:textStyle="bold"
-        android:gravity="bottom"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:text="Signature Dish ?" />
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:id="@+id/et_signature_dish"
+        <TextView
+            android:id="@+id/add_item_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:drawablePadding="10dp"
+            android:text="@string/yummy"
+            android:textColor="#fff"
+            android:textSize="20dp"
+            android:drawableLeft="@drawable/backthree"/>
+    </android.support.v7.widget.Toolbar>
 
-    </TableRow>
-
-    <TableRow
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
         android:gravity="center"
-        android:layout_marginTop="50dp">
-        <Button
-            android:id="@+id/bt_add_item_retailer"
-            android:text="Add"
-            android:background="@color/tab_color"
-            android:layout_gravity="center"/>
-    </TableRow>
+        android:orientation="vertical"
+        tools:context=".Retailer.RetailerAddItemFragment">
 
-</TableLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:theme="@style/EditTextHint">
+
+                <EditText
+                    android:id="@+id/et_retailer_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Item Name"
+                    android:inputType="textPersonName"
+                    android:theme="@style/AppTheme"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:theme="@style/EditTextHint">
+
+                <EditText
+                    android:id="@+id/et_retailer_cost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Item Cost"
+                    android:inputType="number"
+                    android:theme="@style/AppTheme"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:theme="@style/EditTextHint">
+
+                <EditText
+                    android:id="@+id/stock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Item Stock"
+                    android:inputType="number"
+                    android:theme="@style/AppTheme"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/et_signature_dish"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="8dp"
+                    android:checked="false"
+                    android:text="Signature Dish "
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/tab_color"
+                    android:textSize="14sp"
+                    android:theme="@style/SwitchCompatTheme" />
+            </LinearLayout>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/et_combo_dish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="8dp"
+                android:checked="false"
+                android:text="Combo"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/tab_color"
+                android:textSize="14sp"
+                android:theme="@style/SwitchCompatTheme"/>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/bt_add_item_retailer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="24dp"
+                android:background="@color/tab_color"
+                android:padding="12dp"
+                android:text="Add Item"
+                android:textColor="#fff" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

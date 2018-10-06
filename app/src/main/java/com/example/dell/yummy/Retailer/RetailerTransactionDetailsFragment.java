@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
@@ -30,13 +31,14 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class RetailerTransactionDetailsFragment
-        extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+        extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private IRetailerFragmentListener retailerFragmentListener;
     private List<Order> transactionDetailsList;
     private RecyclerView mRecyclerView;
     private TransactionDetailsAdapter mAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private TextView mTextView;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -68,6 +70,7 @@ public class RetailerTransactionDetailsFragment
         mRecyclerView = view.findViewById(R.id.rv_transaction_details);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mTextView  = view.findViewById(R.id.tool_retailer);
 
         swipeRefreshLayout = view.findViewById(R.id.swipe_container);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -79,6 +82,7 @@ public class RetailerTransactionDetailsFragment
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_TRANSACTION_DETAILS);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
+        mTextView.setOnClickListener(this);
         showStoreDetails();
 
     }
@@ -170,5 +174,16 @@ public class RetailerTransactionDetailsFragment
             return false;
         }
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.tool_retailer:
+                if(retailerFragmentListener != null){
+                    retailerFragmentListener.showNavigationDrawer();
+                }
+                break;
+        }
     }
 }

@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,10 @@ import com.example.dell.yummy.model.UserDetails;
 import com.example.dell.yummy.webservice.IApiInterface;
 import com.example.dell.yummy.model.UserResult;
 import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,6 +55,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     DbHandler dbHandler;
     private CoordinatorLayout mCoordinatorLayout;
     ProgressDialog progressDialog;
+    private SharedPreferences sharedPreferences;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -93,6 +99,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
 
+        sharedPreferences
+                = getActivity().getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                Context.MODE_PRIVATE);
+
     }
 
     public void addListener(IMainViewListener iMainViewListener) {
@@ -119,6 +129,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(progressDialog != null && progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+        mPassword.setText("");
+        mUuid.setText("");
+    }
+
     private void validateUser() {
 
         //dbHandler.getToken(1);
@@ -128,6 +148,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         if (TextUtils.isEmpty(strUserName)) {
             mUuid.setError(Constants.FIELD_EMPTY_WARNING);
+            return;
+        } else if (strUserName.length() < 10 || strUserName.length() > 10) {
+            mUuid.setError("Please enter a valid mobile number");
             return;
         }
 
@@ -197,7 +220,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         case 1:
                             calls.getUserDetails(getActivity(), userResult.getLoginId());
                             updateToken(userResult, calls);
-
+                            //TODO ism modification
+                            userTopicRegistration("TOPIC_USERS");
                             break;
                         case 2:
                             calls.getRetailerDetails(getActivity(), userResult.getLoginId());
@@ -217,23 +241,47 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            Toast.makeText(getActivity(), response.code()
-                    + response.message(), Toast.LENGTH_SHORT).show();
+            if(response != null && response.code()==204){
+                Toast.makeText(getActivity(), "Invalid UserName or Password!! Try Again.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(getActivity(), response.code()
+                        + response.message(), Toast.LENGTH_SHORT).show();
+            }
         }
+    }
+
+    //TODO ism modification
+    private void userTopicRegistration(String topic) {
+        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+//        FirebaseMessaging.getInstance().subscribeToTopic(topic).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        String msg = "Subscribed for User Notifications";
+//                        if (!task.isSuccessful()) {
+//                            msg = "Notification Subscription Failed";
+//                        }
+//                        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+//                    }
+//                });
     }
 
     private void updateToken(UserResult userResult, RetrofitNetworksCalls calls) {
         if (userResult.getLoginRole() == 1
                 || userResult.getLoginRole() == 2) {
+            if (dbHandler != null) {
+                String token = dbHandler.getToken(1);
+                if (userResult.getToken().isEmpty()) {
 
-            if (userResult.getToken().isEmpty()) {
-                if (dbHandler != null) {
-                    String token = dbHandler.getToken(1);
                     userResult.setToken(token);
                     calls.updateToken(getActivity(), userResult);
+
                 }
-            } else {
-                String token = userResult.getToken();
+                //TODO ism modification
+                else if (!(token.equals(userResult.getToken()))) {
+                    calls.updateToken(getActivity(), userResult);
+                }
             }
         }
 
@@ -249,16 +297,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void addUserDetailsToSharedPreferance(UserDetails userResult) {
         if (userResult != null) {
 
-            SharedPreferences sharedpreferences
-                    = getActivity().getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
-                    Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString(Constants.KEY_USER_NAME, userResult.getUserName());
-            editor.putInt(Constants.KEY_LOGIN_PIN, userResult.getLoginPin());
-            editor.putInt(Constants.KEY_WALLET, userResult.getUserWallet());
-            editor.putInt(Constants.KEY_ID, userResult.getUserId());
-            editor.putInt(Constants.KEY_ROLE, 1);
-            editor.commit();
+
+            if (sharedPreferences != null) {
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(Constants.KEY_USER_NAME, userResult.getUserName());
+                editor.putInt(Constants.KEY_LOGIN_PIN, userResult.getLoginPin());
+                editor.putInt(Constants.KEY_WALLET, userResult.getUserWallet());
+                editor.putInt(Constants.KEY_ID, userResult.getUserId());
+                editor.putInt(Constants.KEY_ROLE, 1);
+                editor.commit();
+            }
         }
     }
 
@@ -282,16 +331,18 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void addRetailerDetailsToSharedPreferance(RetailerDetails retailerDetails) {
         if (retailerDetails != null) {
 
-            SharedPreferences sharedpreferences
-                    = getActivity().getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
-                    Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString(Constants.KEY_USER_NAME, retailerDetails.getLoginUsername());
-            editor.putInt(Constants.KEY_LOGIN_PIN, retailerDetails.getLoginPin());
-            editor.putInt(Constants.KEY_WALLET, retailerDetails.getRetailWallet());
-            editor.putInt(Constants.KEY_ID, retailerDetails.getRetailId());
-            editor.putInt(Constants.KEY_ROLE, 2);
-            editor.commit();
+            if (sharedPreferences != null) {
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(Constants.KEY_USER_NAME, retailerDetails.getLoginUsername());
+                editor.putInt(Constants.KEY_LOGIN_PIN, retailerDetails.getLoginPin());
+                editor.putInt(Constants.KEY_WALLET, retailerDetails.getRetailWallet());
+                editor.putInt(Constants.KEY_ID, retailerDetails.getRetailId());
+                editor.putInt(Constants.KEY_ROLE, 2);
+                editor.putString(Constants.KEY_RETAIL_NAME,
+                        retailerDetails.getRetailName());
+                editor.commit();
+            }
         }
     }
 
@@ -321,5 +372,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             return false;
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPassword.setText("");
+        mUuid.setText("");
     }
 }

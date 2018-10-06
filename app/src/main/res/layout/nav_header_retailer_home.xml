@@ -22,11 +22,10 @@
         app:civ_border_color="#fff"/>
 
     <TextView
-        android:id="@+id/tv_profilename"
+        android:id="@+id/tv_retailer_profilename"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Arshwin.Denulal@ust-global.com"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 

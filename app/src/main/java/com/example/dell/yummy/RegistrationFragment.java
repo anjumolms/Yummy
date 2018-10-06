@@ -89,6 +89,8 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         String strConfirmPassword = mConfirmPassword.getText().toString().trim();
         String strMobile = mMobile.getText().toString().trim();
 
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
 
         if (TextUtils.isEmpty(strUserName)) {
             mUserName.setError(Constants.FIELD_EMPTY_WARNING);
@@ -99,8 +101,17 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
             mUId.setError(Constants.FIELD_EMPTY_WARNING);
             return;
         }
+        else if(!strEmail.matches(emailPattern)){
+            mUId.setError(Constants.INVALID_EMAIL_WARNING);
+            return;
+        }
         if (TextUtils.isEmpty(strPassword)) {
             mPassword.setError(Constants.FIELD_EMPTY_WARNING);
+            return;
+        }
+
+        if(strPassword.length()<4){
+            mPassword.setError(Constants.PASSWORD_MINIMUM_WARNING);
             return;
         }
 
@@ -112,12 +123,18 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
             mMobile.setError(Constants.FIELD_EMPTY_WARNING);
             return;
         }
+        else if(strMobile.length()!=10){
+            mMobile.setError(Constants.MOBILE_NUMBER_WARNING);
+            return;
+        }
 
         if (!strPassword.equals(strConfirmPassword)) {
             mPassword.setError(Constants.FIELD_PASSWORD_INCORRECT);
             return;
 
         }
+
+
 
         RegistrationResult registrationResult = new RegistrationResult();
         registrationResult.setLoginPin(Integer.parseInt(strPassword));
@@ -156,9 +173,12 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                             if (registrationResult != null && mainView != null) {
                                 mainView.addFragment(Constants.SCREEN_LOGIN);
                             }
-                        } else {
+                        } else if(response.code() == 204){
                             Toast.makeText(getContext(),
-                                    "" + response.code(), Toast.LENGTH_SHORT).show();
+                                    "Already registered", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getContext(),
+                                    "Already registered", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(getContext(),

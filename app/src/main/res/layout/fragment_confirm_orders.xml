@@ -15,12 +15,14 @@
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
         <TextView
+            android:id="@+id/tv_confirmed_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/yummy"
             android:textColor="#fff"
             android:textSize="20dp"
             android:drawablePadding="10dp"
+            android:drawableLeft="@drawable/backthree"
             />
     </android.support.v7.widget.Toolbar>
     <TextView

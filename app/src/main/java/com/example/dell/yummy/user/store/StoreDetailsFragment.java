@@ -158,7 +158,22 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
                         }
                     }
                     if (selectedItems.size() > 0) {
-                        miUserFragmentListener.loadConformationFragment(selectedItems);
+                        int flag = 0;
+                        for (DishesDetails details : selectedItems) {
+                            if (details.getItemStock() >= details.getCounter()) {
+                                flag = 0;
+                            } else {
+                                flag = 1;
+                                Toast.makeText(getActivity(), "" + details.getItemName()
+                                                + "Exceeded stock limit",
+                                        Toast.LENGTH_SHORT).show();
+                                break;
+                            }
+                        }
+                        if (flag == 0) {
+
+                            miUserFragmentListener.loadConformationFragment(selectedItems);
+                        }
                     }
                 }
                 break;

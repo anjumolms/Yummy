@@ -1,6 +1,7 @@
 package com.example.dell.yummy.Retailer;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ class TransactionDetailsAdapter extends
     IRetailerFragmentListener retailerFragmentListener;
     private boolean isConfirmOrderPage;
 
+
     public TransactionDetailsAdapter(Context mCtx,
                                      List<Order> transactionDetailsList,
                                      IRetailerFragmentListener retailerFragmentListener) {
@@ -37,10 +39,21 @@ class TransactionDetailsAdapter extends
         if (transactionDetailsList != null) {
 
             transactionDetails = transactionDetailsList.get(position);
-            holder.textViewUserId.setText("" + transactionDetails.getUser_id());
+            holder.textViewUserId.setText("" + transactionDetails.getOrder_id());
             holder.textViewTransactionId.setText("" + transactionDetails.getWallet_tran_id());
             holder.textViewAmount.setText("" + transactionDetails.getOrder_value());
-            holder.textViewTransactionStatus.setText(transactionDetails.getOrder_status());
+            holder.date.setText("" + transactionDetails.getOrder_date());
+            if (isConfirmOrderPage
+                    && transactionDetails.getOrder_status().equalsIgnoreCase("ORDER_SUCCESSFULL")) {
+                holder.textViewTransactionStatus.setText("ORDER SUCCESSFULL");
+                holder.textViewTransactionStatus.setTextColor(Color.parseColor("#4CAF50"));
+            } else if (transactionDetails.getOrder_status().equalsIgnoreCase("ORDER_SUCCESSFULL")) {
+                holder.textViewTransactionStatus.setText("ORDER PENDING");
+                holder.textViewTransactionStatus.setTextColor(Color.parseColor("#FFC107"));
+            } else {
+                holder.textViewTransactionStatus.setText("ORDER FAILED");
+                holder.textViewTransactionStatus.setTextColor(Color.parseColor("#F44336"));
+            }
         }
     }
 
@@ -77,6 +90,7 @@ class TransactionDetailsAdapter extends
         TextView textViewUserId, textViewTransactionId, textViewAmount,
                 textViewTransactionStatus;
         CardView cardView;
+        TextView date;
 
         public TransactionViewHolder(View itemView) {
             super(itemView);
@@ -85,6 +99,7 @@ class TransactionDetailsAdapter extends
             textViewTransactionId = itemView.findViewById(R.id.tv_transaction_id);
             textViewAmount = itemView.findViewById(R.id.tv_amount);
             textViewTransactionStatus = itemView.findViewById(R.id.tv_transaction_status);
+            date = itemView.findViewById(R.id.tv_date_id);
             cardView = itemView.findViewById(R.id.cv_transaction_details);
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override

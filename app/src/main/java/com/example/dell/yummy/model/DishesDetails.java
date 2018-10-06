@@ -105,5 +105,4 @@ public class DishesDetails {
     public void setRetailId(int retailId) {
         this.retailId = retailId;
     }
-
 }

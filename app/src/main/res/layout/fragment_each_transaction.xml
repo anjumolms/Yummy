@@ -14,12 +14,14 @@
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
         <TextView
+            android:id="@+id/tv_order_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/yummy"
             android:textColor="#fff"
             android:textSize="20dp"
             android:drawablePadding="10dp"
+            android:drawableLeft="@drawable/backthree"
             />
     </android.support.v7.widget.Toolbar>
 
@@ -36,7 +38,8 @@
             android:gravity="center"
             android:text="Purchase order"
             android:textSize="20dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="#000"/>
 
         <View
             android:layout_width="match_parent"
@@ -60,13 +63,15 @@
                 android:layout_weight="1"
                 android:textSize="20sp"
                 android:layout_marginLeft="5dp"
+                android:textColor="#000"
                 />
             <TextView
                 android:id="@+id/tv_user_id_each_transaction_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textColor="#000"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -83,13 +88,15 @@
                 android:layout_weight="1"
                 android:textSize="20sp"
                 android:layout_marginLeft="5dp"
+                android:textColor="#000"
                 />
             <TextView
                 android:id="@+id/tv_each_transaction_order_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textColor="#000"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -106,13 +113,15 @@
                 android:layout_weight="1"
                 android:textSize="20sp"
                 android:layout_marginLeft="5dp"
+                android:textColor="#000"
                 />
             <TextView
                 android:id="@+id/tv_order_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textColor="#000"/>
         </LinearLayout>
 
         <LinearLayout
@@ -130,13 +139,15 @@
                 android:layout_weight="1"
                 android:textSize="20sp"
                 android:layout_marginLeft="5dp"
+                android:textColor="#000"
                 />
             <TextView
                 android:id="@+id/tv_order_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textColor="#000"/>
         </LinearLayout>
 
         <View
@@ -181,13 +192,15 @@
                 android:layout_weight="1"
                 android:textSize="20sp"
                 android:layout_marginLeft="5dp"
+                android:textColor="#000"
                 />
             <TextView
                 android:id="@+id/tv_total_each_transaction_fragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textColor="#000"/>
         </LinearLayout>
 
         <View

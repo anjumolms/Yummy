@@ -21,11 +21,11 @@
         app:civ_border_width="2dp" />
 
     <TextView
-        android:id="@+id/tv_profilename"
+        android:id="@+id/tv_admin_profilename"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Arshwin.Denulal@ust-global.com"
+        android:text="NowU Admin"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 

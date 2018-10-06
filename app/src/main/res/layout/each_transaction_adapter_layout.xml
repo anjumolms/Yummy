@@ -7,15 +7,17 @@
     android:layout_weight="1">
    <TextView
        android:id="@+id/retailer_order_item_name"
-       android:layout_width="wrap_content"
+       android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:layout_weight=".5"/>
+       android:layout_weight=".5"
+       android:textColor="#000"/>
 
     <TextView
         android:id="@+id/retailer_order_item_count"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight=".5"
+        android:textColor="#000"
         />
 
 </LinearLayout>

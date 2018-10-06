@@ -15,18 +15,20 @@
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
         <TextView
+            android:id="@+id/tool_retailer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/yummy"
             android:textColor="#fff"
             android:textSize="20dp"
             android:drawablePadding="10dp"
+            android:drawableLeft="@drawable/navigation_icon"
             />
     </android.support.v7.widget.Toolbar>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pending Orders"
+        android:text="Order Status"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:gravity="center"
         android:textStyle="bold"

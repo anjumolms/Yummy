@@ -10,8 +10,10 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -59,11 +61,12 @@ public class UserHomeActivity extends AppCompatActivity
 
     private UserViewPagerFragment mUserViewPagerFragment;
     private StoreDetailsFragment mStoreDetailsFragment;
-    private PaymentDetailsFragment mPaymentDetailsFragment;
+    private PurchaseHistoryFragment mPurchaseHistoryFragment;
     private UserAddCoinsFragment mUserAddCoinsFragment;
     private UserWalletFragment mUserWalletFragment;
     private ConfirmationFragment mConfirmationFragment;
     private OrderSuccessfullFragment mOrderSuccessfullFragment;
+    private PurchaseHistoryItemFragment mPurchaseHistoryItemFragment;
     private FrameLayout mFrameLayout;
     private TextView mProfileName;
     private UserReview mUserReview;
@@ -78,6 +81,7 @@ public class UserHomeActivity extends AppCompatActivity
     private MenuItem mMenuItemWallet;
     private String mUserSelectedLocation;
     private int mLocationId;
+    private SharedPreferences sharedPreferences;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -95,7 +99,10 @@ public class UserHomeActivity extends AppCompatActivity
                         removeItemsFromReviewList();
                         break;
                     case Constants.NOTIFY_GET_LOCATION:
-                        showPlacesList();
+                        int flag = intent.getIntExtra("Flag", 0);
+                        if (flag == 1) {
+                            showPlacesList();
+                        }
                         break;
                     default:
                         break;
@@ -111,6 +118,9 @@ public class UserHomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_user_home);
         mFrameLayout = findViewById(R.id.fl_userhome_fragment_container);
         mCoordinatorLayout = findViewById(R.id.cl_user_home_activity);
+        sharedPreferences
+                = this.getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                Context.MODE_PRIVATE);
         setTabColor();
         setupNavigationDrawer();
         initFragments();
@@ -126,8 +136,9 @@ public class UserHomeActivity extends AppCompatActivity
             RetrofitNetworksCalls retrofitNetworksCalls
                     = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
             if (retrofitNetworksCalls != null) {
-                retrofitNetworksCalls.getStoreDetails(getApplicationContext(), mLocationId);
-                retrofitNetworksCalls.getDishDetails(getApplicationContext(), mLocationId);
+                int location = getLocationIdFromSharedPreferance();
+                retrofitNetworksCalls.getStoreDetails(getApplicationContext(), location);
+                retrofitNetworksCalls.getDishDetails(getApplicationContext(), location);
                 retrofitNetworksCalls.getReviewDetails(getApplicationContext());
 
             }
@@ -150,8 +161,8 @@ public class UserHomeActivity extends AppCompatActivity
         mStoreDetailsFragment = new StoreDetailsFragment();
         mStoreDetailsFragment.addListener(this);
 
-        mPaymentDetailsFragment = new PaymentDetailsFragment();
-        mPaymentDetailsFragment.addListener(this);
+        mPurchaseHistoryFragment = new PurchaseHistoryFragment();
+        mPurchaseHistoryFragment.addListener(this);
 
         mUserAddCoinsFragment = new UserAddCoinsFragment();
         mUserAddCoinsFragment.addListener(this);
@@ -165,6 +176,9 @@ public class UserHomeActivity extends AppCompatActivity
         mOrderSuccessfullFragment = new OrderSuccessfullFragment();
         mOrderSuccessfullFragment.addListener(this);
 
+        mPurchaseHistoryItemFragment = new PurchaseHistoryItemFragment();
+        mPurchaseHistoryItemFragment.addListener(this);
+
         mProgressDialog = new ProgressDialog(this);
 
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_USER_CONFIRM_ORDER);
@@ -173,13 +187,19 @@ public class UserHomeActivity extends AppCompatActivity
         intentFilter.addAction(Constants.NOTIFY_GET_LOCATION);
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(broadcastReceiver, intentFilter);
+
+
+        checkLocation();
+
         RetrofitNetworksCalls calls = DataSingleton
                 .getInstance().getRetrofitNetworksCallsObject();
         if (calls != null) {
-            calls.getLocation(getApplicationContext());
-            mProgressDialog.show();
+            calls.getLocation(getApplicationContext(), 0);
+            //mProgressDialog.show();
         }
+
     }
+
 
     private void setTabColor() {
         if (android.os.Build.VERSION.SDK_INT >= 21) {
@@ -193,6 +213,8 @@ public class UserHomeActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+
+        // showPlacesList();
     }
 
     @Override
@@ -215,9 +237,9 @@ public class UserHomeActivity extends AppCompatActivity
                 fragmentTransaction.commit();
                 break;
 
-            case Constants.SCREEN_PAYMENT_DETAILS:
+            case Constants.SCREEN_PURCHASE_DETAILS:
                 fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
-                        mPaymentDetailsFragment);
+                        mPurchaseHistoryFragment);
                 fragmentTransaction.commit();
                 break;
 
@@ -245,7 +267,11 @@ public class UserHomeActivity extends AppCompatActivity
                         mOrderSuccessfullFragment);
                 fragmentTransaction.commit();
                 break;
-
+            case Constants.SCREEN_PURCHASE_HISTORY_ITEM:
+                fragmentTransaction.replace(R.id.fl_userhome_fragment_container,
+                        mPurchaseHistoryItemFragment);
+                fragmentTransaction.commit();
+                break;
             default:
                 break;
 
@@ -271,8 +297,16 @@ public class UserHomeActivity extends AppCompatActivity
     }
 
     @Override
-    public int getLocationId() {
-        return mLocationId;
+    public void showPurchaseHistory(Order order) {
+        if (order != null && mPurchaseHistoryItemFragment != null) {
+            mPurchaseHistoryItemFragment.setOrderDetails(order);
+            addFragment(Constants.SCREEN_PURCHASE_HISTORY_ITEM);
+        }
+    }
+
+    @Override
+    public void onBackPress() {
+        onBackPressed();
     }
 
     @Override
@@ -290,6 +324,7 @@ public class UserHomeActivity extends AppCompatActivity
 
 
     private void showPlacesList() {
+
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
@@ -329,17 +364,59 @@ public class UserHomeActivity extends AppCompatActivity
                 @Override
                 public void onClick(DialogInterface dialog, int id) {
                     //Your logic when OK button is clicked
+                    addLocationTosharedPreferance();
                     LoadDetails();
+
                 }
             })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
+                            addLocationTosharedPreferance();
+                            LoadDetails();
+
                         }
                     });
+
             dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(false);
             dialog.show();
+
         }
+    }
+
+    private void addLocationTosharedPreferance() {
+        if (sharedPreferences != null) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt(Constants.KEY_LOCATION, mLocationId);
+            editor.commit();
+        }
+    }
+
+    private void checkLocation() {
+
+        if (sharedPreferences != null) {
+            int atnIn = sharedPreferences.getInt(Constants.KEY_LOCATION, 0);
+            if (atnIn == 0) {
+                RetrofitNetworksCalls calls = DataSingleton
+                        .getInstance().getRetrofitNetworksCallsObject();
+                if (calls != null) {
+                    calls.getLocation(getApplicationContext(), 1);
+                    mProgressDialog.show();
+                }
+            } else {
+                LoadDetails();
+            }
+        }
+
+    }
+
+    public int getLocationIdFromSharedPreferance() {
+        int location = 0;
+        if (sharedPreferences != null) {
+            location = sharedPreferences.getInt(Constants.KEY_LOCATION, 0);
+        }
+        return location;
     }
 
 
@@ -392,38 +469,52 @@ public class UserHomeActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     counter = 0;
-                    if (!itemCount.getText().toString().isEmpty()) {
+                    if (sharedPreferences != null) {
+                        if (!itemCount.getText().toString().isEmpty()) {
 
-                        int numberOfItems = Integer.parseInt(itemCount.getText().toString());
-                        SharedPreferences sharedpreferences
-                                = getApplicationContext()
-                                .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
-                                        Context.MODE_PRIVATE);
-                        int userid = sharedpreferences.getInt(Constants.KEY_ID, 0);
+                            int numberOfItems = Integer.parseInt(itemCount.getText().toString());
 
-                        int total = numberOfItems * dishFromApi.getItemPrice();
-                        Order orderDetails = new Order();
-                        orderDetails.setUser_id(userid);
-                        orderDetails.setRetail_id(dishFromApi.getRetailId());
-                        orderDetails.setOrder_item_count(numberOfItems);
-                        orderDetails.setOrder_value(total);
-                        orderDetails.setOrder_items_string("" + dishFromApi.getMenuId());
-                        if (isNetworkAvailable()) {
-                            RetrofitNetworksCalls calls = DataSingleton
-                                    .getInstance().getRetrofitNetworksCallsObject();
-                            if (calls != null) {
-                                calls.confirmOrder(getApplicationContext(), orderDetails);
+                            int userid = sharedPreferences.getInt(Constants.KEY_ID, 0);
+                            int stock = dishFromApi.getItemStock();
+                            if (stock >= numberOfItems) {
+                                int total = numberOfItems * dishFromApi.getItemPrice();
+                                int wallet = sharedPreferences.getInt(Constants.KEY_WALLET, 0);
+                                if (wallet >= total && total > 0) {
+                                    Order orderDetails = new Order();
+                                    orderDetails.setUser_id(userid);
+                                    orderDetails.setRetail_id(dishFromApi.getRetailId());
+                                    orderDetails.setOrder_item_count(numberOfItems);
+                                    orderDetails.setOrder_value(total);
+                                    orderDetails.setOrder_items_string("" + dishFromApi.getMenuId());
+                                    if (isNetworkAvailable()) {
+                                        RetrofitNetworksCalls calls = DataSingleton
+                                                .getInstance().getRetrofitNetworksCallsObject();
+                                        if (calls != null) {
+                                            calls.confirmOrder(getApplicationContext(), orderDetails);
+                                        }
+                                        showProgress();
+                                        dialog.dismiss();
+                                    } else {
+                                        showSnackBar();
+                                    }
+                                } else {
+                                    Snackbar snackbar = Snackbar
+                                            .make(mCoordinatorLayout, "Sorry you have no sufficient balance",
+                                                    Snackbar.LENGTH_LONG);
+                                    snackbar.show();
+                                }
+                            } else{
+                                Snackbar snackbar = Snackbar
+                                        .make(mCoordinatorLayout, "Exceeded Stock limit",
+                                                Snackbar.LENGTH_LONG);
+                                snackbar.show();
                             }
-                            showProgress();
-                            dialog.dismiss();
                         } else {
-                            showSnackBar();
+                            Toast.makeText(getApplicationContext(),
+                                    "Please select dish count ", Toast.LENGTH_SHORT).show();
                         }
-
-                    } else {
-                        Toast.makeText(getApplicationContext(),
-                                "Please select dish count ", Toast.LENGTH_SHORT).show();
                     }
+
 
                 }
             });
@@ -482,6 +573,10 @@ public class UserHomeActivity extends AppCompatActivity
         View hView = navigationView.getHeaderView(0);
         navigationView.setItemIconTintList(null);
         mProfileName = hView.findViewById(R.id.tv_profilename);
+        if (sharedPreferences != null) {
+            String name = sharedPreferences.getString(Constants.KEY_USER_NAME, "");
+            mProfileName.setText(name);
+        }
         mMenuList = navigationView.getMenu();
         mMenuItemWallet = mMenuList.findItem(R.id.nav_wallet);
         int wallet = getWallet();
@@ -509,7 +604,9 @@ public class UserHomeActivity extends AppCompatActivity
         } else if (mUserAddCoinsFragment.isVisible()
                 || mUserWalletFragment.isVisible()
                 || mConfirmationFragment.isVisible()
-                || mStoreDetailsFragment.isVisible()) {
+                || mStoreDetailsFragment.isVisible()
+                || mPurchaseHistoryItemFragment.isVisible()
+                || mPurchaseHistoryFragment.isVisible()) {
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -521,6 +618,7 @@ public class UserHomeActivity extends AppCompatActivity
 
         } else {
             super.onBackPressed();
+            onDestroy();
         }
 
 
@@ -561,6 +659,7 @@ public class UserHomeActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -576,9 +675,11 @@ public class UserHomeActivity extends AppCompatActivity
             addFragment(Constants.SCREEN_USER_WALLET);
 
         } else if (id == R.id.nav_logout) {
-
+            finishAffinity();
         } else if (id == R.id.nav_places_list) {
             showPlacesList();
+        } else if (id == R.id.nav_purchase_history_list) {
+            addFragment(Constants.SCREEN_PURCHASE_DETAILS);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

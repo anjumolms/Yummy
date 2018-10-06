@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
                 Intent adminIntent = new Intent(this, AdminHomeActivity.class);
                 startActivity(adminIntent);
                 break;
-
             default:
                 break;
         }
@@ -105,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
         super.onBackPressed();
         if (mRegistrationFragment.isVisible()) {
             addFragment(SCREEN_LOGIN);
+        } else {
+            onDestroy();
         }
     }
 }

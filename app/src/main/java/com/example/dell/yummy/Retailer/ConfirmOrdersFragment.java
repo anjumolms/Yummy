@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
@@ -27,11 +28,12 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ConfirmOrdersFragment extends Fragment {
+public class ConfirmOrdersFragment extends Fragment implements View.OnClickListener {
     private RecyclerView mRecyclerView;
     private TransactionDetailsAdapter mTransactionDetailsAdapter;
     private IRetailerFragmentListener mFragmentListener;
     private ProgressDialog mProgressDialog;
+    private TextView back;
 
 
     public ConfirmOrdersFragment() {
@@ -72,7 +74,7 @@ public class ConfirmOrdersFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mProgressDialog = new ProgressDialog(getActivity());
-
+        back = view.findViewById(R.id.tv_confirmed_back);
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_CONFIRMED_TRANSACTIONS);
         intentFilter.addAction(Constants.NOTIFY_CONFIRMED_TRANSACTIONS_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
@@ -91,7 +93,7 @@ public class ConfirmOrdersFragment extends Fragment {
             }
             calls.getConfirmedOrders(getActivity(), id);
         }
-
+        back.setOnClickListener(this);
     }
 
     private void dismissProgress() {
@@ -122,4 +124,14 @@ public class ConfirmOrdersFragment extends Fragment {
         this.mFragmentListener = retailerFragmentListener;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_confirmed_back:
+                if (mFragmentListener != null) {
+                    mFragmentListener.onBackPress();
+                }
+                break;
+        }
+    }
 }

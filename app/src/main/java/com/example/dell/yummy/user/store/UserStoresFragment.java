@@ -32,7 +32,8 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UserStoresFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UserStoresFragment extends
+        Fragment implements SwipeRefreshLayout.OnRefreshListener {
     RecyclerView recyclerView;
     IUserFragmentListener miUserFragmentListener;
     List<StoreDetails> StoreList;
@@ -173,7 +174,7 @@ public class UserStoresFragment extends Fragment implements SwipeRefreshLayout.O
             RetrofitNetworksCalls retrofitNetworksCalls = DataSingleton.getInstance()
                     .getRetrofitNetworksCallsObject();
             if (retrofitNetworksCalls != null && miUserFragmentListener != null) {
-                int locationId = miUserFragmentListener.getLocationId();
+                int locationId = miUserFragmentListener.getLocationIdFromSharedPreferance();
                 retrofitNetworksCalls.getStoreDetails(getActivity(), locationId);
             }
         } else {

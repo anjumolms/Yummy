@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
@@ -27,7 +28,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AdminStoreTransactionsFragment extends Fragment {
+public class AdminStoreTransactionsFragment extends Fragment implements View.OnClickListener {
 
     private IAdminFragmentListener iAdminFragmentListener;
     private List<Order> transactionDetailsList;
@@ -35,6 +36,8 @@ public class AdminStoreTransactionsFragment extends Fragment {
     private AdminStoreTransactionAdapter mAdapter;
     private ProgressDialog mProgressDialog;
     private StoreDetails storeDetails;
+    private TextView mTextView;
+
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -71,6 +74,7 @@ public class AdminStoreTransactionsFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mProgressDialog = new ProgressDialog(getActivity());
+        mTextView = view.findViewById(R.id.tv_back_button_admin_store);
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_ALL_TRANSACTIONS);
         intentFilter.addAction(Constants.NOTIFY_ALL_TRANSACTIONS_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
@@ -84,6 +88,7 @@ public class AdminStoreTransactionsFragment extends Fragment {
             calls.getAllTransactionDetails(getActivity(),
                     storeDetails.getRetailId());
         }
+        mTextView.setOnClickListener(this);
         showStoreDetails();
 
     }
@@ -138,5 +143,16 @@ public class AdminStoreTransactionsFragment extends Fragment {
 
     public void setStores(StoreDetails storeDetails) {
         this.storeDetails = storeDetails;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_back_button_admin_store:
+                if(iAdminFragmentListener != null){
+                    iAdminFragmentListener.onBackPress();
+                }
+                break;
+        }
     }
 }

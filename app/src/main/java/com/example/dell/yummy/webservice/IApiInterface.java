@@ -55,9 +55,6 @@ public interface IApiInterface {
     @GET("order/getstorependorders/{retail_id}")
     Call<List<Order>> getTransactionPendingOrders(@Path("retail_id") int retail_id);
 
-
-
-
     @POST("order/makeorder")
     Call<Order> getOrderDetails(@Body Order orderDetails);
 
@@ -115,5 +112,8 @@ public interface IApiInterface {
 
     @GET("admin/getaddlocation")
     Call<List<LocationDetails>> getAllLocations();
+
+    @GET("order/getuserorders/{user_id}")
+    Call<List<Order>> getPurchaseHistory(@Path("user_id") int user_id);
 
 }

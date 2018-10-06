@@ -57,6 +57,7 @@ public class ConfirmationFragment extends
     private String mMenuitem = "";
     private int retailid;
     private ProgressDialog mProgressDialog;
+    private TextView back;
 
     public ConfirmationFragment() {
         // Required empty public constructor
@@ -139,6 +140,7 @@ public class ConfirmationFragment extends
         mConfirmbutton = view.findViewById(R.id.bt_confirm);
         mProgressDialog = new ProgressDialog(getActivity());
         linearLayout = view.findViewById(R.id.ll_wallet_updation);
+        back = view.findViewById(R.id.id_back_confirm);
         mWallet = view.findViewById(R.id.user_wallet);
         mTotal = 0;
         orderitemcount = 0;
@@ -150,6 +152,7 @@ public class ConfirmationFragment extends
         intentFilter.addAction(Constants.NOTIFY_USER_CONFIRM_ORDER_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
+        back.setOnClickListener(this);
     }
 
 
@@ -166,6 +169,10 @@ public class ConfirmationFragment extends
         switch (v.getId()) {
             case R.id.bt_confirm:
                 confirmOrder();
+                break;
+            case R.id.id_back_confirm:
+                if(mFragmentListener != null){}
+                mFragmentListener.onBackPress();
                 break;
             default:
                 break;
