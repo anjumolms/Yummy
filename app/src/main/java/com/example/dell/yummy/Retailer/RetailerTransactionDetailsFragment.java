@@ -125,7 +125,7 @@ public class RetailerTransactionDetailsFragment
         RetrofitNetworksCalls calls = DataSingleton
                 .getInstance().getRetrofitNetworksCallsObject();
         if(calls != null){
-            calls.resetTransactionList();
+            calls.resetRetailerTransactionList();
         }
     }
 

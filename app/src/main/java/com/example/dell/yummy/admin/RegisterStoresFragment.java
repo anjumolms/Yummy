@@ -36,6 +36,7 @@ import java.util.List;
  */
 public class RegisterStoresFragment extends Fragment implements View.OnClickListener {
     private EditText mStoreName;
+    private EditText mStorePoc;
     private EditText mStoreId;
     private EditText mAccount;
     private EditText mEmail;
@@ -77,6 +78,7 @@ public class RegisterStoresFragment extends Fragment implements View.OnClickList
 
     private void initViews(View view) {
         mStoreName = view.findViewById(R.id.admin_store_name);
+        mStorePoc = view.findViewById(R.id.admin_store_poc);
         mStoreId = view.findViewById(R.id.admin_store_id);
         mAccount = view.findViewById(R.id.admin_store_account);
         mEmail = view.findViewById(R.id.admin_store_email);
@@ -164,11 +166,17 @@ public class RegisterStoresFragment extends Fragment implements View.OnClickList
         String selectLocationName = spinner.getSelectedItem().toString();
         String retailAccount = mAccount.getText().toString().trim();
         String storeName = mStoreName.getText().toString().trim();
+        String storePoc = mStorePoc.getText().toString().trim();
         String retailPhone = mMobile.getText().toString().trim();
         String retailEmail = mEmail.getText().toString().trim();
         String id = mStoreId.getText().toString().trim();
         //String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         String emailPattern = "[a-zA-Z0-9._-]+@ust-global.com";
+
+        if (TextUtils.isEmpty(storePoc)) {
+            mStorePoc.setError(Constants.FIELD_EMPTY_WARNING);
+            return;
+        }
 
         if (TextUtils.isEmpty(storeName)) {
             mStoreName.setError(Constants.FIELD_EMPTY_WARNING);
@@ -193,13 +201,13 @@ public class RegisterStoresFragment extends Fragment implements View.OnClickList
             return;
         }
 
-        if (TextUtils.isEmpty(retailPhone)) {
-            mMobile.setError(Constants.FIELD_EMPTY_WARNING);
+        if (TextUtils.isEmpty(strPassword)) {
+            mPassword.setError(Constants.FIELD_EMPTY_WARNING);
             return;
         }
 
-        if (TextUtils.isEmpty(strPassword)) {
-            mPassword.setError(Constants.FIELD_EMPTY_WARNING);
+        if (TextUtils.isEmpty(retailPhone)) {
+            mMobile.setError(Constants.FIELD_EMPTY_WARNING);
             return;
         }
 
@@ -232,6 +240,9 @@ public class RegisterStoresFragment extends Fragment implements View.OnClickList
         registerStore.setRetailWallet(wallet);
         registerStore.setRetailName(mStoreName.getText().toString());
         registerStore.setLocation_id(location_id);
+        registerStore.setRetailEmail(retailEmail);
+        registerStore.setRetailPoc(storePoc);
+
 
         RetrofitNetworksCalls calls = DataSingleton
                 .getInstance().getRetrofitNetworksCallsObject();
@@ -246,7 +257,7 @@ public class RegisterStoresFragment extends Fragment implements View.OnClickList
         if (mProgressDialog != null) {
             sendMail();
             setSpinner();
-            mStoreName.requestFocus();
+            mStorePoc.requestFocus();
             mProgressDialog.dismiss();
             mStoreName.setText("");
             mEmail.setText("");
@@ -254,6 +265,20 @@ public class RegisterStoresFragment extends Fragment implements View.OnClickList
             mAccount.setText("");
             mStoreId.setText("");
             mMobile.setText("");
+            mStorePoc.setText("");
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mStorePoc.requestFocus();
+        mStoreName.setText("");
+        mEmail.setText("");
+        mPassword.setText("");
+        mAccount.setText("");
+        mStoreId.setText("");
+        mMobile.setText("");
+        mStorePoc.setText("");
     }
 }

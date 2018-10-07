@@ -28,6 +28,20 @@ public class RetailerDetails {
     @SerializedName("retail_wallet")
     @Expose
     private int retailWallet;
+    @SerializedName("retail_email")
+    @Expose
+    private String retailEmail;
+    @SerializedName("retail_poc")
+    @Expose
+    private String retailPoc;
+
+    @SerializedName("retail_phone")
+    @Expose
+    private String retailPhone;
+
+    @SerializedName("location_id")
+    @Expose
+    private int location_id;
 
     public int getLoginId() {
         return loginId;
@@ -91,5 +105,37 @@ public class RetailerDetails {
 
     public void setRetailWallet(int retailWallet) {
         this.retailWallet = retailWallet;
+    }
+
+    public String getRetailEmail() {
+        return retailEmail;
+    }
+
+    public void setRetailEmail(String retailEmail) {
+        this.retailEmail = retailEmail;
+    }
+    public String getRetailPoc() {
+        return retailPoc;
+    }
+
+    public void setRetailPoc(String retailPoc) {
+        this.retailPoc = retailPoc;
+    }
+
+
+    public String getRetailPhone() {
+        return retailPhone;
+    }
+
+    public void setRetailPhone(String retailPhone) {
+        this.retailPhone = retailPhone;
+    }
+
+    public int getLocation_id() {
+        return location_id;
+    }
+
+    public void setLocation_id(int location_id) {
+        this.location_id = location_id;
     }
 }

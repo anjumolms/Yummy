@@ -21,6 +21,10 @@ public class RetailerMenu {
     @Expose
     private int stock;
 
+    @SerializedName("item_promotion")
+    @Expose
+    private int promotion;
+
     public String getItemName() {
         return itemName;
     }
@@ -59,5 +63,13 @@ public class RetailerMenu {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public int getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(int promotion) {
+        this.promotion = promotion;
     }
 }

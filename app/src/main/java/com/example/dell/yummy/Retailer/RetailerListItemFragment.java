@@ -75,6 +75,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
 
                 if (intent.getAction().equals(Constants.NOTIFY_UPDATE_ITEM_ERROR)) {
                     stopProgress();
+                    updateList();
                 }
             }
 
@@ -156,6 +157,23 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
     private void stopProgress() {
         if(progressDialog != null && progressDialog.isShowing()){
             progressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RetrofitNetworksCalls retrofitNetworksCalls = DataSingleton.getInstance()
+                .getRetrofitNetworksCallsObject();
+        if (retrofitNetworksCalls != null) {
+            retrofitNetworksCalls.resetmRetailordishesList();
+        }
+    }
+
+    private void updateList() {
+        if(adapter != null){
+            adapter.setData(null);
+            adapter.notifyDataSetChanged();
         }
     }
 

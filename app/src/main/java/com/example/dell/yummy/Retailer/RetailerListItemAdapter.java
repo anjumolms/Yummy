@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +52,8 @@ class RetailerListItemAdapter extends
             DishesDetails dishesDetails = retailordishesList.get(position);
             holder.textViewTitle.setText(dishesDetails.getItemName());
             holder.textViewPrice.setText("" + dishesDetails.getItemPrice());
+            holder.stock.setText(""+ dishesDetails.getItemStock());
+            holder.checkBox.setChecked(false);
         }
     }
 
@@ -70,7 +73,8 @@ class RetailerListItemAdapter extends
 
     class ListItemViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewTitle, textViewPrice, btnRetailerUpdate,stock;
+        TextView textViewTitle, textViewPrice,stock;
+        ImageButton btnRetailerUpdate;
         CheckBox checkBox;
 
 
@@ -81,6 +85,7 @@ class RetailerListItemAdapter extends
             textViewPrice = itemView.findViewById(R.id.tv_retailer_listitem_cost);
             btnRetailerUpdate = itemView.findViewById(R.id.bt_retailer_update);
             checkBox = itemView.findViewById(R.id.checkbox_retailer);
+            stock = itemView.findViewById(R.id.tv_retailer_listitem_stock);
 
             if (retailordishesList != null) {
 

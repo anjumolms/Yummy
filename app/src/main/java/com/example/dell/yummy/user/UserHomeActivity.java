@@ -100,7 +100,7 @@ public class UserHomeActivity extends AppCompatActivity
                         break;
                     case Constants.NOTIFY_GET_LOCATION:
                         int flag = intent.getIntExtra("Flag", 0);
-                        if (flag == 1) {
+                        if (flag == 1 && !isFinishing()) {
                             showPlacesList();
                         }
                         break;
@@ -329,6 +329,11 @@ public class UserHomeActivity extends AppCompatActivity
             mProgressDialog.dismiss();
         }
 
+        int selectedLoc = 0,selectedLocIndex =0;
+        if(sharedPreferences != null && sharedPreferences.contains(Constants.KEY_LOCATION)){
+            selectedLoc = sharedPreferences.getInt(Constants.KEY_LOCATION,0);
+        }
+
         RetrofitNetworksCalls calls = DataSingleton
                 .getInstance().getRetrofitNetworksCallsObject();
         if (calls != null) {
@@ -339,13 +344,17 @@ public class UserHomeActivity extends AppCompatActivity
             Dialog dialog;
             List<String> items = new ArrayList<>();
             for (LocationDetails locationDetails : places) {
+                if(selectedLoc != 0
+                        && locationDetails.getLocationId() == selectedLoc){
+                    selectedLocIndex = places.indexOf(locationDetails);
+                }
                 items.add(locationDetails.getLocationName());
             }
             mLocationId = places.get(0).getLocationId();
             final String[] placesList = items.toArray(new String[items.size()]);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Choose your location: ");
-            builder.setSingleChoiceItems(placesList, 0,
+            builder.setSingleChoiceItems(placesList, selectedLocIndex,
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -617,8 +626,10 @@ public class UserHomeActivity extends AppCompatActivity
             fragmentTransaction.commit();
 
         } else {
-            super.onBackPressed();
-            onDestroy();
+            Intent a = new Intent(Intent.ACTION_MAIN);
+            a.addCategory(Intent.CATEGORY_HOME);
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
         }
 
 

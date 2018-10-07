@@ -30,9 +30,9 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UserDishesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UserDishesFragment extends Fragment
+        implements SwipeRefreshLayout.OnRefreshListener {
 
-    private List<DishesDetails> dishesList;
     private RecyclerView recyclerView;
     private IUserFragmentListener miUserFragmentListener;
     private UserDishesAdapter adapter;

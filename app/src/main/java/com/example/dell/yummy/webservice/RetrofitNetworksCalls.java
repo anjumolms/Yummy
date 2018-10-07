@@ -47,6 +47,7 @@ public class RetrofitNetworksCalls {
     List<LocationDetails> places;
     private List<LocationDetails> mGetAllLocationDetails;
     private List<Order> mPurchaseHistory;
+    private List<RetailerDetails> allRetailerDetails;
 
     public void getStoreDetails(final Context context, int locationId) {
 
@@ -92,7 +93,6 @@ public class RetrofitNetworksCalls {
         }
 
     }
-
 
     public void getDishDetails(final Context context, int location_id) {
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
@@ -237,7 +237,6 @@ public class RetrofitNetworksCalls {
 
     }
 
-
     public void getConfirmedOrders(final Context context, int id) {
 
         Retrofit retrofit = DataSingleton
@@ -342,7 +341,6 @@ public class RetrofitNetworksCalls {
 
     public void resetTransactionList() {
         if (allTransactions != null) {
-
             allTransactions.clear();
         }
     }
@@ -460,8 +458,21 @@ public class RetrofitNetworksCalls {
         return mRetailordishesList;
     }
 
+    public void resetmRetailordishesList() {
+        if (mRetailordishesList != null) {
+            mRetailordishesList.clear();
+        }
+    }
+
+
     public List<Order> getTransactionList() {
         return mTransactionDetails;
+    }
+
+    public void resetRetailerTransactionList() {
+        if (mTransactionDetails != null) {
+            mTransactionDetails.clear();
+        }
     }
 
     public List<Order> getConfirmOrderList() {
@@ -1163,8 +1174,104 @@ public class RetrofitNetworksCalls {
 
     }
 
-    public List<Order> getPurchaseHistoryList(){
+    public List<Order> getPurchaseHistoryList() {
         return mPurchaseHistory;
+    }
+
+
+    public void getAllStoreDetails(final Context context) {
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        if (retrofit != null) {
+            IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
+            Call<List<RetailerDetails>> call = iApiInterface.getAllStores();
+
+            call.enqueue(new Callback<List<RetailerDetails>>() {
+
+                @Override
+                public void onResponse(Call<List<RetailerDetails>> call,
+                                       Response<List<RetailerDetails>> response) {
+
+                    if (response != null) {
+                        if (response.code() == 200) {
+                            allRetailerDetails = response.body();
+                            Intent intent = new Intent(Constants.NOTIFY_ALL_STORE_DETAILS);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        } else {
+                            Intent intent = new Intent(Constants.NOTIFY_ALL_STORE_DETAILS_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Intent intent = new Intent(Constants.NOTIFY_ALL_STORE_DETAILS_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        Toast.makeText(context,
+                                "response is null", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<List<RetailerDetails>> call, Throwable t) {
+                    Intent intent = new Intent(Constants.NOTIFY_ALL_STORE_DETAILS_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+    }
+
+    public List<RetailerDetails> getAllStoreListCollection() {
+        return allRetailerDetails;
+    }
+
+    public void addAdmin(final Context context, String strUserName, String strPassword) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(IApiInterface.BASE_URL).build();
+        if (retrofit != null) {
+            IApiInterface service = retrofit.create(IApiInterface.class);
+            Call<String> call = service.addadmin(strUserName, strPassword);
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call,
+                                       Response<String> response) {
+                    if (response != null) {
+                        if (response.code() == 200) {
+
+                            Toast.makeText(context, response.body()
+                                    , Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(Constants.NOTIFY_ADD_ADMIN);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                        } else if (response.code() == 204) {
+                            Intent intent = new Intent(Constants.NOTIFY_ADD_ADMIN_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            Toast.makeText(context, "Admin already exists",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(context, "Response is null",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                    Toast.makeText(context, t.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
     }
 
 //    public void callRefundApi(final Context context, String number) {

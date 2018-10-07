@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,13 +30,13 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AdminStoresFragment extends Fragment implements View.OnClickListener {
+public class AdminStoresFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     RecyclerView recyclerView;
     IAdminFragmentListener mIAdminFragmentListener;
     List<StoreDetails> StoreList;
     AdminStoresAdapter adapter;
-    TextView textView;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -43,6 +44,10 @@ public class AdminStoresFragment extends Fragment implements View.OnClickListene
             if (intent != null
                     && intent.getAction().equals(Constants.NOTIFY_STORE_DETAILS)) {
                 updateData();
+            }
+            if (intent != null
+                    && intent.getAction().equals(Constants.NOTIFY_STORE_DETAILS_ERROR)) {
+                stopRefereshing();
             }
         }
     };
@@ -65,11 +70,16 @@ public class AdminStoresFragment extends Fragment implements View.OnClickListene
     private void initViews(View view) {
         recyclerView = view.findViewById(R.id.rv_admin_stores_fragment);
         recyclerView.setHasFixedSize(true);
-        textView = view.findViewById(R.id.tool_admin);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_admin_stores);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(R.color.tab_color,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_STORE_DETAILS);
+        intentFilter.addAction(Constants.NOTIFY_STORE_DETAILS_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
-        textView.setOnClickListener(this);
         showStoreDetails();
 
     }
@@ -107,6 +117,9 @@ public class AdminStoresFragment extends Fragment implements View.OnClickListene
             if (retrofitNetworksCalls != null) {
                 adapter.setData(retrofitNetworksCalls.getStoreDetailsList());
                 adapter.notifyDataSetChanged();
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
 
         }
@@ -123,15 +136,22 @@ public class AdminStoresFragment extends Fragment implements View.OnClickListene
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.tool_admin:
-                if(mIAdminFragmentListener != null){
-                    mIAdminFragmentListener.showNavigationDrawer();
-                }
-                break;
-             default:
-                 break;
+    public void onRefresh() {
+        RetrofitNetworksCalls retrofitNetworksCalls = DataSingleton.getInstance()
+                .getRetrofitNetworksCallsObject();
+        if (retrofitNetworksCalls != null && mIAdminFragmentListener != null) {
+            int locationId = mIAdminFragmentListener.getLocationIdFromSharedPreferance();
+            retrofitNetworksCalls.getStoreDetails(getActivity(), locationId);
+        }
+
+
+        swipeRefreshLayout.setRefreshing(true);
+    }
+
+    private void stopRefereshing() {
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 }
+

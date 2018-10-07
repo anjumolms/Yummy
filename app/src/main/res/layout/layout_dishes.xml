@@ -37,6 +37,14 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:textColor="#000000"
                 android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/tv_dish_retailer_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="#000000"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/dish_item_stock"

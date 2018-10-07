@@ -11,4 +11,5 @@ public interface IAdminFragmentListener {
     void showNavigationDrawer();
 
     void onBackPress();
+    int getLocationIdFromSharedPreferance();
 }

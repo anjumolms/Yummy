@@ -119,6 +119,7 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
         String itemCost = mItemPrice.getText().toString().trim();
         String stockNumber = stock.getText().toString().trim();
 
+
         if (TextUtils.isEmpty(itemName)) {
             mItimeName.setError(Constants.FIELD_EMPTY_WARNING);
             return;
@@ -131,7 +132,10 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
             stock.setError(Constants.FIELD_EMPTY_WARNING);
             return;
         }
-
+        int promotion = 0;
+        if (mCombo.isChecked()) {
+            promotion = 1;
+        }
         int signature = 0;
         if (mSignatureDish.isChecked()) {
             signature = 1;
@@ -146,6 +150,7 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
         retailerMenu.setItemName(itemName);
         retailerMenu.setItemPrice(Integer.parseInt(itemCost));
         retailerMenu.setItemSignature(signature);
+        retailerMenu.setPromotion(promotion);
         retailerMenu.setRetailId(id);
         retailerMenu.setStock(Integer.parseInt(stockNumber));
         RetrofitNetworksCalls calls = DataSingleton.getInstance()

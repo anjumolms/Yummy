@@ -116,6 +116,16 @@ public class AdminStoreTransactionsFragment extends Fragment implements View.OnC
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RetrofitNetworksCalls calls = DataSingleton
+                .getInstance().getRetrofitNetworksCallsObject();
+        if(calls != null){
+            calls.resetTransactionList();
+        }
+    }
+
     private void dismissProgress() {
         if (mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();

@@ -56,6 +56,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private CoordinatorLayout mCoordinatorLayout;
     ProgressDialog progressDialog;
     private SharedPreferences sharedPreferences;
+    View view;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -78,7 +79,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_login, container,
+        view = inflater.inflate(R.layout.fragment_login, container,
                 false);
         initViews(view);
         mLogin.setOnClickListener(this);
@@ -135,6 +136,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         if(progressDialog != null && progressDialog.isShowing()){
             progressDialog.dismiss();
         }
+        mUuid.requestFocus();
         mPassword.setText("");
         mUuid.setText("");
     }
@@ -289,6 +291,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private void showadminPage() {
         if (mMainView != null) {
+            if (progressDialog != null && view.isShown()) {
+                progressDialog.dismiss();
+            }
             //addDetailsToSharedPreferance(userResult);
             mMainView.addActivityInfo(Constants.SCREEN_ADMIN_HOME);
         }
@@ -314,7 +319,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void showRetailerPage() {
         //User page NEED CORRECTION
         if (mMainView != null) {
-            if (progressDialog != null) {
+            if (progressDialog != null && view.isShown()) {
                 progressDialog.dismiss();
             }
             RetrofitNetworksCalls calls = DataSingleton
@@ -349,7 +354,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void showUserPage() {
         //User page
         if (mMainView != null) {
-            if (progressDialog != null) {
+
+            if (progressDialog != null && view.isShown()) {
                 progressDialog.dismiss();
             }
             RetrofitNetworksCalls calls = DataSingleton

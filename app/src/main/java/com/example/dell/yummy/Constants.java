@@ -25,6 +25,9 @@ public class Constants {
     public static final int SCREEN_REGISTER_RETAILER = 20;
     public static final int SCREEN_PURCHASE_HISTORY_ITEM = 21;
     public static final int SCREEN_REFUND_FRAGMENT = 22;
+    public static final int SCREEN_ADMIN_VIEWPAGER = 23;
+    public static final int SCREEN_ALL_STORES_LIST = 24;
+    public static final int SCREEN_ADD_ADMIN = 25;
 
     public static final String CHANNEL_ID = "my_channel_01";
     public static final String CHANNEL_NAME = "Simplified Coding Notification";
@@ -88,6 +91,10 @@ public class Constants {
     public static final String NOTIFY_TRANSACTION_ORDER_ERROR = "NOTIFY_TRANSACTION_ORDER_ERROR";
     public static final String NOTIFY_REFUND_ERROR = "NOTIFY_REFUND_ERROR";
     public static final String NOTIFY_REFUND = "NOTIFY_REFUND";
+    public static final String NOTIFY_ALL_STORE_DETAILS = "NOTIFY_ALL_STORE_DETAILS";
+    public static final String NOTIFY_ALL_STORE_DETAILS_ERROR = "NOTIFY_ALL_STORE_DETAILS_ERROR";
+    public static final String NOTIFY_ADD_ADMIN = "NOTIFY_ADD_ADMIN";
+    public static final String NOTIFY_ADD_ADMIN_ERROR = "NOTIFY_ADD_ADMIN_ERROR";
     public static final String INVALID_EMAIL_WARNING = "Enter Valid Email";
     public static final String MOBILE_NUMBER_WARNING = "Enter 10 digit Mobile Number";
     public static final String PASSWORD_MINIMUM_WARNING = "Minimum 4 Digits Required";

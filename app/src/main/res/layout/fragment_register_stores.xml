@@ -35,6 +35,21 @@
                 android:drawableLeft="@drawable/backthree"/>
         </android.support.v7.widget.Toolbar>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/EditTextHint"
+            android:layout_margin="5dp">
+
+            <EditText
+                android:id="@+id/admin_store_poc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="POC Name"
+                android:inputType="textPersonName"
+                android:theme="@style/AppTheme"/>
+        </android.support.design.widget.TextInputLayout>
+
         <!-- Email Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

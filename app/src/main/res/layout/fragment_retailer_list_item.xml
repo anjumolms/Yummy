@@ -58,7 +58,11 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Item" />
+                android:text="Item"
+                android:textSize="18sp"
+                android:textColor="#000"
+                android:textStyle="bold"
+                />
 
             <TextView
                 android:id="@+id/tv_item_cpst"
@@ -66,6 +70,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
                 android:text="Cost"
+                android:textSize="18sp"
+                android:textColor="#000"
+                android:textStyle="bold"
                 />
 
             <TextView
@@ -73,14 +80,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
-                android:text="Stock" />
+                android:text="Stock"
+                android:textSize="18sp"
+                android:textColor="#000"
+                android:textStyle="bold"/>
 
-            <CheckBox
-                android:id="@+id/retailer_cb_check_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight=".5   "
-                android:text="Select All" />
         </LinearLayout>
 
         <LinearLayout

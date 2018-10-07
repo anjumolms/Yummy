@@ -93,6 +93,7 @@ public class UserStoresFragment extends
         intentFilter.addAction(Constants.NOTIFY_STORE_DETAILS_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
+
         showStoreDetails();
 
     }

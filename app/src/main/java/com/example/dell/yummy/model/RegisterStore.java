@@ -26,6 +26,13 @@ public class RegisterStore {
     @Expose
     private int location_id;
 
+    @SerializedName("retail_email")
+    @Expose
+    private String retailEmail;
+
+    @SerializedName("retail_poc")
+    @Expose
+    private String retailPoc;
     public int getLoginPin() {
         return loginPin;
     }
@@ -80,5 +87,21 @@ public class RegisterStore {
 
     public void setLocation_id(int location_id) {
         this.location_id = location_id;
+    }
+
+    public String getRetailEmail() {
+        return retailEmail;
+    }
+
+    public void setRetailEmail(String retailEmail) {
+        this.retailEmail = retailEmail;
+    }
+
+    public String getRetailPoc() {
+        return retailPoc;
+    }
+
+    public void setRetailPoc(String retailPoc) {
+        this.retailPoc = retailPoc;
     }
 }

@@ -116,4 +116,10 @@ public interface IApiInterface {
     @GET("order/getuserorders/{user_id}")
     Call<List<Order>> getPurchaseHistory(@Path("user_id") int user_id);
 
+    @GET("retail/getallstores")
+    Call<List<RetailerDetails>> getAllStores();
+
+    @GET("admin/addadmin/{admin_username}/{admin_pass}")
+    Call<String> addadmin(@Path("admin_username") String admin_username,
+                          @Path("admin_pass") String admin_pass);
 }

@@ -22,13 +22,18 @@
             android:title="Add Places" />
 
         <item
+            android:id="@+id/nav_admin_view_all_stores"
+            android:icon="@drawable/locationtwo"
+            android:title="All Stores" />
+
+        <item
             android:id="@+id/nav_admin_location"
             android:icon="@drawable/locationtwo"
             android:title="Location" />
-
-
-
-
+        <item
+            android:id="@+id/new_admin"
+            android:icon="@drawable/retailerwallet"
+            android:title="Add Admin" />
 
     </group>
     <item android:title="Communicate">

@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
@@ -39,6 +40,7 @@ import com.example.dell.yummy.R;
 import com.example.dell.yummy.model.LocationDetails;
 import com.example.dell.yummy.model.Order;
 import com.example.dell.yummy.model.StoreDetails;
+import com.example.dell.yummy.user.UserViewPagerFragment;
 import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 
 import java.io.StringReader;
@@ -51,12 +53,16 @@ public class AdminHomeActivity extends AppCompatActivity
     private AdminStoresFragment adminStoresFragment;
     private AdminStoreTransactionsFragment adminStoreTransactionsFragment;
     private RegisterStoresFragment registerStoresFragment;
+    private AdminViewPagerFragment adminViewPagerFragment;
+    private AdminListStoreFragment adminListStoreFragment;
+    private AddAdminFragment addAdminFragment;
     private String mUserSelectedLocation;
     private int mLocationId;
     List<LocationDetails> places = null;
     private SharedPreferences sharedPreferences;
     private ProgressDialog mProgressDialog;
     DrawerLayout drawer;
+    int flag = 0;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -67,7 +73,10 @@ public class AdminHomeActivity extends AppCompatActivity
                     case Constants.NOTIFY_GET_LOCATION:
                         int flag = intent.getIntExtra("Flag", 0);
                         if (flag == 1) {
-                            showPlacesList();
+                            if (!isFinishing()) {
+                                showPlacesList();
+                            }
+
                         }
                         break;
                     case Constants.NOTIFY_GET_ALL_LOCATIONS_LIST:
@@ -90,7 +99,7 @@ public class AdminHomeActivity extends AppCompatActivity
         setupNavigationDrawer();
         initFragments();
 
-        addFragment(Constants.SCREEN_ADMIN_STORE_LIST);
+        addFragment(Constants.SCREEN_ADMIN_VIEWPAGER);
     }
 
     private void initFragments() {
@@ -102,6 +111,15 @@ public class AdminHomeActivity extends AppCompatActivity
 
         registerStoresFragment = new RegisterStoresFragment();
         registerStoresFragment.addListener(this);
+
+        adminViewPagerFragment = new AdminViewPagerFragment();
+        adminViewPagerFragment.addListener(this);
+
+        adminListStoreFragment = new AdminListStoreFragment();
+        adminListStoreFragment.addListener(this);
+        addAdminFragment = new AddAdminFragment();
+        addAdminFragment.addListener(this);
+
         mProgressDialog = new ProgressDialog(getApplicationContext());
 
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_GET_LOCATION);
@@ -128,6 +146,7 @@ public class AdminHomeActivity extends AppCompatActivity
         if (calls != null) {
             int id = getLocationIdFromSharedPreferance();
             calls.getStoreDetails(getApplicationContext(), id);
+            calls.getDishDetails(getApplicationContext(), id);
         }
     }
 
@@ -162,12 +181,24 @@ public class AdminHomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+            drawer.closeDrawer(GravityCompat.START);
         } else if (adminStoreTransactionsFragment.isVisible()
-                || registerStoresFragment.isVisible()) {
-            addFragment(Constants.SCREEN_ADMIN_STORE_LIST);
+                || registerStoresFragment.isVisible()
+                || adminListStoreFragment.isVisible()) {
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            AdminViewPagerFragment adminViewPagerFragment = new AdminViewPagerFragment();
+            adminViewPagerFragment.addListener(this);
+            fragmentTransaction.replace(R.id.fl_admin_home_fragment_container,
+                    adminViewPagerFragment);
+            fragmentTransaction.commit();
         } else {
             super.onBackPressed();
-            finish();
+            Intent a = new Intent(Intent.ACTION_MAIN);
+            a.addCategory(Intent.CATEGORY_HOME);
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
         }
     }
 
@@ -197,6 +228,10 @@ public class AdminHomeActivity extends AppCompatActivity
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
+        int selectedLoc = 0, selectedLocIndex = 0;
+        if (sharedPreferences != null && sharedPreferences.contains(Constants.KEY_LOCATION)) {
+            selectedLoc = sharedPreferences.getInt(Constants.KEY_LOCATION, 0);
+        }
         RetrofitNetworksCalls calls
                 = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
         if (calls != null) {
@@ -207,19 +242,26 @@ public class AdminHomeActivity extends AppCompatActivity
             Dialog dialog;
             List<String> items = new ArrayList<>();
             for (LocationDetails locationDetails : places) {
+                if (selectedLoc != 0
+                        && locationDetails.getLocationId() == selectedLoc) {
+                    selectedLocIndex = places.indexOf(locationDetails);
+                }
                 items.add(locationDetails.getLocationName());
             }
+
             mLocationId = places.get(0).getLocationId();
             final String[] placesList = items.toArray(new String[items.size()]);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Choose your location: ");
-            builder.setSingleChoiceItems(placesList, 0,
+            builder.setSingleChoiceItems(placesList, selectedLocIndex,
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mUserSelectedLocation = placesList[which];
                             for (LocationDetails locationDetails : places) {
-                                if (locationDetails.getLocationName().equals(mUserSelectedLocation)) {
+                                if (locationDetails.getLocationName()
+                                        .equals(mUserSelectedLocation)) {
+                                    flag = 1;
                                     mLocationId = locationDetails.getLocationId();
                                     break;
                                 }
@@ -232,7 +274,11 @@ public class AdminHomeActivity extends AppCompatActivity
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             //Your logic when OK button is clicked
-                            addLocationTosharedPreferance();
+
+                            if (flag == 1) {
+                                addLocationTosharedPreferance();
+                            }
+                            flag = 0;
                             loadDetails();
                             dialog.dismiss();
                         }
@@ -241,7 +287,11 @@ public class AdminHomeActivity extends AppCompatActivity
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int id) {
-                                    addLocationTosharedPreferance();
+                                    if (flag == 1) {
+
+                                        addLocationTosharedPreferance();
+                                    }
+                                    flag = 0;
                                     loadDetails();
                                     dialog.dismiss();
                                 }
@@ -317,6 +367,10 @@ public class AdminHomeActivity extends AppCompatActivity
             finishAffinity();
         } else if (id == R.id.nav_admin_location) {
             showPlacesList();
+        } else if (id == R.id.nav_admin_view_all_stores) {
+            addFragment(Constants.SCREEN_ALL_STORES_LIST);
+        }else if(id == R.id.new_admin){
+            addFragment(Constants.SCREEN_ADD_ADMIN);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -410,9 +464,9 @@ public class AdminHomeActivity extends AppCompatActivity
 
         switch (screenId) {
 
-            case Constants.SCREEN_ADMIN_STORE_LIST:
+            case Constants.SCREEN_ADMIN_VIEWPAGER:
                 fragmentTransaction.replace(R.id.fl_admin_home_fragment_container,
-                        adminStoresFragment);
+                        adminViewPagerFragment);
                 fragmentTransaction.commit();
                 break;
             case Constants.SCREEN_ADMIN_TRANSACTION_DETAILS:
@@ -423,6 +477,17 @@ public class AdminHomeActivity extends AppCompatActivity
             case Constants.SCREEN_REGISTER_RETAILER:
                 fragmentTransaction.replace(R.id.fl_admin_home_fragment_container,
                         registerStoresFragment);
+                fragmentTransaction.commit();
+                break;
+            case Constants.SCREEN_ALL_STORES_LIST:
+                fragmentTransaction.replace(R.id.fl_admin_home_fragment_container,
+                        adminListStoreFragment);
+                fragmentTransaction.commit();
+                break;
+
+            case Constants.SCREEN_ADD_ADMIN:
+                fragmentTransaction.replace(R.id.fl_admin_home_fragment_container,
+                        addAdminFragment);
                 fragmentTransaction.commit();
                 break;
             default:
@@ -448,6 +513,7 @@ public class AdminHomeActivity extends AppCompatActivity
 //
 //        }
     }
+
 
     @Override
     public void showNavigationDrawer() {

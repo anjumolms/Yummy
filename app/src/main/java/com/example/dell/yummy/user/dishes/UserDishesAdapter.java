@@ -61,6 +61,8 @@ public class UserDishesAdapter extends
             holder.textViewPrice.setText("₹ " + dishesDetails.getItemPrice());
             holder.ratingBar.setRating(dishesDetails.getReview());
             holder.stock.setText("Stock    " + dishesDetails.getItemStock());
+            holder.storeId.setText("StoreId " + dishesDetails.getRetailId());
+
             if (dishesDetails.getItemSignature() == 1) {
                 holder.textViewTitle.setTextColor(Color.parseColor("#E91E63"));
             } else {
@@ -84,7 +86,7 @@ public class UserDishesAdapter extends
 
     class DishesViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewTitle, textViewPrice,stock;
+        TextView textViewTitle, textViewPrice,stock,storeId;
         CardView cardView;
         ImageView storeImg;
         RatingBar ratingBar;
@@ -99,7 +101,7 @@ public class UserDishesAdapter extends
             storeImg = itemView.findViewById(R.id.iv_dish);
             ratingBar = itemView.findViewById(R.id.rtbProductRating);
             stock = itemView.findViewById(R.id.dish_item_stock);
-
+            storeId = itemView.findViewById(R.id.tv_dish_retailer_id);
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

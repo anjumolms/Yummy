@@ -2,6 +2,7 @@ package com.example.dell.yummy.Retailer;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -245,7 +246,10 @@ public class RetailerHomeActivity extends AppCompatActivity
             addFragment(Constants.SCREEN_RETAILER_TRANSACTION_DETAILS);
 
         } else {
-            super.onBackPressed();
+            Intent a = new Intent(Intent.ACTION_MAIN);
+            a.addCategory(Intent.CATEGORY_HOME);
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
         }
     }
 

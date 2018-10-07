@@ -33,6 +33,18 @@ public class DishesDetails {
     @Expose
     private int counter = 0;
 
+    public int getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(int promotion) {
+        this.promotion = promotion;
+    }
+
+    @SerializedName("item_promotion")
+    @Expose
+    private int promotion;
+
     public int getReview() {
         return review;
     }

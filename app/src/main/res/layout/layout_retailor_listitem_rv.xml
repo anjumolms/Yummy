@@ -45,12 +45,13 @@
             <!--app:srcCompat="@drawable/baseline_launch_black_18dp"-->
             <!--android:layout_marginRight="10dp"/>-->
 
-        <Button
+        <ImageButton
             android:id="@+id/bt_retailer_update"
             android:text="UPDATE"
             android:textColor="#fff"
-            android:background="@color/tab_color"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp"
+            android:src="@drawable/updateitem"
+            android:background="@android:color/transparent"/>
         <CheckBox
             android:id="@+id/checkbox_retailer"
             android:layout_width="wrap_content"
