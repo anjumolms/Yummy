@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/purchase_history_ll"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="10dp">
+    <TextView
+        android:id="@+id/purchase_history_store_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/yummy"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-smallcaps"
+        />
+    <TextView
+        android:id="@+id/purchase_history_order_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:textSize="18sp"
+        android:textColor="#000"
+        android:text="Order success"
+        />
+    <TextView
+        android:id="@+id/purchase_history_order_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:textSize="18sp"
+        android:text="Order success"
+        />
+    <TextView
+        android:id="@+id/purchase_history_order_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:textSize="18sp"
+        android:text="Order success"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="8dp"
+        android:background="#e0e0e0" />
+
+    <TextView
+        android:id="@+id/purchase_history_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:textSize="18sp"
+        android:textColor="#000"
+        android:textStyle="bold"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="8dp"
+        android:background="#e0e0e0" />
+
+</LinearLayout>
