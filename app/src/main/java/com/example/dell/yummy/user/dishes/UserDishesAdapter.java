@@ -61,12 +61,18 @@ public class UserDishesAdapter extends
             holder.textViewPrice.setText("₹ " + dishesDetails.getItemPrice());
             holder.ratingBar.setRating(dishesDetails.getReview());
             holder.stock.setText("Stock    " + dishesDetails.getItemStock());
-            holder.storeId.setText("StoreId " + dishesDetails.getRetailId());
+            holder.storeId.setText(dishesDetails.getRetail_name());
 
             if (dishesDetails.getItemSignature() == 1) {
                 holder.textViewTitle.setTextColor(Color.parseColor("#E91E63"));
             } else {
                 holder.textViewTitle.setTextColor(Color.parseColor("#000000"));
+            }
+
+            if(dishesDetails.getMenuType() == 2){
+                holder.textViewTitle
+                        .setCompoundDrawablesWithIntrinsicBounds(R.drawable.veg_symbol,
+                                0, 0, 0);
             }
         }
 

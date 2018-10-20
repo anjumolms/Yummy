@@ -24,7 +24,7 @@
         <item
             android:id="@+id/nav_admin_view_all_stores"
             android:icon="@drawable/locationtwo"
-            android:title="All Stores" />
+            android:title="Contact Stores" />
 
         <item
             android:id="@+id/nav_admin_location"

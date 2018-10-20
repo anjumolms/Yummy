@@ -1,5 +1,6 @@
 package com.example.dell.yummy.admin;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
@@ -43,6 +44,7 @@ public class AdminDishesAdapter extends
         return new AdminDishesAdapter.DishesViewHolder(view);
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public void onBindViewHolder(AdminDishesAdapter.DishesViewHolder holder, int position) {
         //getting the product of the specified position
@@ -55,7 +57,7 @@ public class AdminDishesAdapter extends
             holder.textViewPrice.setText("₹ " + dishesDetails.getItemPrice());
             holder.ratingBar.setRating(dishesDetails.getReview());
             holder.stock.setText("Stock    " + dishesDetails.getItemStock());
-            holder.storeId.setText("StoreId " + dishesDetails.getRetailId());
+            holder.storeId.setText(dishesDetails.getRetail_name());
 
             if (dishesDetails.getItemSignature() == 1) {
                 holder.textViewTitle.setTextColor(Color.parseColor("#E91E63"));

@@ -48,6 +48,11 @@ public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapte
         } else {
             holder.textViewTitle.setTextColor(Color.parseColor("#000000"));
         }
+        if (dishesDetails.getMenuType() == 2) {
+            holder.textViewTitle
+                    .setCompoundDrawablesWithIntrinsicBounds(R.drawable.veg_symbol,
+                            0, 0, 0);
+        }
 
     }
 
@@ -62,7 +67,7 @@ public class StoreDetailsAdapter extends RecyclerView.Adapter<StoreDetailsAdapte
 
     class DishesViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewTitle, textViewPrice, textViewCount,stock;
+        TextView textViewTitle, textViewPrice, textViewCount, stock;
         ImageButton addimage, removeimage;
 
 

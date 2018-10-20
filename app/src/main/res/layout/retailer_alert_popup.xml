@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -45,25 +44,35 @@
             </TableRow>
         </TableLayout>
 
-
-        <EditText
-            android:id="@+id/popup_retailer_item_price"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:hint="Price"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textSize="18sp" />
+            android:layout_margin="15dp"
+            android:theme="@style/EditTextHint">
 
-        <EditText
-            android:id="@+id/et_dishes_count"
+            <EditText
+                android:id="@+id/popup_retailer_item_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Price"
+                android:inputType="number"
+                android:theme="@style/AppTheme" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:hint="Count"
-            android:inputType="number"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textSize="18sp" />
+            android:layout_margin="15dp"
+            android:theme="@style/EditTextHint">
+
+            <EditText
+                android:id="@+id/et_dishes_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Stock"
+                android:inputType="number"
+                android:theme="@style/AppTheme" />
+        </android.support.design.widget.TextInputLayout>
 
         <TableLayout
             android:layout_width="match_parent"

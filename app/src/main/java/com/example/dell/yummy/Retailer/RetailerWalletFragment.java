@@ -34,11 +34,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RetailerWalletFragment extends Fragment {
+public class RetailerWalletFragment extends Fragment implements View.OnClickListener {
 
     ProgressDialog progressDialog;
     TextView remainingCoins;
     private IRetailerFragmentListener mFragmentListener;
+    private TextView back;
 
     public RetailerWalletFragment() {
         // Required empty public constructor
@@ -76,6 +77,7 @@ public class RetailerWalletFragment extends Fragment {
 
     private void initViews(View view) {
         remainingCoins = view.findViewById(R.id.retailer_remaining_coins);
+        back = view.findViewById(R.id.wallet_back);
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
         progressDialog.show();
@@ -97,6 +99,7 @@ public class RetailerWalletFragment extends Fragment {
         intentFilter.addAction(Constants.NOTIFY_WALLET_UPDATED_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
+        back.setOnClickListener(this);
     }
 
     private boolean isNetworkAvailable() {
@@ -136,5 +139,16 @@ public class RetailerWalletFragment extends Fragment {
 
     public void addListener(IRetailerFragmentListener retailerFragmentListener) {
         this.mFragmentListener = retailerFragmentListener;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.wallet_back:
+                if(mFragmentListener != null){
+                    mFragmentListener.onBackPress();
+                }
+                break;
+        }
     }
 }

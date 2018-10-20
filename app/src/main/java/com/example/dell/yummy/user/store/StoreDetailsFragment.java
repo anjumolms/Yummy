@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -175,6 +176,9 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
                             miUserFragmentListener.loadConformationFragment(selectedItems);
                         }
                     }
+                    else {
+                        Toast.makeText(getActivity(), "Select Item to Proceed", Toast.LENGTH_LONG).show();
+                        }
                 }
                 break;
             default:

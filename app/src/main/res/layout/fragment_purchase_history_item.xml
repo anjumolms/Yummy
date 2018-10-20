@@ -16,12 +16,14 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <TextView
+            android:id="@+id/back_purchase_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="10dp"
             android:text="@string/yummy"
             android:textColor="#fff"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:drawableLeft="@drawable/backthree"/>
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout

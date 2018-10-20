@@ -75,6 +75,7 @@ public class UserHomeActivity extends AppCompatActivity
     List<LocationDetails> places = null;
     DrawerLayout drawer;
     int counter = 0;
+    int flag =0;
     DishesDetails dishFromApi;
     private ProgressDialog mProgressDialog;
     private Menu mMenuList;
@@ -363,6 +364,7 @@ public class UserHomeActivity extends AppCompatActivity
                             for (LocationDetails locationDetails : places) {
                                 if (locationDetails.getLocationName().equals(mUserSelectedLocation)) {
                                     mLocationId = locationDetails.getLocationId();
+                                    flag = 1;
                                     break;
                                 }
                             }
@@ -373,16 +375,26 @@ public class UserHomeActivity extends AppCompatActivity
                 @Override
                 public void onClick(DialogInterface dialog, int id) {
                     //Your logic when OK button is clicked
-                    addLocationTosharedPreferance();
-                    LoadDetails();
+                    if (flag == 1) {
+                        addLocationTosharedPreferance();
+                        LoadDetails();
+                    }
+                    flag = 0;
+
 
                 }
             })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            addLocationTosharedPreferance();
-                            LoadDetails();
+                            if (sharedPreferences != null
+                                    && !sharedPreferences.contains(Constants.KEY_LOCATION)) {
+
+                                addLocationTosharedPreferance();
+                                LoadDetails();
+                            }
+                            flag = 0;
+
 
                         }
                     });
@@ -683,7 +695,7 @@ public class UserHomeActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_wallet) {
             // Handle the wallet action
-            addFragment(Constants.SCREEN_USER_WALLET);
+            //addFragment(Constants.SCREEN_USER_WALLET);
 
         } else if (id == R.id.nav_logout) {
             finishAffinity();

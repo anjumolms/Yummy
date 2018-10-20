@@ -88,6 +88,7 @@ public class RetailerHomeActivity extends AppCompatActivity
         mConfirmOrdersFragment.addListener(this);
 
         mRefundFragment = new RefundFragment();
+        mRefundFragment.addListener(this);
 
         loadDetails();
     }
@@ -242,7 +243,8 @@ public class RetailerHomeActivity extends AppCompatActivity
                 || mretailerListItemFragment.isVisible()
                 || mretailerAddItemFragment.isVisible()
                 || meachTransactionFragment.isVisible()
-                || mConfirmOrdersFragment.isVisible()) {
+                || mConfirmOrdersFragment.isVisible()
+                || mRefundFragment.isVisible()) {
             addFragment(Constants.SCREEN_RETAILER_TRANSACTION_DETAILS);
 
         } else {

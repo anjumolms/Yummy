@@ -30,13 +30,14 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PurchaseHistoryItemFragment extends Fragment {
+public class PurchaseHistoryItemFragment extends Fragment implements View.OnClickListener {
     private TextView mStoreName;
     private RecyclerView mRecyclerView;
     private TextView mTotal;
     private Order orders;
     private IUserFragmentListener mIUserFragmentListener;
     private ProgressDialog mProgressDialog;
+    private TextView back;
 
 
     public PurchaseHistoryItemFragment() {
@@ -77,11 +78,13 @@ public class PurchaseHistoryItemFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mProgressDialog = new ProgressDialog(getActivity());
+        back = view.findViewById(R.id.back_purchase_item);
 
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_TRANSACTION_ORDER);
         intentFilter.addAction(Constants.NOTIFY_TRANSACTION_ORDER_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
+        back.setOnClickListener(this);
         showDishDetails();
 
 
@@ -131,5 +134,16 @@ public class PurchaseHistoryItemFragment extends Fragment {
 
     public void addListener(IUserFragmentListener iUserFragmentListener) {
         mIUserFragmentListener = iUserFragmentListener;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.back_purchase_item:
+                if(mIUserFragmentListener != null){
+                    mIUserFragmentListener.onBackPress();
+                }
+                break;
+        }
     }
 }

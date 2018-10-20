@@ -33,6 +33,10 @@ public class DishesDetails {
     @Expose
     private int counter = 0;
 
+    @SerializedName("retail_name")
+    @Expose
+    private String retail_name;
+
     public int getPromotion() {
         return promotion;
     }
@@ -44,6 +48,9 @@ public class DishesDetails {
     @SerializedName("item_promotion")
     @Expose
     private int promotion;
+    @SerializedName("menu_type")
+    @Expose
+    private int menuType;
 
     public int getReview() {
         return review;
@@ -64,7 +71,6 @@ public class DishesDetails {
     public String getItemName() {
         return itemName;
     }
-
 
     public void setItemName(String itemName) {
         this.itemName = itemName;
@@ -116,5 +122,21 @@ public class DishesDetails {
 
     public void setRetailId(int retailId) {
         this.retailId = retailId;
+    }
+
+    public String getRetail_name() {
+        return retail_name;
+    }
+
+    public void setRetail_name(String retail_name) {
+        this.retail_name = retail_name;
+    }
+
+    public int getMenuType() {
+        return menuType;
+    }
+
+    public void setMenuType(int menuType) {
+        this.menuType = menuType;
     }
 }

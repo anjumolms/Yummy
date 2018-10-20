@@ -63,6 +63,10 @@ public class RegisterStoresFragment extends Fragment implements View.OnClickList
                     && intent.getAction().equals(Constants.NOTIFY_STORE_ADDED)) {
                 updateData();
             }
+            if(intent != null
+                    && intent.getAction().equals(Constants.NOTIFY_STORE_ADDED_ERROR)){
+                stopProgress();
+            }
         }
     };
 
@@ -90,6 +94,7 @@ public class RegisterStoresFragment extends Fragment implements View.OnClickList
         mProgressDialog = new ProgressDialog(getActivity());
 
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_STORE_ADDED);
+        intentFilter.addAction(Constants.NOTIFY_STORE_ADDED_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
 
@@ -124,12 +129,12 @@ public class RegisterStoresFragment extends Fragment implements View.OnClickList
         // attaching data adapter to spinner
         spinner.setAdapter(dataAdapter);
     }
+
     public void addListener(IAdminFragmentListener iAdminFragmentListener) {
 
         this.iAdminFragmentListener = iAdminFragmentListener;
 
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -151,7 +156,7 @@ public class RegisterStoresFragment extends Fragment implements View.OnClickList
         i.setType("message/rfc822");
         i.putExtra(Intent.EXTRA_EMAIL, new String[]{mEmail.getText().toString()});
         i.putExtra(Intent.EXTRA_SUBJECT, "Yummy");
-        i.putExtra(Intent.EXTRA_TEXT, "Please find below details" +
+        i.putExtra(Intent.EXTRA_TEXT, "Your store has been registered Successfully.Please find the below details  " +
                 "UserName : " + mMobile.getText().toString() +
                 " Password : " + mPassword.getText().toString());
         try {
@@ -250,6 +255,12 @@ public class RegisterStoresFragment extends Fragment implements View.OnClickList
             calls.addStoreDetails(getActivity(), registerStore);
         }
 
+    }
+
+    private void stopProgress() {
+        if(mProgressDialog != null && mProgressDialog.isShowing()){
+            mProgressDialog.dismiss();
+        }
     }
 
     private void updateData() {

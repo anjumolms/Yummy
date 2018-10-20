@@ -8,6 +8,7 @@ import com.example.dell.yummy.model.RegistrationResult;
 import com.example.dell.yummy.model.RetailerDetails;
 import com.example.dell.yummy.model.RetailerMenu;
 import com.example.dell.yummy.model.StoreDetails;
+import com.example.dell.yummy.model.User;
 import com.example.dell.yummy.model.UserDetails;
 import com.example.dell.yummy.model.UserResult;
 import com.example.dell.yummy.model.UserReview;
@@ -122,4 +123,11 @@ public interface IApiInterface {
     @GET("admin/addadmin/{admin_username}/{admin_pass}")
     Call<String> addadmin(@Path("admin_username") String admin_username,
                           @Path("admin_pass") String admin_pass);
+    @GET("user/getuserbynumber/{user_phone}")
+    Call<User> getUserByNumber(@Path("user_phone") String user_phone);
+
+    @GET("retail/refund/{userid}/{retailid}/{amnt}")
+    Call<String> callRefundApi(@Path("userid") int userid,
+                             @Path("retailid") int retailid,
+                             @Path("amnt") int amnt);
 }

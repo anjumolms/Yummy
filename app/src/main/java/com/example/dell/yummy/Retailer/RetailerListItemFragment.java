@@ -155,7 +155,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
     }
 
     private void stopProgress() {
-        if(progressDialog != null && progressDialog.isShowing()){
+        if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
     }
@@ -171,7 +171,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
     }
 
     private void updateList() {
-        if(adapter != null){
+        if (adapter != null) {
             adapter.setData(null);
             adapter.notifyDataSetChanged();
         }
@@ -180,9 +180,11 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
     private void listItemUpdated() {
         RetrofitNetworksCalls calls = DataSingleton
                 .getInstance().getRetrofitNetworksCallsObject();
+
         if (calls != null) {
             calls.getRetailerMenuList(getActivity(), 1);
         }
+        Toast.makeText(getActivity(), "Item updated !!!", Toast.LENGTH_SHORT).show();
     }
 
     public void showUpdatePopup(final DishesDetails dishesDetails) {
@@ -204,6 +206,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
             storeName.setText("Store Id " + dishesDetails.getRetailId());
             itemName.setText(dishesDetails.getItemName());
             itemPrice.setText("" + dishesDetails.getItemPrice());
+            itemCount.setText("" + dishesDetails.getItemStock());
 
             btUpdate.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -256,7 +259,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
                 deleteItemFromList();
                 break;
             case R.id.tv_list_back:
-                if(mFragmentListener != null){
+                if (mFragmentListener != null) {
                     mFragmentListener.onBackPress();
                 }
                 break;

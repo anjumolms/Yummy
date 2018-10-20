@@ -58,6 +58,7 @@ public class ConfirmationFragment extends
     private int retailid;
     private ProgressDialog mProgressDialog;
     private TextView back;
+    private TextView storeName;
 
     public ConfirmationFragment() {
         // Required empty public constructor
@@ -142,6 +143,7 @@ public class ConfirmationFragment extends
         linearLayout = view.findViewById(R.id.ll_wallet_updation);
         back = view.findViewById(R.id.id_back_confirm);
         mWallet = view.findViewById(R.id.user_wallet);
+        storeName = view.findViewById(R.id.conf_order_store_name);
         mTotal = 0;
         orderitemcount = 0;
         mMenuitem = "";

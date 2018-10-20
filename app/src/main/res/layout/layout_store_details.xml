@@ -31,13 +31,17 @@
                         android:gravity="center_vertical"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="#000000"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:drawableRight="@drawable/veg_symbol"/>
 
                 <TextView
                     android:id="@+id/tv_dish_item_count"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".3"
+                    android:text="0"
+                    android:gravity="center"
+                    android:textSize="18sp"
                     />
                 <android.support.v7.widget.AppCompatImageButton
                     android:id="@+id/im_add"
@@ -71,7 +75,8 @@
 
                 </TableRow>
                 <TableRow
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

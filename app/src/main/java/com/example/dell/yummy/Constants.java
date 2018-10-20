@@ -95,10 +95,13 @@ public class Constants {
     public static final String NOTIFY_ALL_STORE_DETAILS_ERROR = "NOTIFY_ALL_STORE_DETAILS_ERROR";
     public static final String NOTIFY_ADD_ADMIN = "NOTIFY_ADD_ADMIN";
     public static final String NOTIFY_ADD_ADMIN_ERROR = "NOTIFY_ADD_ADMIN_ERROR";
+    public static final String NOTIFY_GET_USER_BY_NUMBER = "NOTIFY_GET_USER_BY_NUMBER";
+    public static final String NOTIFY_GET_USER_BY_NUMBER_ERROR = "NOTIFY_GET_USER_BY_NUMBER_ERROR";
     public static final String INVALID_EMAIL_WARNING = "Enter Valid Email";
     public static final String MOBILE_NUMBER_WARNING = "Enter 10 digit Mobile Number";
     public static final String PASSWORD_MINIMUM_WARNING = "Minimum 4 Digits Required";
     public static final String KEY_RETAIL_NAME = "KEY_RETAIL_NAME";
     public static final String SELECT_LOCATION_WARNING = "Select Store Location";
     public static final String INVALID_UST_EMAIL_WARNING = "Enter Valid UST Email Address";
+    public static final String NOTIFY_STORE_ADDED_ERROR = "NOTIFY_STORE_ADDED_ERROR";
 }

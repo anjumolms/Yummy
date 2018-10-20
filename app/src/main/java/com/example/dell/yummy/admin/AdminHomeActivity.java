@@ -184,7 +184,8 @@ public class AdminHomeActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else if (adminStoreTransactionsFragment.isVisible()
                 || registerStoresFragment.isVisible()
-                || adminListStoreFragment.isVisible()) {
+                || adminListStoreFragment.isVisible()
+                || addAdminFragment.isVisible()) {
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -277,9 +278,10 @@ public class AdminHomeActivity extends AppCompatActivity
 
                             if (flag == 1) {
                                 addLocationTosharedPreferance();
+                                loadDetails();
                             }
                             flag = 0;
-                            loadDetails();
+
                             dialog.dismiss();
                         }
                     })
@@ -287,12 +289,13 @@ public class AdminHomeActivity extends AppCompatActivity
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int id) {
-                                    if (flag == 1) {
+                                    if (sharedPreferences != null
+                                            && !sharedPreferences.contains(Constants.KEY_LOCATION)) {
 
                                         addLocationTosharedPreferance();
+                                        loadDetails();
                                     }
                                     flag = 0;
-                                    loadDetails();
                                     dialog.dismiss();
                                 }
                             });
@@ -369,7 +372,7 @@ public class AdminHomeActivity extends AppCompatActivity
             showPlacesList();
         } else if (id == R.id.nav_admin_view_all_stores) {
             addFragment(Constants.SCREEN_ALL_STORES_LIST);
-        }else if(id == R.id.new_admin){
+        } else if (id == R.id.new_admin) {
             addFragment(Constants.SCREEN_ADD_ADMIN);
         }
 

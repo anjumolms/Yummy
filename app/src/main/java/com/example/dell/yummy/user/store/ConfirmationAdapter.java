@@ -37,6 +37,7 @@ public class ConfirmationAdapter extends RecyclerView.Adapter<ConfirmationAdapte
             //binding the data with the viewholder views
             holder.textViewTitle.setText(dishesDetails.getItemName());
             holder.textViewPrice.setText(String.valueOf(amnt));
+            holder.textViewQty.setText(String.valueOf(dishesDetails.getCounter()));
         }
 
     }
@@ -52,13 +53,14 @@ public class ConfirmationAdapter extends RecyclerView.Adapter<ConfirmationAdapte
 
     class DishesViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewTitle,textViewPrice;
+        TextView textViewTitle,textViewPrice,textViewQty;
 
         public DishesViewHolder(View itemView) {
             super(itemView);
 
-            textViewTitle = itemView.findViewById(R.id.textView6);
-            textViewPrice = itemView.findViewById(R.id.textView7);
+            textViewTitle = itemView.findViewById(R.id.conf_order_item);
+            textViewPrice = itemView.findViewById(R.id.conf_order_cost);
+            textViewQty = itemView.findViewById(R.id.conf_order_qty);
         }
     }
 
