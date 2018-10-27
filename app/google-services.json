@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "241860826245",
+    "firebase_url": "https://yummy-ad9ba.firebaseio.com",
+    "project_id": "yummy-ad9ba",
+    "storage_bucket": "yummy-ad9ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:241860826245:android:8d775cdbb980d6dd",
+        "android_client_info": {
+          "package_name": "com.example.dell.yummy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "241860826245-tnavsssdgulkg65ag41u61phigt9ebbt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dell.yummy",
+            "certificate_hash": "9eed9a86b2d70aff4fc97ee992dcf83f1f1bd7f4"
+          }
+        },
+        {
+          "client_id": "241860826245-omnq45pimrvc69ktdme796lv7rkig048.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmpa0qhBXX8ALUjJFNs2Ys_YTPbk86RV4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "241860826245-omnq45pimrvc69ktdme796lv7rkig048.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
