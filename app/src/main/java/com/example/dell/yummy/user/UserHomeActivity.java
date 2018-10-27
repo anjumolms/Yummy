@@ -126,11 +126,12 @@ public class UserHomeActivity extends AppCompatActivity
         setupNavigationDrawer();
         initFragments();
         addFragment(Constants.SCREEN_USER);
-        //LoadDetails();
-        //showPlacesList();
 
     }
 
+    /**
+     *
+     */
     private void LoadDetails() {
         if (isNetworkAvailable()) {
 
@@ -726,14 +727,14 @@ public class UserHomeActivity extends AppCompatActivity
                     .setTitle("Rate your YummY Taste")
                     .setDescription("Please select some stars")
                     .setDefaultComment("It is delicious !")
-                    .setStarColor(R.color.colorAccent)
-                    .setNoteDescriptionTextColor(R.color.text)
-                    .setTitleTextColor(R.color.light_tab)
-                    .setDescriptionTextColor(R.color.light_tab)
+                    .setStarColor(R.color.fbutton_color_sun_flower)
+                    .setNoteDescriptionTextColor(R.color.tab_color)
+                    .setTitleTextColor(R.color.tab_color)
+                    .setDescriptionTextColor(R.color.tab_color_light)
                     .setHint("Please write your comment here ...")
                     .setHintTextColor(R.color.tab_color)
                     .setCommentTextColor(R.color.background)
-                    .setCommentBackgroundColor(R.color.rvbackground)
+                    .setCommentBackgroundColor(R.color.fbutton_color_silver)
                     .setWindowAnimation(R.style.MyDialogFadeAnimation)
                     .create(UserHomeActivity.this)
                     .show();

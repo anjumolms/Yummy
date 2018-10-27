@@ -22,7 +22,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/yummy"
+                android:textColor="#fff"
                 android:textSize="20dp"
+                android:fontFamily="@font/poppins"
                 android:drawablePadding="10dp"
                 android:drawableLeft="@drawable/navigation_icon"
 
@@ -34,8 +36,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabMode="fixed"
-            android:background="@color/tab_color"
-            app:tabGravity="fill"/>
+            android:background="@color/tab_color_light"
+            app:tabGravity="fill"
+            android:fontFamily="@font/poppins"
+            app:tabIndicatorColor="#fff"
+            app:tabIndicatorHeight="3dp"
+
+            />
     </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout

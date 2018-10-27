@@ -1,8 +1,5 @@
 package com.example.dell.yummy;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import com.example.dell.yummy.webservice.IApiInterface;
 import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 
@@ -12,7 +9,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class DataSingleton {
     private static DataSingleton sDataSingleton = null;
     private Retrofit mRetrofit;
-    private SharedPreferences mLoginPreferance;
     private RetrofitNetworksCalls mRetrofitNetworksCalls;
 
     private DataSingleton() {

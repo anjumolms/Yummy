@@ -10,7 +10,8 @@
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:layout_weight=".5"
-       android:textColor="#000"/>
+       android:textColor="#000"
+       android:fontFamily="@font/poppins"/>
 
     <TextView
         android:id="@+id/retailer_order_item_count"
@@ -18,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_weight=".5"
         android:textColor="#000"
+        android:fontFamily="@font/poppins"
         />
 
 </LinearLayout>

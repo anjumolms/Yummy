@@ -40,6 +40,7 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
     private Button mAddItem;
     private EditText stock;
     private ProgressDialog progressDialog;
+    private SwitchCompat nonveg;
     private TextView back;
 
     public RetailerAddItemFragment() {
@@ -83,6 +84,7 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
         mCombo = view.findViewById(R.id.et_combo_dish);
         stock = view.findViewById(R.id.stock);
         back = view.findViewById(R.id.add_item_back);
+        nonveg = view.findViewById(R.id.non_veg_dish);
         progressDialog = new ProgressDialog(getActivity());
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_ITEM_ADDED);
         intentFilter.addAction(Constants.NOTIFY_ITEM_ADDED_ERROR);
@@ -119,7 +121,6 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
         String itemCost = mItemPrice.getText().toString().trim();
         String stockNumber = stock.getText().toString().trim();
 
-
         if (TextUtils.isEmpty(itemName)) {
             mItimeName.setError(Constants.FIELD_EMPTY_WARNING);
             return;
@@ -137,8 +138,12 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
             promotion = 1;
         }
         int signature = 0;
+        int menutype = 1;
         if (mSignatureDish.isChecked()) {
             signature = 1;
+        }
+        if (nonveg.isChecked()) {
+            menutype = 2;
         }
         SharedPreferences sharedPreferences = getActivity()
                 .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
@@ -153,6 +158,7 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
         retailerMenu.setPromotion(promotion);
         retailerMenu.setRetailId(id);
         retailerMenu.setStock(Integer.parseInt(stockNumber));
+        retailerMenu.setMenuType(menutype);
         RetrofitNetworksCalls calls = DataSingleton.getInstance()
                 .getRetrofitNetworksCallsObject();
         if (calls != null) {

@@ -32,7 +32,8 @@
                         android:text="Strore Name"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="#000000"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins"/>
 
                     <TextView
                         android:id="@+id/list_store_name"
@@ -42,7 +43,8 @@
                         android:layout_weight="1"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="#000000"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins"/>
                 </TableRow>
 
                 <TableRow
@@ -56,7 +58,8 @@
                         android:text="Store ID"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="#000000"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins"/>
 
                     <TextView
                         android:id="@+id/list_store_id"
@@ -64,6 +67,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
                 </TableRow>
 
@@ -78,7 +82,8 @@
                         android:text="Wallet Info"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="#000000"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -86,6 +91,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
                 </TableRow>
 
@@ -100,7 +106,8 @@
                         android:text="Email"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="#000000"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins"/>
 
                     <TextView
                         android:id="@+id/admin_list_store_retail_email"
@@ -108,6 +115,7 @@
                         android:layout_width="match_parent"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
                         android:drawableRight="@drawable/mailoption"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
                 </TableRow>
@@ -120,6 +128,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_weight=".2"
                         android:text="POC Name"
+                        android:fontFamily="@font/poppins"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="#000000"
                         android:textStyle="bold" />
@@ -130,6 +139,7 @@
                         android:layout_width="match_parent"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
                 </TableRow>
                 <TableRow
@@ -141,6 +151,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_weight=".2"
                         android:text="Account"
+                        android:fontFamily="@font/poppins"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="#000000"
                         android:textStyle="bold" />
@@ -151,6 +162,7 @@
                         android:layout_width="match_parent"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
                 </TableRow>
                 <TableRow
@@ -163,6 +175,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_weight=".2"
                         android:text="Mobile"
+                        android:fontFamily="@font/poppins"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="#000000"
                         android:textStyle="bold" />
@@ -173,6 +186,7 @@
                         android:layout_width="match_parent"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
                         android:drawableRight="@drawable/calloption"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
                 </TableRow>
@@ -187,7 +201,8 @@
                         android:text="Location"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="#000000"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins"/>
 
                     <TextView
                         android:id="@+id/admin_store_list_retailer_location"
@@ -195,6 +210,7 @@
                         android:layout_width="match_parent"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
                 </TableRow>
                 <TableRow

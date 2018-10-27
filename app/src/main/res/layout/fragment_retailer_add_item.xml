@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:drawablePadding="10dp"
             android:text="@string/yummy"
+            android:fontFamily="@font/poppins"
             android:textColor="#fff"
             android:textSize="20dp"
             android:drawableLeft="@drawable/backthree"/>
@@ -105,6 +106,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/tab_color"
                     android:textSize="14sp"
+                    android:fontFamily="@font/poppins"
                     android:theme="@style/SwitchCompatTheme" />
             </LinearLayout>
 
@@ -120,8 +122,22 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/tab_color"
                 android:textSize="14sp"
+                android:fontFamily="@font/poppins"
                 android:theme="@style/SwitchCompatTheme"/>
-
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/non_veg_dish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="8dp"
+                android:checked="false"
+                android:text="Non Veg Dish"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/tab_color"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins"
+                android:theme="@style/SwitchCompatTheme"/>
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/bt_add_item_retailer"
                 android:layout_width="fill_parent"
@@ -130,8 +146,10 @@
                 android:layout_marginTop="24dp"
                 android:background="@color/tab_color"
                 android:padding="12dp"
+                android:fontFamily="@font/poppins"
                 android:text="Add Item"
                 android:textColor="#fff" />
+
         </LinearLayout>
 
     </LinearLayout>

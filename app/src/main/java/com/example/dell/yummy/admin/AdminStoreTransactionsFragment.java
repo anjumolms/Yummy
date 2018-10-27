@@ -28,7 +28,8 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AdminStoreTransactionsFragment extends Fragment implements View.OnClickListener {
+public class AdminStoreTransactionsFragment extends
+        Fragment implements View.OnClickListener {
 
     private IAdminFragmentListener iAdminFragmentListener;
     private List<Order> transactionDetailsList;
@@ -36,6 +37,9 @@ public class AdminStoreTransactionsFragment extends Fragment implements View.OnC
     private AdminStoreTransactionAdapter mAdapter;
     private ProgressDialog mProgressDialog;
     private StoreDetails storeDetails;
+    private TextView mStoreName;
+    private TextView mStoreid;
+    private TextView mWallet;
     private TextView mTextView;
 
 
@@ -75,6 +79,14 @@ public class AdminStoreTransactionsFragment extends Fragment implements View.OnC
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mProgressDialog = new ProgressDialog(getActivity());
         mTextView = view.findViewById(R.id.tv_back_button_admin_store);
+        mStoreName = view.findViewById(R.id.transaction_store_name);
+        mStoreid = view.findViewById(R.id.transaction_store_id);
+        mWallet = view.findViewById(R.id.transaction_wallet_info);
+        if(storeDetails != null){
+            mStoreName.setText(storeDetails.getRetailName());
+            mStoreid.setText("" + storeDetails.getRetailId());
+            mWallet.setText("Wallet  ₹ " + storeDetails.getRetailWallet());
+        }
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_ALL_TRANSACTIONS);
         intentFilter.addAction(Constants.NOTIFY_ALL_TRANSACTIONS_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
@@ -152,7 +164,9 @@ public class AdminStoreTransactionsFragment extends Fragment implements View.OnC
     }
 
     public void setStores(StoreDetails storeDetails) {
+
         this.storeDetails = storeDetails;
+
     }
 
     @Override

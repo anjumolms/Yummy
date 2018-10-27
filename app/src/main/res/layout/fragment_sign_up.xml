@@ -23,7 +23,7 @@
                 android:layout_height="100dp"
                 android:layout_marginTop="20dp"
                 android:textSize="50sp"
-                android:src="@drawable/yummyimage"
+                android:src="@drawable/yummyphoto"
                 android:gravity="center" />
 
             <!-- Email Label -->

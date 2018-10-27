@@ -12,8 +12,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,7 @@ public class UserDishesFragment extends Fragment
     private IUserFragmentListener miUserFragmentListener;
     private UserDishesAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private int screenWidth;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -83,6 +86,10 @@ public class UserDishesFragment extends Fragment
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
         intentFilter.addAction(Constants.NOTIFY_DISH_DETAILS_ERROR);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        screenWidth = displayMetrics.widthPixels;
         showDishDetails();
 
     }
@@ -109,9 +116,14 @@ public class UserDishesFragment extends Fragment
             List<DishesDetails> dishesDetails = networksCalls.getDishDetailsList();
 
             adapter = new UserDishesAdapter(getActivity(),
-                    dishesDetails, miUserFragmentListener);
+                    dishesDetails, miUserFragmentListener,screenWidth);
+            int spanCount = 2; // 3 columns
+            int spacing = 15; // 50px
+            boolean includeEdge = true;
+            recyclerView.addItemDecoration
+                    (new EqualSpacingItemDecoration(5, EqualSpacingItemDecoration.HORIZONTAL));
             recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         }
     }
@@ -128,6 +140,8 @@ public class UserDishesFragment extends Fragment
             if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
             }
+
+
 
         }
     }

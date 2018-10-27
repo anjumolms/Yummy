@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:drawablePadding="10dp"
             android:text="@string/yummy"
+            android:fontFamily="@font/poppins"
             android:textColor="#fff"
             android:textSize="20dp"
             android:drawableLeft="@drawable/backthree"/>
@@ -80,6 +81,7 @@
                 android:layout_marginBottom="24dp"
                 android:padding="12dp"
                 android:text="Register"
+                android:fontFamily="@font/poppins"
                 android:textColor="#fff"
                 />
         </LinearLayout>

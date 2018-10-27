@@ -22,6 +22,7 @@
             android:drawablePadding="10dp"
             android:text="@string/yummy"
             android:textColor="#fff"
+            android:fontFamily="@font/poppins"
             android:textSize="20dp"
             android:drawableLeft="@drawable/backthree"/>
     </android.support.v7.widget.Toolbar>
@@ -40,6 +41,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="Kantharies"
+            android:fontFamily="@font/poppins"
             android:textSize="20dp"
             android:textStyle="bold"
             android:textColor="#000"/>
@@ -60,6 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Item"
+                android:fontFamily="@font/poppins"
                 android:textColor="#000" />
 
             <TextView
@@ -67,6 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Cost"
+                android:fontFamily="@font/poppins"
                 android:textColor="#000" />
 
             <TextView
@@ -74,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Quantity"
+                android:fontFamily="@font/poppins"
                 android:textColor="#000" />
         </TableRow>
 
@@ -122,7 +127,8 @@
                 android:layout_weight="1"
                 android:text="Total"
                 android:textColor="#000"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:fontFamily="@font/poppins"/>
 
             <TextView
                 android:id="@+id/tv_total_price"
@@ -130,7 +136,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="#000"/>
+                android:textColor="#000"
+                android:fontFamily="@font/poppins"/>
         </LinearLayout>
 
         <View
@@ -147,7 +154,8 @@
             android:layout_margin="20dp"
             android:background="@color/tab_color"
             android:text="Confirm Order"
-            android:textColor="#fff" />
+            android:textColor="#fff"
+            android:fontFamily="@font/poppins"/>
 
         <LinearLayout
             android:id="@+id/ll_wallet_updation"
@@ -166,7 +174,8 @@
                 android:layout_weight="1"
                 android:text="Wallet"
                 android:textColor="#000"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:fontFamily="@font/poppins"/>
 
             <TextView
                 android:id="@+id/user_wallet"
@@ -174,7 +183,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="#000"/>
+                android:textColor="#000"
+                android:fontFamily="@font/poppins"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

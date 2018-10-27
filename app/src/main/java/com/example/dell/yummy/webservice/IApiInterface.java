@@ -19,6 +19,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -74,9 +75,9 @@ public interface IApiInterface {
     //    @FormUrlEncoded
     @POST("menu/deleteitemlist")
     Call<String> deleteItemList(@Body ArrayList<Integer> list);
-
+//TODO ismmodification
     @GET("admin/getlocation")
-    Call<List<LocationDetails>> getLocations();
+    Call<List<LocationDetails>> getLocations(@Header("Authorization") String authkey);
 
     @GET("user/login/{login_id}")
     Call<UserDetails> getUserDetails(@Path("login_id") int login_id);
@@ -130,4 +131,10 @@ public interface IApiInterface {
     Call<String> callRefundApi(@Path("userid") int userid,
                              @Path("retailid") int retailid,
                              @Path("amnt") int amnt);
+    @GET("retail/updatestoredetail")
+    Call<String> updateRetailerProfile(@Body RetailerDetails mRetailerDetails);
+
+    @GET("user/adminloadwallet/{userid}/{amnt}")
+    Call<String> updateUserWallet(@Path("userid") int userid, @Path("amnt") int amnt);
+
 }

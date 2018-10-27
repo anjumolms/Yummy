@@ -28,6 +28,7 @@ public class Constants {
     public static final int SCREEN_ADMIN_VIEWPAGER = 23;
     public static final int SCREEN_ALL_STORES_LIST = 24;
     public static final int SCREEN_ADD_ADMIN = 25;
+    public static final int SCREEN_PROFILE_EDIT = 26;
 
     public static final String CHANNEL_ID = "my_channel_01";
     public static final String CHANNEL_NAME = "Simplified Coding Notification";
@@ -104,4 +105,13 @@ public class Constants {
     public static final String SELECT_LOCATION_WARNING = "Select Store Location";
     public static final String INVALID_UST_EMAIL_WARNING = "Enter Valid UST Email Address";
     public static final String NOTIFY_STORE_ADDED_ERROR = "NOTIFY_STORE_ADDED_ERROR";
+    public static final String NOTIFY_PROFILE_DETAILS_ERROR = "NOTIFY_PROFILE_DETAILS_ERROR";
+    public static final String NOTIFY_PROFILE_DETAILS_UPDATE = "NOTIFY_PROFILE_DETAILS_UPDATE";
+    public static final String NOTIFY_UPDATE_DELIVERY = "NOTIFY_UPDATE_DELIVERY";
+    public static final String NOTIFY_UPDATE_DELIVERY_ERROR = "NOTIFY_UPDATE_DELIVERY_ERROR";
+    public static final String NOTIFY_UPDATE_USER_WALLET = "NOTIFY_UPDATE_USER_WALLET";
+    public static final String NOTIFY_UPDATE_USER_WALLET_ERROR = "NOTIFY_UPDATE_USER_WALLET_ERROR";
+
+    public static final String AUTHUSERNAME = "ismpost";
+    public static final String AUTHPASS = "pass1";
 }

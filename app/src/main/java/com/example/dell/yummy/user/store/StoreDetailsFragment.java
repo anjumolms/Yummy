@@ -3,9 +3,11 @@ package com.example.dell.yummy.user.store;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.FontRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
@@ -48,7 +50,7 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
     private StoreDetailsAdapter adapter;
     private ProgressDialog mProgressDialog;
     private StoreDetails selectedStore;
-
+    private TextView storeName;
     public StoreDetailsFragment() {
         // Required empty public constructor
     }
@@ -84,6 +86,7 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
 
     private void initViews(View view) {
         mRecyclerView = view.findViewById(R.id.rv_storedetails);
+        storeName = view.findViewById(R.id.store_details_store_name);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         //mStoreName = view.findViewById(R.id.tv_store_name);
@@ -95,9 +98,12 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
         CollapsingToolbarLayout collapsingToolbarLayout =
                 view.findViewById(R.id.toolbar_layout);
 
-        if (mStoreDetails != null) {
-            collapsingToolbarLayout.setTitle(mStoreDetails.getRetailName());
+        if (selectedStore != null) {
+            storeName.setText(selectedStore.getRetailName());
+            collapsingToolbarLayout.setTitle("Yummy Aid");
         }
+        collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
+        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
     }
 
     private void getStoreDishes() {

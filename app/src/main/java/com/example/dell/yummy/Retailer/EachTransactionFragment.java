@@ -30,7 +30,6 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class EachTransactionFragment extends Fragment implements View.OnClickListener {
-    private int mListPosition = -1;
     private TextView mUserId;
     private TextView mTotal;
     private Order mTransactionDetails;
@@ -51,10 +50,19 @@ public class EachTransactionFragment extends Fragment implements View.OnClickLis
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
             if (intent != null
                     && intent.getAction().equals(Constants.NOTIFY_TRANSACTION_ORDER)) {
                 updateData();
             }
+            if (intent != null
+                    && intent.getAction().equals(Constants.NOTIFY_UPDATE_DELIVERY_ERROR)) {
+            }
+            if (intent != null
+                    && intent.getAction().equals(Constants.NOTIFY_UPDATE_DELIVERY)) {
+                setVisibilityOfConfirmButton();
+            }
+
         }
     };
 
@@ -86,21 +94,11 @@ public class EachTransactionFragment extends Fragment implements View.OnClickLis
         orederId = view.findViewById(R.id.tv_order_id);
         back = view.findViewById(R.id.tv_order_back);
 
-        if (mListPosition != -1) {
-            RetrofitNetworksCalls retrofitNetworksCalls = DataSingleton
-                    .getInstance().getRetrofitNetworksCallsObject();
-            if (retrofitNetworksCalls != null) {
 
-                List<Order> transactionList
-                        = retrofitNetworksCalls.getTransactionList();
-                if (transactionList != null && !transactionList.isEmpty()) {
-                    mTransactionDetails = transactionList.get(mListPosition);
-                }
-            }
-
-        }
-
-        IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_TRANSACTION_ORDER);
+        IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_UPDATE_DELIVERY);
+        intentFilter.addAction(Constants.NOTIFY_UPDATE_DELIVERY_ERROR);
+        intentFilter.addAction(Constants.NOTIFY_TRANSACTION_ORDER);
+        intentFilter.addAction(Constants.NOTIFY_TRANSACTION_ORDER_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
         mConfirmOrder.setOnClickListener(this);
@@ -143,8 +141,8 @@ public class EachTransactionFragment extends Fragment implements View.OnClickLis
         }
     }
 
-    public void listPosition(int position) {
-        mListPosition = position;
+    public void listPosition(Order details) {
+        mTransactionDetails = details;
     }
 
     @Override
@@ -159,7 +157,7 @@ public class EachTransactionFragment extends Fragment implements View.OnClickLis
                     networksCalls.updateDelivery(mTransactionDetails.getOrder_id(),
                             getActivity());
                 }
-                mConfirmOrder.setVisibility(View.GONE);
+
                 break;
             case R.id.tv_order_back:
                 if(iRetailerFragmentListener != null){
@@ -180,5 +178,9 @@ public class EachTransactionFragment extends Fragment implements View.OnClickLis
         if (networksCalls != null) {
             networksCalls.updateOrderInfo();
         }
+    }
+
+    private void setVisibilityOfConfirmButton() {
+        mConfirmOrder.setVisibility(View.GONE);
     }
 }

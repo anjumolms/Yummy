@@ -21,12 +21,14 @@
             android:layout_weight="1"
             android:maxLines="1"
             android:ellipsize="end"
+            android:fontFamily="@font/poppins"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/tv_retailer_listitem_cost"
             android:layout_weight=".5"
+            android:fontFamily="@font/poppins"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:text="10rs"/>
 

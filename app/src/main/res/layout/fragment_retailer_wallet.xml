@@ -19,6 +19,7 @@
             android:text="@string/yummy"
             android:textColor="#fff"
             android:textSize="20dp"
+            android:fontFamily="@font/poppins"
             android:drawablePadding="10dp"
             android:drawableLeft="@drawable/backthree"
             />
@@ -33,6 +34,7 @@
         android:text="Wallet: 0"
         android:textColor="#000"
         android:textSize="20sp"
+        android:fontFamily="@font/poppins"
         android:layout_height="wrap_content" />
 
 </RelativeLayout>

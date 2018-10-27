@@ -92,7 +92,8 @@ public class AdminStoresAdapter extends
 
                             int userClickPosition = getAdapterPosition();
                             StoreDetails storeDetails = storeList.get(userClickPosition);
-                            iAdminFragmentListener.passStoreDetails(Constants.SCREEN_ADMIN_TRANSACTION_DETAILS,
+                            iAdminFragmentListener
+                                    .passStoreDetails(Constants.SCREEN_ADMIN_TRANSACTION_DETAILS,
                                     storeDetails);
                         }
                     }

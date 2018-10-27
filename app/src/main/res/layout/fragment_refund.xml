@@ -20,6 +20,7 @@
             android:text="@string/yummy"
             android:textColor="#fff"
             android:textSize="20dp"
+            android:fontFamily="@font/poppins"
             android:drawableLeft="@drawable/backthree"/>
     </android.support.v7.widget.Toolbar>
 
@@ -54,18 +55,21 @@
                 <TextView
                     android:id="@+id/refund_user_name"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"/>
 
                 <TextView
                     android:id="@+id/refund_user_email"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"/>
                 <EditText
                     android:id="@+id/refund_user_amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:hint="Amount"
+                    android:fontFamily="@font/poppins"
                     android:visibility="gone"/>
 
                 <Button
@@ -74,6 +78,7 @@
                     android:layout_height="wrap_content"
                     android:text="Refund"
                     android:layout_gravity="right"
+                    android:fontFamily="@font/poppins"
                     android:background="@color/tab_color"
                     android:textColor="#fff"
                     />

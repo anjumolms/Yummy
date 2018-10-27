@@ -30,7 +30,6 @@ public class UserViewPagerFragment extends Fragment implements View.OnClickListe
     private UserDishesFragment mUserDishesFragment;
     private UserReviewFragment mUserReviewFragment;
     private IUserFragmentListener miUserFragmentListener;
-    private List<StoreDetails> mStoreDetails;
     private TextView mTextView;
 
     public UserViewPagerFragment() {
@@ -65,7 +64,6 @@ public class UserViewPagerFragment extends Fragment implements View.OnClickListe
 
         mUserReviewFragment = new UserReviewFragment();
         mUserReviewFragment.addListener(miUserFragmentListener);
-        //LoadDetails();
     }
 
     private void addTabs(ViewPager viewPager) {

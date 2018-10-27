@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:text="@string/yummy"
             android:textColor="#fff"
+            android:fontFamily="@font/poppins"
             android:textSize="20dp"
             android:drawablePadding="10dp"
             android:drawableLeft="@drawable/backthree"
@@ -39,7 +40,8 @@
             android:text="Purchase order"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:textColor="#000"/>
+            android:textColor="#000"
+            android:fontFamily="@font/poppins"/>
 
         <View
             android:layout_width="match_parent"
@@ -64,6 +66,7 @@
                 android:textSize="20sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="#000"
+                android:fontFamily="@font/poppins"
                 />
             <TextView
                 android:id="@+id/tv_user_id_each_transaction_details"
@@ -71,7 +74,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="#000"/>
+                android:textColor="#000"
+                android:fontFamily="@font/poppins"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -89,6 +93,7 @@
                 android:textSize="20sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="#000"
+                android:fontFamily="@font/poppins"
                 />
             <TextView
                 android:id="@+id/tv_each_transaction_order_id"
@@ -96,7 +101,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="#000"/>
+                android:textColor="#000"
+                android:fontFamily="@font/poppins"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -114,6 +120,7 @@
                 android:textSize="20sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="#000"
+                android:fontFamily="@font/poppins"
                 />
             <TextView
                 android:id="@+id/tv_order_date"
@@ -121,7 +128,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="#000"/>
+                android:textColor="#000"
+                android:fontFamily="@font/poppins"/>
         </LinearLayout>
 
         <LinearLayout
@@ -140,6 +148,7 @@
                 android:textSize="20sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="#000"
+                android:fontFamily="@font/poppins"
                 />
             <TextView
                 android:id="@+id/tv_order_id"
@@ -147,7 +156,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="#000"/>
+                android:textColor="#000"
+                android:fontFamily="@font/poppins"/>
         </LinearLayout>
 
         <View
@@ -193,6 +203,7 @@
                 android:textSize="20sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="#000"
+                android:fontFamily="@font/poppins"
                 />
             <TextView
                 android:id="@+id/tv_total_each_transaction_fragment"
@@ -200,7 +211,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="#000"/>
+                android:textColor="#000"
+                android:fontFamily="@font/poppins"/>
         </LinearLayout>
 
         <View
@@ -217,7 +229,8 @@
             android:layout_margin="20dp"
             android:background="@color/tab_color"
             android:text="Confirm Purchase"
-            android:textColor="#fff" />
+            android:textColor="#fff"
+            android:fontFamily="@font/poppins"/>
 
     </LinearLayout>
 </RelativeLayout>

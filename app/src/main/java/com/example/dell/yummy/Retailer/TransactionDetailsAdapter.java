@@ -109,7 +109,7 @@ class TransactionDetailsAdapter extends
                         if (!isConfirmOrderPage) {
                             int pos = getAdapterPosition();
                             if (retailerFragmentListener != null) {
-                                retailerFragmentListener.loadEachTransactionFragment(pos);
+                                retailerFragmentListener.loadEachTransactionFragment(transactionDetailsList.get(pos));
                             }
                         }
 

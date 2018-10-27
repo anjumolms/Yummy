@@ -25,6 +25,10 @@ public class RetailerMenu {
     @Expose
     private int promotion;
 
+    @SerializedName("menu_type")
+    @Expose
+    private int menuType;
+
     public String getItemName() {
         return itemName;
     }
@@ -71,5 +75,13 @@ public class RetailerMenu {
 
     public void setPromotion(int promotion) {
         this.promotion = promotion;
+    }
+
+    public int getMenuType() {
+        return menuType;
+    }
+
+    public void setMenuType(int menuType) {
+        this.menuType = menuType;
     }
 }

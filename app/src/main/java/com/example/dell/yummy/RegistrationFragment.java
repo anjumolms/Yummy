@@ -46,7 +46,8 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
+        View view = inflater.inflate(R.layout.fragment_sign_up, container,
+                false);
         initViews(view);
         mlogin.setOnClickListener(this);
         return view;
@@ -64,13 +65,11 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
 
 
     public void addListener(IMainViewListener iMainViewListener) {
-
         mainView = iMainViewListener;
     }
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.register_login:
                 getValuesFromFields();
@@ -133,8 +132,6 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
             return;
 
         }
-
-
 
         RegistrationResult registrationResult = new RegistrationResult();
         registrationResult.setLoginPin(Integer.parseInt(strPassword));

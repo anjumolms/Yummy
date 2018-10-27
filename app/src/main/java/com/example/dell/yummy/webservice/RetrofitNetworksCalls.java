@@ -3,7 +3,9 @@ package com.example.dell.yummy.webservice;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ import com.example.dell.yummy.model.UserReview;
 
 import retrofit2.Retrofit;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,18 +41,28 @@ public class RetrofitNetworksCalls {
     private List<UserReview> mUserReviewList;
     private List<Order> mTransactionDetails;
     private List<Order> mConfirmOrderList = new ArrayList<>();
-    private Retrofit mRetrofit;
     private List<DishesDetails> mRetailordishesList;
     private UserDetails mUserDetails;
     private RetailerDetails mRetailerDetails;
     private Order mOrders;
     private List<Order> mConfirmedOrders;
     private List<Order> allTransactions;
-    List<LocationDetails> places;
+    private List<LocationDetails> mPlaces;
     private List<LocationDetails> mGetAllLocationDetails;
     private List<Order> mPurchaseHistory;
     private List<RetailerDetails> allRetailerDetails;
     private User userByNumer;
+
+    //TODO ismmodification
+    public static String getAuthToken() {
+        byte[] data = new byte[0];
+        try {
+            data = (Constants.AUTHUSERNAME+":"+Constants.AUTHPASS).getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "Basic " + Base64.encodeToString(data, Base64.NO_WRAP);
+    }
 
     public void getStoreDetails(final Context context, int locationId) {
 
@@ -512,6 +525,8 @@ public class RetrofitNetworksCalls {
                     } else {
                         Toast.makeText(context, response.code()
                                 + response.message(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Constants.NOTIFY_ITEM_ADDED_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     }
                 } else {
                     Intent intent = new Intent(Constants.NOTIFY_ITEM_ADDED_ERROR);
@@ -756,15 +771,15 @@ public class RetrofitNetworksCalls {
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
-            Call<List<LocationDetails>> call = service.getLocations();
+            Call<List<LocationDetails>> call = service.getLocations(getAuthToken());
             call.enqueue(new Callback<List<LocationDetails>>() {
                 @Override
                 public void onResponse(Call<List<LocationDetails>> call,
                                        Response<List<LocationDetails>> response) {
                     if (response != null && response.code() == 200) {
 
-                        places = response.body();
-                        if (places != null) {
+                        mPlaces = response.body();
+                        if (mPlaces != null) {
                             Intent intent = new Intent(Constants.NOTIFY_GET_LOCATION);
                             intent.putExtra("Flag", firstCalling);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
@@ -790,7 +805,7 @@ public class RetrofitNetworksCalls {
     }
 
     public List<LocationDetails> getLocations() {
-        return places;
+        return mPlaces;
     }
 
     public void getUserWalletDetails(final Context context) {
@@ -1052,12 +1067,15 @@ public class RetrofitNetworksCalls {
                                        Response<String> response) {
                     if (response != null) {
                         if (response.code() == 200) {
-
+                            Intent intent = new Intent(Constants.NOTIFY_UPDATE_DELIVERY);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                             Toast.makeText(context, response.body()
                                     , Toast.LENGTH_SHORT).show();
 
 
                         } else {
+                            Intent intent = new Intent(Constants.NOTIFY_UPDATE_DELIVERY_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                             Toast.makeText(context, response.code()
                                     + response.message(), Toast.LENGTH_SHORT).show();
                         }
@@ -1374,5 +1392,109 @@ public class RetrofitNetworksCalls {
 
     public User getUserDetailsByNuber() {
         return userByNumer;
+    }
+
+    public void updateProfileDetails(final Context context,
+                                     RetailerDetails mRetailerDetails) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(IApiInterface.BASE_URL).build();
+        if (retrofit != null) {
+            IApiInterface service = retrofit.create(IApiInterface.class);
+
+            Call<String> call = service.updateRetailerProfile(mRetailerDetails);
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call,
+                                       Response<String> response) {
+                    if (response != null) {
+                        if (response.code() == 200) {
+
+                            Intent intent = new Intent(Constants.NOTIFY_PROFILE_DETAILS_UPDATE);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            Toast.makeText(context, response.body().toString(), Toast.LENGTH_LONG).show();
+
+                        } else {
+                            Intent intent = new Intent(Constants.NOTIFY_PROFILE_DETAILS_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Intent intent = new Intent(Constants.NOTIFY_PROFILE_DETAILS_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        Toast.makeText(context, response.code()
+                                + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Intent intent = new Intent(Constants.NOTIFY_PROFILE_DETAILS_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    Toast.makeText(context, t.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
+
+    }
+
+    public void updateUserWallet(final Context context, int userAmount) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(IApiInterface.BASE_URL).build();
+        SharedPreferences sharedPreferences = context
+                .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                        Context.MODE_PRIVATE);
+        int id = 0;
+        if (sharedPreferences != null) {
+            id = sharedPreferences.getInt(Constants.KEY_ID, 0);
+        }
+
+        if (retrofit != null) {
+            IApiInterface service = retrofit.create(IApiInterface.class);
+
+            Call<String> call = service.updateUserWallet(id,userAmount);
+
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call,
+                                       Response<String> response) {
+                    if (response != null) {
+                        if (response.code() == 200) {
+
+                            Intent intent = new Intent(Constants.NOTIFY_UPDATE_USER_WALLET);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            Toast.makeText(context, response.body().toString(), Toast.LENGTH_LONG).show();
+
+                        } else {
+                            Intent intent = new Intent(Constants.NOTIFY_UPDATE_USER_WALLET_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            Toast.makeText(context, response.code()
+                                    + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Intent intent = new Intent(Constants.NOTIFY_UPDATE_USER_WALLET_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        Toast.makeText(context, response.code()
+                                + response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Intent intent = new Intent(Constants.NOTIFY_UPDATE_USER_WALLET_ERROR);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    Toast.makeText(context, t.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }
     }
 }

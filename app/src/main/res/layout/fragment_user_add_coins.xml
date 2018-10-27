@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,75 +15,64 @@
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
         <TextView
+            android:id="@+id/add_coins_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/yummy"
+            android:fontFamily="@font/poppins"
             android:textColor="#fff"
             android:textSize="20dp"
+            android:gravity="center"
+            android:drawableLeft="@drawable/backthree"
             android:drawablePadding="10dp"
             />
     </android.support.v7.widget.Toolbar>
 
-
     <LinearLayout
+        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-
-
-    <TextView
-        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="Enter Amount :"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-        android:layout_marginLeft="20dp"
-        android:gravity="bottom"
-        />
+        android:orientation="vertical"
+        android:gravity="center">
+        <LinearLayout
+            android:id="@+id/ll_payment"
 
-        <EditText
-            android:layout_width="100dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
-            />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Enter Amount :"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                android:layout_marginLeft="20dp"
+                android:gravity="bottom"
+                />
+
+            <EditText
+                android:id="@+id/user_amount"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:inputType="number"
+                />
 
 
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/payment_proceed"
+            android:layout_below="@id/ll_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/tab_color"
+            android:text="proceed"
+            android:textColor="#fff"
+            android:layout_gravity="right"
+            android:layout_margin="10dp"/>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mode :"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        />
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
 
-        <RadioButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Debit Card"
-            android:textSize="19dp"
-            android:layout_marginTop="10dp"/>
-
-        <RadioButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Paytm"
-            android:textSize="19dp"
-            android:layout_marginTop="10dp"/>
-
-        <RadioButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Credit Card"
-            android:textSize="19dp"
-            android:layout_marginTop="10dp"/>
-    </RadioGroup>
-
-</LinearLayout>
+</RelativeLayout>

@@ -108,5 +108,4 @@ public class SplashActivity extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-
 }

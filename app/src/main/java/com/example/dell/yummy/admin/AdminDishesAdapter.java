@@ -64,6 +64,16 @@ public class AdminDishesAdapter extends
             } else {
                 holder.textViewTitle.setTextColor(Color.parseColor("#000000"));
             }
+
+            if (dishesDetails.getMenuType() == 2) {
+                holder.textViewTitle
+                        .setCompoundDrawablesWithIntrinsicBounds(0,
+                                0, R.drawable.nonveg, 0);
+            } else{
+                holder.textViewTitle
+                        .setCompoundDrawablesWithIntrinsicBounds(0,
+                                0, R.drawable.veg, 0);
+            }
         }
 
     }

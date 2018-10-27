@@ -24,6 +24,10 @@
             android:id="@+id/refund_orders"
             android:icon="@drawable/retailerwallet"
             android:title="Refund" />
+        <item
+            android:id="@+id/retailer_profile"
+            android:icon="@drawable/retailerwallet"
+            android:title="Profile" />
 
 
     </group>

@@ -21,6 +21,7 @@
             android:text="@string/yummy"
             android:textColor="#fff"
             android:textSize="20dp"
+            android:fontFamily="@font/poppins"
             android:drawablePadding="10dp"
             android:drawableLeft="@drawable/backthree"
             />
@@ -29,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Confirmed Orders"
+        android:fontFamily="@font/poppins"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:gravity="center"
         android:textStyle="bold"

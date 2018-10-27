@@ -9,8 +9,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -31,9 +29,6 @@ import com.example.dell.yummy.model.UserDetails;
 import com.example.dell.yummy.webservice.IApiInterface;
 import com.example.dell.yummy.model.UserResult;
 import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import retrofit2.Call;
@@ -107,7 +102,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     public void addListener(IMainViewListener iMainViewListener) {
-
         mMainView = iMainViewListener;
     }
 
@@ -133,7 +127,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        if(progressDialog != null && progressDialog.isShowing()){
+        if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
         mUuid.requestFocus();
@@ -142,9 +136,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void validateUser() {
-
-        //dbHandler.getToken(1);
-
         String strUserName = mUuid.getText().toString().trim();
         String strPassword = mPassword.getText().toString().trim();
 
@@ -243,11 +234,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            if(response != null && response.code()==204){
+            if (response != null && response.code() == 204) {
                 Toast.makeText(getActivity(), "Invalid UserName or Password!! Try Again.",
                         Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 Toast.makeText(getActivity(), response.code()
                         + response.message(), Toast.LENGTH_SHORT).show();
             }

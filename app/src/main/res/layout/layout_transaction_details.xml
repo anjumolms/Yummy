@@ -37,7 +37,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Order Status"
-                        android:textColor="#000"/>
+                        android:textColor="#000"
+                        android:fontFamily="@font/poppins"/>
 
                     <TextView
                         android:id="@+id/tv_transaction_status"
@@ -45,7 +46,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Order Status"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins"/>
                 </TableRow>
 
                 <TableRow
@@ -58,7 +60,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Order Id "
-                        android:textColor="#000"/>
+                        android:textColor="#000"
+                        android:fontFamily="@font/poppins"/>
 
                     <TextView
                         android:id="@+id/tv_user_id"
@@ -66,7 +69,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Order Status"
-                        android:textColor="#000"/>
+                        android:textColor="#000"
+                        android:fontFamily="@font/poppins"/>
                 </TableRow>
 
                 <TableRow
@@ -78,7 +82,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Transaction Id "
-                        android:textColor="#000"/>
+                        android:textColor="#000"
+                        android:fontFamily="@font/poppins"/>
 
                     <TextView
                         android:id="@+id/tv_transaction_id"
@@ -86,7 +91,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Order Status"
-                        android:textColor="#000"/>
+                        android:textColor="#000"
+                        android:fontFamily="@font/poppins"/>
                 </TableRow>
                 <TableRow
                     android:layout_marginBottom="5dp"
@@ -97,7 +103,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Date "
-                        android:textColor="#000"/>
+                        android:textColor="#000"
+                        android:fontFamily="@font/poppins"/>
 
                     <TextView
                         android:id="@+id/tv_date_id"
@@ -105,7 +112,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Order Status"
-                        android:textColor="#000"/>
+                        android:textColor="#000"
+                        android:fontFamily="@font/poppins"/>
                 </TableRow>
             </TableLayout>
 
@@ -120,13 +128,15 @@
                 android:layout_height="wrap_content"
                 android:text="Amount"
                 android:layout_marginBottom="5dp"
-                android:textColor="#000"/>
+                android:textColor="#000"
+                android:fontFamily="@font/poppins"/>
             <TextView
                 android:id="@+id/tv_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Amount"
-                android:textColor="#000"/>
+                android:textColor="#000"
+                android:fontFamily="@font/poppins"/>
 
         </LinearLayout>
         </LinearLayout>

@@ -25,8 +25,6 @@ import static com.example.dell.yummy.Constants.SCREEN_LOGIN;
 public class MainActivity extends AppCompatActivity implements IMainViewListener {
     private LoginFragment mLoginFragment;
     private RegistrationFragment mRegistrationFragment;
-    List<StoreDetails> storeDetailsList;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
     private void initFragments() {
         mLoginFragment = new LoginFragment();
         mLoginFragment.addListener(this);
-
         mRegistrationFragment = new RegistrationFragment();
         mRegistrationFragment.addListener(this);
     }
@@ -50,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
             Window window = this.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(this.getResources().getColor(R.color.tab_color));
+            window.setStatusBarColor(this.getResources().getColor(R.color.status_bar_color));
         }
     }
 
@@ -80,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
 
         switch (screen) {
             case Constants.SCREEN_USER_HOME:
-
                 Intent mySuperIntent = new Intent(this,
                         UserHomeActivity.class);
                 startActivity(mySuperIntent);

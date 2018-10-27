@@ -25,6 +25,7 @@
                 android:text="@string/yummy"
                 android:textColor="#fff"
                 android:textSize="20dp"
+                android:fontFamily="@font/poppins"
                 android:drawablePadding="10dp"
                 android:drawableLeft="@drawable/backthree"
                 />
@@ -42,6 +43,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="DISHES"
+                android:fontFamily="@font/poppins"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -62,6 +64,7 @@
                 android:textSize="18sp"
                 android:textColor="#000"
                 android:textStyle="bold"
+                android:fontFamily="@font/poppins"
                 />
 
             <TextView
@@ -73,6 +76,7 @@
                 android:textSize="18sp"
                 android:textColor="#000"
                 android:textStyle="bold"
+                android:fontFamily="@font/poppins"
                 />
 
             <TextView
@@ -83,7 +87,8 @@
                 android:text="Stock"
                 android:textSize="18sp"
                 android:textColor="#000"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins"/>
 
         </LinearLayout>
 

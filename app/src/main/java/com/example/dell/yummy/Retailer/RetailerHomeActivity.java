@@ -32,7 +32,10 @@ import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
 import com.example.dell.yummy.R;
 import com.example.dell.yummy.model.DishesDetails;
+import com.example.dell.yummy.model.Order;
 import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RetailerHomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IRetailerFragmentListener {
@@ -46,6 +49,7 @@ public class RetailerHomeActivity extends AppCompatActivity
     private CoordinatorLayout mCoordinatorLayout;
     private RefundFragment mRefundFragment;
     private SharedPreferences sharedPreferences;
+    private ProfileFragment mProfileFragment;
     DrawerLayout drawer;
 
     @Override
@@ -86,6 +90,8 @@ public class RetailerHomeActivity extends AppCompatActivity
         mretailerWalletFragment.addListener(this);
         mConfirmOrdersFragment = new ConfirmOrdersFragment();
         mConfirmOrdersFragment.addListener(this);
+        mProfileFragment = new ProfileFragment();
+        mProfileFragment.addListener(this);
 
         mRefundFragment = new RefundFragment();
         mRefundFragment.addListener(this);
@@ -107,7 +113,7 @@ public class RetailerHomeActivity extends AppCompatActivity
 
     @Override
     public void onBackPress() {
-     onBackPressed();
+        onBackPressed();
     }
 
     private void loadDetails() {
@@ -176,15 +182,20 @@ public class RetailerHomeActivity extends AppCompatActivity
                         mRefundFragment);
                 fragmentTransaction.commit();
                 break;
+            case Constants.SCREEN_PROFILE_EDIT:
+                fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container,
+                        mProfileFragment);
+                fragmentTransaction.commit();
+                break;
             default:
                 break;
         }
     }
 
     @Override
-    public void loadEachTransactionFragment(int position) {
+    public void loadEachTransactionFragment(Order details) {
         if (meachTransactionFragment != null) {
-            meachTransactionFragment.listPosition(position);
+            meachTransactionFragment.listPosition(details);
             addFragment(Constants.SCREEN_RETAILER_EACH_TRANSACTION_DETAILS);
         }
     }
@@ -227,11 +238,23 @@ public class RetailerHomeActivity extends AppCompatActivity
         View hView = navigationView.getHeaderView(0);
 
         TextView mProfileName = hView.findViewById(R.id.tv_retailer_profilename);
+        CircleImageView circleImageView = hView.findViewById(R.id.profile_image_retailer);
         if (sharedPreferences != null) {
             String name = sharedPreferences.getString(Constants.KEY_RETAIL_NAME, "");
             mProfileName.setText(name);
         }
+        circleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showProfileFragment();
+            }
+        });
+
         navigationView.setItemIconTintList(null);
+    }
+
+    public void showProfileFragment(){
+        addFragment(Constants.SCREEN_PROFILE_EDIT);
     }
 
     @Override
@@ -244,8 +267,18 @@ public class RetailerHomeActivity extends AppCompatActivity
                 || mretailerAddItemFragment.isVisible()
                 || meachTransactionFragment.isVisible()
                 || mConfirmOrdersFragment.isVisible()
-                || mRefundFragment.isVisible()) {
+                || mRefundFragment.isVisible()
+                || mProfileFragment.isVisible()) {
+
+//            RetailerTransactionDetailsFragment fragment = new RetailerTransactionDetailsFragment();
+//            fragment.addListener(this);
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container,
+//                    fragment);
+//            fragmentTransaction.commit();
             addFragment(Constants.SCREEN_RETAILER_TRANSACTION_DETAILS);
+
 
         } else {
             Intent a = new Intent(Intent.ACTION_MAIN);
@@ -303,6 +336,8 @@ public class RetailerHomeActivity extends AppCompatActivity
             addFragment(Constants.SCREEN_CONFIRM_ORDERS);
         } else if (id == R.id.refund_orders) {
             addFragment(Constants.SCREEN_REFUND_FRAGMENT);
+        } else if(id == R.id.retailer_profile){
+            showProfileFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
