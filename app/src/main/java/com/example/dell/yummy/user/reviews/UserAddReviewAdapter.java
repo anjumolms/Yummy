@@ -49,6 +49,7 @@ public class UserAddReviewAdapter
 
             holder.storeName.setText(" "
                     + userReviews.get(position).getRetailName());
+
             holder.itemName.setText(userReviews.get(position).getOrderItem());
         }
 

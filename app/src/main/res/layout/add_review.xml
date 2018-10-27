@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/add_review_store_name"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-        android:textStyle="bold"
+        android:textColor="#000"
         android:fontFamily="@font/poppins"
         android:textSize="20dp"
         android:text="rating star here"

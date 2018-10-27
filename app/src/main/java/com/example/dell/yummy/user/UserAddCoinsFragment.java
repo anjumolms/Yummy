@@ -1,11 +1,13 @@
 package com.example.dell.yummy.user;
 
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -36,6 +38,7 @@ public class UserAddCoinsFragment extends Fragment implements View.OnClickListen
     EditText amount;
     Button proceed;
     int userAmount;
+    ProgressDialog mProgressDialog;
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -43,14 +46,18 @@ public class UserAddCoinsFragment extends Fragment implements View.OnClickListen
                  String action = intent.getAction();
                  switch (action){
                      case Constants.NOTIFY_UPDATE_USER_WALLET:
+                         callWalletapi();
                          break;
 
                      case Constants.NOTIFY_UPDATE_USER_WALLET_ERROR:
+                         dismisProgress();
                          break;
 
                      case Constants.NOTIFY_WALLET_UPDATED:
+                         dismisProgress();
                          break;
                      case Constants.NOTIFY_WALLET_UPDATED_ERROR:
+                         dismisProgress();
                          break;
                  }
              }
@@ -82,6 +89,7 @@ public class UserAddCoinsFragment extends Fragment implements View.OnClickListen
         back = view.findViewById(R.id.add_coins_back);
         proceed = view.findViewById(R.id.payment_proceed);
         amount = view.findViewById(R.id.user_amount);
+        mProgressDialog = new ProgressDialog(getActivity());
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_UPDATE_USER_WALLET);
         intentFilter.addAction(Constants.NOTIFY_UPDATE_USER_WALLET_ERROR);
         intentFilter.addAction(Constants.NOTIFY_WALLET_UPDATED);
@@ -125,7 +133,8 @@ public class UserAddCoinsFragment extends Fragment implements View.OnClickListen
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 userAmount = Integer.parseInt(amount.getText().toString().trim());
-                if(userAmount > 0){
+                int key = Integer.parseInt(edt.getText().toString().trim());
+                if(userAmount > 0 && key == 5533){
                     updateUserWallet(userAmount);
                 }
             }
@@ -144,6 +153,24 @@ public class UserAddCoinsFragment extends Fragment implements View.OnClickListen
                 = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
         if(calls != null){
             calls.updateUserWallet(getActivity(), userAmount);
+            mProgressDialog.setMessage("Loading......");
+            mProgressDialog.show();
+            mProgressDialog.setCancelable(false);
+        }
+    }
+
+    private void dismisProgress() {
+        if(mProgressDialog.isShowing()){
+            mProgressDialog.dismiss();
+        }
+    }
+
+    private void callWalletapi() {
+        RetrofitNetworksCalls calls
+                = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
+        if(calls != null){
+
+            calls.getUserWalletDetails(getActivity());
         }
     }
 }

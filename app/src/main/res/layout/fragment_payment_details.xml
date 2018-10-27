@@ -22,7 +22,6 @@
             android:textSize="20dp"
             android:gravity="center"
             android:fontFamily="@font/poppins"
-            android:drawablePadding="10dp"
             android:drawableLeft="@drawable/backthree"
             />
     </android.support.v7.widget.Toolbar>

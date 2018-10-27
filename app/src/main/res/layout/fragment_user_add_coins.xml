@@ -24,7 +24,6 @@
             android:textSize="20dp"
             android:gravity="center"
             android:drawableLeft="@drawable/backthree"
-            android:drawablePadding="10dp"
             />
     </android.support.v7.widget.Toolbar>
 

@@ -19,11 +19,11 @@
             android:id="@+id/id_back_confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="10dp"
             android:text="@string/yummy"
             android:textColor="#fff"
             android:fontFamily="@font/poppins"
             android:textSize="20dp"
+            android:gravity="center"
             android:drawableLeft="@drawable/backthree"/>
     </android.support.v7.widget.Toolbar>
 

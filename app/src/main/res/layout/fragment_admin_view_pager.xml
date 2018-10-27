@@ -24,7 +24,7 @@
                 android:textSize="20dp"
                 android:textColor="#fff"
                 android:fontFamily="@font/poppins"
-                android:drawablePadding="10dp"
+                android:gravity="center"
                 android:drawableLeft="@drawable/navigation_icon"
 
                 />
