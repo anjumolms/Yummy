@@ -10,23 +10,23 @@
             android:title="Add Item " />
         <item
             android:id="@+id/list_item"
-            android:icon="@drawable/list_item"
+            android:icon="@drawable/editlist"
             android:title="Update Items" />
         <item
             android:id="@+id/wallet"
-            android:icon="@drawable/retailerwallet"
+            android:icon="@drawable/wallet"
             android:title="Wallet" />
         <item
             android:id="@+id/confirm_orders"
-            android:icon="@drawable/cofirmedorders"
+            android:icon="@drawable/purchasehistory"
             android:title="Confirmed Orders" />
         <item
             android:id="@+id/refund_orders"
-            android:icon="@drawable/retailerwallet"
+            android:icon="@drawable/refund"
             android:title="Refund" />
         <item
             android:id="@+id/retailer_profile"
-            android:icon="@drawable/retailerwallet"
+            android:icon="@drawable/profile"
             android:title="Profile" />
 
 

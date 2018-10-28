@@ -31,6 +31,7 @@ import com.example.dell.yummy.model.UserResult;
 import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -156,13 +157,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
             progressDialog.setMessage("Signing Up...");
             progressDialog.show();
+            progressDialog.setCancelable(false);
 
             final UserResult userResult = new UserResult();
             userResult.setLoginUsername(strUserName);
             userResult.setLoginPin(Integer.parseInt(strPassword));
 
-
-            Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+            RetrofitNetworksCalls calls
+                    = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
+            OkHttpClient okHttpClient = calls.createOkHttpClient(getActivity());
+            Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(okHttpClient);
             if (retrofit != null) {
                 IApiInterface service = retrofit.create(IApiInterface.class);
                 Call<UserResult> call = service.userLogin(userResult);

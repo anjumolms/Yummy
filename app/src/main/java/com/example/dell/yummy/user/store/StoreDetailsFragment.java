@@ -27,10 +27,12 @@ import com.example.dell.yummy.user.IUserFragmentListener;
 import com.example.dell.yummy.model.DishesDetails;
 import com.example.dell.yummy.webservice.IApiInterface;
 import com.example.dell.yummy.model.StoreDetails;
+import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -94,6 +96,7 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage("Loading...");
         mProgressDialog.show();
+        mProgressDialog.setCancelable(false);
 
         CollapsingToolbarLayout collapsingToolbarLayout =
                 view.findViewById(R.id.toolbar_layout);
@@ -107,7 +110,10 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
     }
 
     private void getStoreDishes() {
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        RetrofitNetworksCalls calls = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
+        OkHttpClient client = calls.createOkHttpClient(getActivity());
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             if (selectedStore != null) {
@@ -177,9 +183,9 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
                                 break;
                             }
                         }
-                        if (flag == 0) {
+                        if (flag == 0 && selectedStore != null) {
 
-                            miUserFragmentListener.loadConformationFragment(selectedItems);
+                            miUserFragmentListener.loadConformationFragment(selectedItems, selectedStore.getRetailName());
                         }
                     }
                     else {

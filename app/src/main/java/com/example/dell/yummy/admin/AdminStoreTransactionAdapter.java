@@ -36,8 +36,8 @@ public class AdminStoreTransactionAdapter extends
         if (transactionDetailsList != null) {
 
             transactionDetails = transactionDetailsList.get(position);
-            holder.textViewUserId.setText("" + transactionDetails.getUser_id());
-            holder.textViewTransactionId.setText("" + transactionDetails.getOrder_id());
+            holder.textViewUserId.setText("" + transactionDetails.getOrder_id());
+            holder.textViewTransactionId.setText("" + transactionDetails.getWallet_tran_id());
             holder.textViewAmount.setText("" + transactionDetails.getOrder_value());
             holder.textViewTransactionStatus.setText(transactionDetails.getOrder_status());
 

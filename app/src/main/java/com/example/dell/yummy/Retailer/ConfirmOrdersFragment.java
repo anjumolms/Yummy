@@ -84,6 +84,7 @@ public class ConfirmOrdersFragment extends Fragment implements View.OnClickListe
         if (calls != null) {
             mProgressDialog.setMessage("Loading....");
             mProgressDialog.show();
+            mProgressDialog.setCancelable(false);
             SharedPreferences sharedPreferences = getActivity()
                     .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
                             Context.MODE_PRIVATE);

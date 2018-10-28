@@ -19,7 +19,9 @@ import android.widget.Toast;
 
 import com.example.dell.yummy.webservice.IApiInterface;
 import com.example.dell.yummy.model.RegistrationResult;
+import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -153,7 +155,11 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     }
 
     private void registerUser(RegistrationResult registrationResult) {
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        RetrofitNetworksCalls calls = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
+
+        OkHttpClient client = calls.createOkHttpClient(getActivity());
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
             Call<RegistrationResult> call = service.register(registrationResult);
@@ -198,6 +204,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         mProgressDialog = new ProgressDialog(getActivity());
         mProgressDialog.setMessage("Loading...");
         mProgressDialog.show();
+        mProgressDialog.setCancelable(false);
     }
 
     private boolean isNetworkAvailable() {

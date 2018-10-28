@@ -10,8 +10,9 @@
             android:title="Add Coin" />
         <item
             android:id="@+id/nav_wallet"
-            android:icon="@drawable/retailerwallet"
-            android:title="Wallet" />
+            android:icon="@drawable/wallet"
+            android:title="Wallet"
+            />
         <item
             android:id="@+id/nav_places_list"
             android:icon="@drawable/location"

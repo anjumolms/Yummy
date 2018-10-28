@@ -35,7 +35,7 @@
             style="@style/Base.TextAppearance.AppCompat.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="Purchase order"
             android:textSize="20dp"
@@ -63,7 +63,6 @@
                 android:layout_height="wrap_content"
                 android:text="UserId"
                 android:layout_weight="1"
-                android:textSize="20sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="#000"
                 android:fontFamily="@font/poppins"
@@ -74,6 +73,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textColor="#000"
                 android:fontFamily="@font/poppins"/>
         </LinearLayout>
@@ -90,7 +91,6 @@
                 android:layout_height="wrap_content"
                 android:text="Order Status"
                 android:layout_weight="1"
-                android:textSize="20sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="#000"
                 android:fontFamily="@font/poppins"
@@ -100,6 +100,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:gravity="center"
                 android:textColor="#000"
                 android:fontFamily="@font/poppins"/>
@@ -117,9 +119,9 @@
                 android:layout_height="wrap_content"
                 android:text="Date "
                 android:layout_weight="1"
-                android:textSize="20sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="#000"
+
                 android:fontFamily="@font/poppins"
                 />
             <TextView
@@ -128,6 +130,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textColor="#000"
                 android:fontFamily="@font/poppins"/>
         </LinearLayout>
@@ -145,7 +149,6 @@
                 android:layout_height="wrap_content"
                 android:text="Order Id"
                 android:layout_weight="1"
-                android:textSize="20sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="#000"
                 android:fontFamily="@font/poppins"
@@ -155,6 +158,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:gravity="center"
                 android:textColor="#000"
                 android:fontFamily="@font/poppins"/>
@@ -172,7 +177,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="50dp">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -200,7 +206,8 @@
                 android:layout_height="wrap_content"
                 android:text="TOTAL"
                 android:layout_weight="1"
-                android:textSize="20sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:layout_marginLeft="5dp"
                 android:textColor="#000"
                 android:fontFamily="@font/poppins"

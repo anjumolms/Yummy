@@ -57,10 +57,14 @@ public class EachTransactionFragment extends Fragment implements View.OnClickLis
             }
             if (intent != null
                     && intent.getAction().equals(Constants.NOTIFY_UPDATE_DELIVERY_ERROR)) {
+                dismissProgress();
             }
             if (intent != null
                     && intent.getAction().equals(Constants.NOTIFY_UPDATE_DELIVERY)) {
                 setVisibilityOfConfirmButton();
+            }if (intent != null
+                    && intent.getAction().equals(Constants.NOTIFY_TRANSACTION_ORDER_ERROR)) {
+                dismissProgress();
             }
 
         }
@@ -120,6 +124,7 @@ public class EachTransactionFragment extends Fragment implements View.OnClickLis
                 calls.getTransactionOrders(getActivity(), orderId);
                 mProgressDialog.setMessage("Loading....");
                 mProgressDialog.show();
+                mProgressDialog.setCancelable(false);
             }
         }
     }
@@ -156,6 +161,10 @@ public class EachTransactionFragment extends Fragment implements View.OnClickLis
                     networksCalls.addOrderConfirmedTransaction(mTransactionDetails);
                     networksCalls.updateDelivery(mTransactionDetails.getOrder_id(),
                             getActivity());
+                    mProgressDialog.setMessage("Loading......");
+                    mProgressDialog.show();
+                    mProgressDialog.setCancelable(false);
+
                 }
 
                 break;
@@ -181,6 +190,13 @@ public class EachTransactionFragment extends Fragment implements View.OnClickLis
     }
 
     private void setVisibilityOfConfirmButton() {
+        dismissProgress();
         mConfirmOrder.setVisibility(View.GONE);
+    }
+
+    private void dismissProgress() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 }

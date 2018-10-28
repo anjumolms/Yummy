@@ -97,6 +97,7 @@ public class AdminStoreTransactionsFragment extends
         if (calls != null && storeDetails != null) {
             mProgressDialog.setMessage("Loading....");
             mProgressDialog.show();
+            mProgressDialog.setCancelable(false);
             calls.getAllTransactionDetails(getActivity(),
                     storeDetails.getRetailId());
         }

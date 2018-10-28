@@ -76,6 +76,7 @@ public class AdminListStoreFragment extends Fragment implements View.OnClickList
         if (calls != null) {
             progressDialog.setMessage("Loading........");
             progressDialog.show();
+            progressDialog.setCancelable(false);
             calls.getAllStoreDetails(getActivity());
         }
         back.setOnClickListener(this);

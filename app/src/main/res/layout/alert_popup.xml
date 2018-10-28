@@ -22,6 +22,8 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                         android:textSize="18dp"
+
+                        android:fontFamily="@font/poppins"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textColor="#000000"
                     android:textStyle="bold" />
@@ -37,6 +39,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
                         android:textSize="18sp"
+                        android:fontFamily="@font/poppins"
                         android:gravity="center_vertical"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="#000000" />
@@ -45,6 +48,7 @@
                         android:id="@+id/popup_dish_item_count"
                         android:layout_width="0dp"
                         android:textSize="18sp"
+                        android:fontFamily="@font/poppins"
                         android:layout_height="wrap_content"
                         android:layout_weight=".3" />
 
@@ -52,8 +56,9 @@
                         android:id="@+id/popup_im_add"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/additem" />
+                        android:src="@drawable/additemtolist" />
 
                     <android.support.v7.widget.AppCompatImageButton
                         android:id="@+id/popup_im_rem"
@@ -61,6 +66,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
+                        android:fontFamily="@font/poppins"
                         android:background="@android:color/transparent"
                         android:src="@drawable/removeitem" />
 
@@ -74,6 +80,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:textSize="18sp"
+                        android:fontFamily="@font/poppins"
                         android:gravity="center_vertical"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
@@ -88,12 +95,14 @@
                     <TextView
                         android:id="@+id/popup_buy"
                         android:text="Buy"
+                        android:fontFamily="@font/poppins"
                         android:textColor="@color/tab_color"
                         android:layout_marginRight="10dp"/>
 
                     <TextView
                         android:id="@+id/popup_cancel"
                         android:text="Cancel"
+                        android:fontFamily="@font/poppins"
                         android:textColor="@color/tab_color"
                         android:layout_marginRight="10dp"/>
                 </TableRow>

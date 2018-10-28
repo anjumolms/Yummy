@@ -133,9 +133,12 @@ public class UserAddCoinsFragment extends Fragment implements View.OnClickListen
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 userAmount = Integer.parseInt(amount.getText().toString().trim());
-                int key = Integer.parseInt(edt.getText().toString().trim());
-                if(userAmount > 0 && key == 5533){
-                    updateUserWallet(userAmount);
+
+                if(!edt.getText().toString().isEmpty()){
+                    int key = Integer.parseInt(edt.getText().toString().trim());
+                    if(userAmount > 0 && key == 5533){
+                        updateUserWallet(userAmount);
+                    }
                 }
             }
         });

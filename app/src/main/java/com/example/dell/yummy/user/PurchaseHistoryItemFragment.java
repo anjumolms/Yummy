@@ -101,6 +101,7 @@ public class PurchaseHistoryItemFragment extends Fragment implements View.OnClic
                 calls.getTransactionOrders(getActivity(), orders.getOrder_id());
                 mProgressDialog.setMessage("Loading..........");
                 mProgressDialog.show();
+                mProgressDialog.setCancelable(false);
             }
         }
     }

@@ -357,14 +357,14 @@ public class AdminHomeActivity extends AppCompatActivity
             //showAddPlacesPopup();
             RetrofitNetworksCalls calls = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
             if (calls != null) {
-                List<LocationDetails> locationDetails = calls.getmGetAllLocationDetails();
-                if (locationDetails != null) {
-                    showAddPlacesPopup(locationDetails);
-                } else {
+//                List<LocationDetails> locationDetails = calls.getmGetAllLocationDetails();
+//                if (locationDetails != null) {
+//                    showAddPlacesPopup(locationDetails);
+//                } else {
                     //mProgressDialog.setMessage("Loading........");
                     // mProgressDialog.show();
                     calls.getAllLocations(getApplicationContext());
-                }
+               // }
             }
         } else if (id == R.id.admin_nav_logout) {
             finishAffinity();
@@ -382,6 +382,7 @@ public class AdminHomeActivity extends AppCompatActivity
     }
 
     private void showAddPlacesPopup() {
+        if(mProgressDialog != null && mProgressDialog.isShowing())
         mProgressDialog.dismiss();
         RetrofitNetworksCalls calls = DataSingleton.getInstance().getRetrofitNetworksCallsObject();
         if (calls != null) {

@@ -116,6 +116,7 @@ public class RefundFragment extends Fragment implements View.OnClickListener {
                         if (calls != null && number != null && !number.isEmpty()) {
                             mProgressDialog.setMessage("Loading.......");
                             mProgressDialog.show();
+                            mProgressDialog.setCancelable(false);
                             calls.getUsersByNumber(getActivity(), number);
                         }
                         return true;
@@ -196,6 +197,7 @@ public class RefundFragment extends Fragment implements View.OnClickListener {
             }
             mProgressDialog.setMessage("Loading.......");
             mProgressDialog.show();
+            mProgressDialog.setCancelable(false);
             calls.callRefundApi(getActivity(), Integer.parseInt(number),userId,retail);
         }
     }

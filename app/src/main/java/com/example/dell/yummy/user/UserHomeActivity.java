@@ -99,6 +99,12 @@ public class UserHomeActivity extends AppCompatActivity
                     case Constants.NOTIFY_REVIEW_UPDATED:
                         removeItemsFromReviewList();
                         break;
+                    case Constants.NOTIFY_USER_CONFIRM_ORDER_ERROR:
+                        dismissProgress();
+                        break;
+                    case Constants.NOTIFY_REVIEW_UPDATED_ERROR:
+                        dismissProgress();
+                        break;
                     case Constants.NOTIFY_GET_LOCATION:
                         int flag = intent.getIntExtra("Flag", 0);
                         if (flag == 1 && !isFinishing()) {
@@ -186,7 +192,9 @@ public class UserHomeActivity extends AppCompatActivity
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_USER_CONFIRM_ORDER);
         intentFilter.addAction(Constants.NOTIFY_WALLET_UPDATED);
         intentFilter.addAction(Constants.NOTIFY_REVIEW_UPDATED);
+        intentFilter.addAction(Constants.NOTIFY_REVIEW_UPDATED_ERROR);
         intentFilter.addAction(Constants.NOTIFY_GET_LOCATION);
+        intentFilter.addAction(Constants.NOTIFY_USER_CONFIRM_ORDER_ERROR);
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(broadcastReceiver, intentFilter);
 
@@ -319,8 +327,8 @@ public class UserHomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void loadConformationFragment(List<DishesDetails> dishesDetails) {
-        mConfirmationFragment.setConfirmationDetails(dishesDetails);
+    public void loadConformationFragment(List<DishesDetails> dishesDetails, String name) {
+        mConfirmationFragment.setConfirmationDetails(dishesDetails,name);
         addFragment(Constants.SCREEN_CONFIRMATION);
     }
 
@@ -425,6 +433,7 @@ public class UserHomeActivity extends AppCompatActivity
                 if (calls != null) {
                     calls.getLocation(getApplicationContext(), 1);
                     mProgressDialog.show();
+                    mProgressDialog.setCancelable(false);
                 }
             } else {
                 LoadDetails();
@@ -507,7 +516,19 @@ public class UserHomeActivity extends AppCompatActivity
                                     orderDetails.setRetail_id(dishFromApi.getRetailId());
                                     orderDetails.setOrder_item_count(numberOfItems);
                                     orderDetails.setOrder_value(total);
-                                    orderDetails.setOrder_items_string("" + dishFromApi.getMenuId());
+                                    String mMenuitem = "";
+                                    for (int i = 0; i < numberOfItems; i++) {
+
+                                        if (mMenuitem.equalsIgnoreCase("")) {
+                                            mMenuitem = ""+dishFromApi.getMenuId();
+                                        } else {
+                                            mMenuitem = mMenuitem + "," + dishFromApi.getMenuId();
+                                        }
+                                    }
+                                    if(!mMenuitem.equalsIgnoreCase("")){
+
+                                        orderDetails.setOrder_items_string(mMenuitem);
+                                    }
                                     if (isNetworkAvailable()) {
                                         RetrofitNetworksCalls calls = DataSingleton
                                                 .getInstance().getRetrofitNetworksCallsObject();
@@ -577,6 +598,7 @@ public class UserHomeActivity extends AppCompatActivity
 
             mProgressDialog.setMessage("Loading...");
             mProgressDialog.show();
+            mProgressDialog.setCancelable(false);
         }
     }
 
@@ -627,7 +649,6 @@ public class UserHomeActivity extends AppCompatActivity
                 || mUserWalletFragment.isVisible()
                 || mConfirmationFragment.isVisible()
                 || mStoreDetailsFragment.isVisible()
-                || mPurchaseHistoryItemFragment.isVisible()
                 || mPurchaseHistoryFragment.isVisible()) {
 
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -638,7 +659,9 @@ public class UserHomeActivity extends AppCompatActivity
                     userViewPagerFragment);
             fragmentTransaction.commit();
 
-        } else {
+        } else if(mPurchaseHistoryItemFragment.isVisible()){
+            addFragment(Constants.SCREEN_PURCHASE_DETAILS);
+        }else {
             Intent a = new Intent(Intent.ACTION_MAIN);
             a.addCategory(Intent.CATEGORY_HOME);
             a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -748,6 +771,7 @@ public class UserHomeActivity extends AppCompatActivity
         if (mProgressDialog != null) {
             mProgressDialog.setMessage("Please wait.....");
             mProgressDialog.show();
+            mProgressDialog.setCancelable(false);
             RetrofitNetworksCalls calls = DataSingleton
                     .getInstance().getRetrofitNetworksCallsObject();
             if (calls != null) {

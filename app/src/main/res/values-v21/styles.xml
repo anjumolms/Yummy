@@ -8,8 +8,8 @@
 
     <style name="MyCheckbox" parent="@style/Widget.AppCompat.CompoundButton.CheckBox">
         <item name="android:colorControlNormal">@color/tab_color</item>
-        <item name="android:colorControlActivated">@color/light_tab</item>
-        <item name="android:colorControlHighlight">@color/light_tab</item>
+        <item name="android:colorControlActivated">@color/tab_color_light</item>
+        <item name="android:colorControlHighlight">@color/tab_color_light</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
     </style>
 </resources>

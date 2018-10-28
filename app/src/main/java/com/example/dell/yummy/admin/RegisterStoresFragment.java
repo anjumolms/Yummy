@@ -231,6 +231,7 @@ public class RegisterStoresFragment extends Fragment implements View.OnClickList
         if (mProgressDialog != null) {
             mProgressDialog.setMessage("Loading.....");
             mProgressDialog.show();
+            mProgressDialog.setCancelable(false);
 
         }
 

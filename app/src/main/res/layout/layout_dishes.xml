@@ -19,7 +19,8 @@
                 android:id="@+id/iv_dish"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/food"/>
+                android:src="@drawable/food"
+                android:layout_gravity="center"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,6 +37,7 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                 android:textColor="#000000"
                 android:textStyle="bold"
+                android:textSize="18sp"
                 android:fontFamily="@font/poppins"
                 android:drawableRight="@drawable/veg"/>
             <TextView

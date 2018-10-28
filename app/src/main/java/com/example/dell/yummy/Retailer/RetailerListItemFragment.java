@@ -129,6 +129,9 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
                 adapter = new RetailerListItemAdapter(getActivity(),
                         dishesDetails, mFragmentListener);
                 mRecyclerView.setAdapter(adapter);
+                if(dishesDetails != null && dishesDetails.isEmpty()){
+                    calls.getRetailerMenuList(getActivity(),0);
+                }
             }
 
         }
@@ -226,6 +229,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
                                 calls.updateRetailerMenuItem(getActivity(), dishesDetails);
                                 progressDialog.setMessage("Please wait..");
                                 progressDialog.show();
+                                progressDialog.setCancelable(false);
                             }
                             dialog.dismiss();
                         } else {
@@ -284,6 +288,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
                     if (calls != null) {
                         progressDialog.setMessage("Please wait..");
                         progressDialog.show();
+                        progressDialog.setCancelable(false);
                         calls.deleteItemFromList(getActivity(), list);
                     }
                 }

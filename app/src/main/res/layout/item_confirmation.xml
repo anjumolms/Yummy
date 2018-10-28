@@ -4,37 +4,40 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="3"
+    android:layout_marginLeft="3dp">
 
-        <TextView
-            android:id="@+id/conf_order_item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_weight="1"
-            android:text="TextView"
-            android:textColor="#000" />
+    <TextView
+        android:id="@+id/conf_order_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_weight="1.5"
+        android:text="TextView"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="#000" />
 
-        <TextView
-            android:id="@+id/conf_order_cost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_weight="1"
-            android:text="TextView"
-            android:textColor="#000" />
+    <TextView
+        android:id="@+id/conf_order_cost"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TextView"
+        android:textColor="#000" />
 
-        <TextView
-            android:id="@+id/conf_order_qty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_weight="1"
-            android:text="TextView"
-            android:textColor="#000" />
-    </TableRow>
+    <TextView
+        android:id="@+id/conf_order_qty"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TextView"
+        android:textColor="#000" />
+</LinearLayout>
+
 
 </LinearLayout>

@@ -11,6 +11,8 @@
        android:layout_height="wrap_content"
        android:layout_weight=".5"
        android:textColor="#000"
+       android:maxLines="1"
+       android:ellipsize="end"
        android:fontFamily="@font/poppins"/>
 
     <TextView
@@ -19,6 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_weight=".5"
         android:textColor="#000"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:fontFamily="@font/poppins"
         />
 

@@ -11,7 +11,7 @@ public interface IUserFragmentListener {
     void addFragment(int screenId);
     void passStoreDetails(int screenId, StoreDetails storeDetails);
     void addPopup(DishesDetails dishesDetails);
-    void loadConformationFragment(List<DishesDetails> dishesDetails);
+    void loadConformationFragment(List<DishesDetails> dishesDetails, String name);
     void showDialog(UserReview userReview);
     void showSnackBar();
     void showNavigationDrawer();

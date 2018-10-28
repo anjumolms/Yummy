@@ -20,11 +20,11 @@
             android:text="@string/yummy"
             android:textColor="#fff"
             android:textSize="20dp"
-            android:gravity="center"
             android:fontFamily="@font/poppins"
             android:drawableLeft="@drawable/backthree"
             />
     </android.support.v7.widget.Toolbar>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_purchase_history"
         android:layout_width="match_parent"

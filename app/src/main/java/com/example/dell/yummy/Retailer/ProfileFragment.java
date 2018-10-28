@@ -145,7 +145,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 selectImage();
                 break;
             case R.id.submit_profile_details:
-                submitProfileDetails();
+                Toast.makeText(getActivity(),"Sorry This feature is currently unavailable",
+                        Toast.LENGTH_SHORT).show();
+                //submitProfileDetails();
                 break;
             case R.id.profile_back:
                 if (listener != null) {
@@ -210,6 +212,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             calls.updateProfileDetails(getActivity(),mRetailerDetails);
             mProgressDialog.setMessage("Please wait.....");
             mProgressDialog.show();
+            mProgressDialog.setCancelable(false);
         }
 
     }

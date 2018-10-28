@@ -71,7 +71,7 @@
                     android:id="@+id/register_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
+                    android:inputType="numberPassword"
                     android:hint="Password"
                     android:theme="@style/AppTheme"/>
             </android.support.design.widget.TextInputLayout>
@@ -88,7 +88,7 @@
                     android:id="@+id/confirm_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPassword"
+                    android:inputType="numberPassword"
                     android:hint="Confirm Password"
                     android:theme="@style/AppTheme"/>
             </android.support.design.widget.TextInputLayout>

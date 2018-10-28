@@ -49,6 +49,7 @@ public class AdminStoresAdapter extends
         //getting the product of the specified position
         if (storeList != null) {
             StoreDetails storeDetails = storeList.get(position);
+            holder.wallet.setVisibility(View.VISIBLE);
             //binding the data with the viewholder views
             holder.textViewStoreName.setText(storeDetails.getRetailName());
             holder.textViewStoreId.setText("Store ID  " + storeDetails.getRetailNumber());

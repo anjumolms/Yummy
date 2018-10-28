@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
+import com.example.dell.yummy.R;
 import com.example.dell.yummy.model.DishesDetails;
 import com.example.dell.yummy.model.LocationDetails;
 import com.example.dell.yummy.model.Order;
@@ -23,11 +24,27 @@ import com.example.dell.yummy.model.UserDetails;
 import com.example.dell.yummy.model.UserResult;
 import com.example.dell.yummy.model.UserReview;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +58,7 @@ public class RetrofitNetworksCalls {
     private List<UserReview> mUserReviewList;
     private List<Order> mTransactionDetails;
     private List<Order> mConfirmOrderList = new ArrayList<>();
-    private List<DishesDetails> mRetailordishesList;
+    private List<DishesDetails> mRetailordishesList = new ArrayList<>();
     private UserDetails mUserDetails;
     private RetailerDetails mRetailerDetails;
     private Order mOrders;
@@ -57,7 +74,7 @@ public class RetrofitNetworksCalls {
     public static String getAuthToken() {
         byte[] data = new byte[0];
         try {
-            data = (Constants.AUTHUSERNAME+":"+Constants.AUTHPASS).getBytes("UTF-8");
+            data = (Constants.AUTHUSERNAME + ":" + Constants.AUTHPASS).getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -65,8 +82,9 @@ public class RetrofitNetworksCalls {
     }
 
     public void getStoreDetails(final Context context, int locationId) {
+        OkHttpClient client = createOkHttpClient(context);
 
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             Call<List<StoreDetails>> call = iApiInterface.getStores(locationId);
@@ -110,7 +128,9 @@ public class RetrofitNetworksCalls {
     }
 
     public void getDishDetails(final Context context, int location_id) {
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             Call<List<DishesDetails>> call = iApiInterface.getallMenu(location_id);
@@ -163,7 +183,9 @@ public class RetrofitNetworksCalls {
     }
 
     public void getReviewDetails(final Context context) {
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
 
@@ -216,7 +238,9 @@ public class RetrofitNetworksCalls {
 
     public void getTransactionPendingOrders(final Context context, int id) {
 
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             Call<List<Order>> call = iApiInterface
@@ -254,8 +278,9 @@ public class RetrofitNetworksCalls {
 
     public void getConfirmedOrders(final Context context, int id) {
 
-        Retrofit retrofit = DataSingleton
-                .getInstance().getRetrofitInstance();
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             Call<List<Order>> call = iApiInterface
@@ -303,8 +328,9 @@ public class RetrofitNetworksCalls {
 
     public void getAllTransactionDetails(final Context context, int id) {
 
-        Retrofit retrofit = DataSingleton
-                .getInstance().getRetrofitInstance();
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             Call<List<Order>> call = iApiInterface
@@ -376,7 +402,9 @@ public class RetrofitNetworksCalls {
         if (sharedPreferences != null) {
             id = sharedPreferences.getInt(Constants.KEY_ID, 0);
         }
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             Call<List<DishesDetails>> call = iApiInterface
@@ -395,6 +423,9 @@ public class RetrofitNetworksCalls {
                     } else {
                         Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
                         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+//                        if (isFromListUpdate == 1 && mRetailordishesList != null) {
+//                            mRetailordishesList.clear();
+//                        }
                         Toast.makeText(context, response.code()
                                 + response.message(), Toast.LENGTH_SHORT).show();
                     }
@@ -413,9 +444,11 @@ public class RetrofitNetworksCalls {
     }
 
     public void updateReview(int rating, final Context context, int reviewId) {
+        OkHttpClient client = createOkHttpClient(context);
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .baseUrl(IApiInterface.BASE_URL).build();
 
         IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
@@ -433,13 +466,18 @@ public class RetrofitNetworksCalls {
                         if (response.body()
                                 .equalsIgnoreCase("Review Updated")) {
 
-                            Toast.makeText(context, response.code()
-                                    + response.toString(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Review Updated", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(Constants.NOTIFY_REVIEW_UPDATED);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        } else{
+                            Toast.makeText(context, "Response failed", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Constants.NOTIFY_REVIEW_UPDATED_ERROR);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                         }
 
                     } else {
+                        Intent intent = new Intent(Constants.NOTIFY_REVIEW_UPDATED_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                         Toast.makeText(context, response.code()
                                 + response.message(), Toast.LENGTH_SHORT).show();
                     }
@@ -448,7 +486,8 @@ public class RetrofitNetworksCalls {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-
+                Intent intent = new Intent(Constants.NOTIFY_REVIEW_UPDATED_ERROR);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
             }
 
@@ -496,11 +535,12 @@ public class RetrofitNetworksCalls {
 
     public void addItemsToList(RetailerMenu retailerMenu, final Context context) {
 
+        OkHttpClient client = createOkHttpClient(context);
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .baseUrl(IApiInterface.BASE_URL).build();
-
         IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
 
         Call<String> call = iApiInterface.addItem(retailerMenu);
@@ -547,7 +587,11 @@ public class RetrofitNetworksCalls {
     }
 
     public void getUserDetails(final Context context, int loginId) {
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+
+
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             Call<UserDetails> call = iApiInterface.getUserDetails(loginId);
@@ -582,7 +626,10 @@ public class RetrofitNetworksCalls {
     }
 
     public void getRetailerDetails(final Context context, int loginId) {
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             Call<RetailerDetails> call = iApiInterface.getRetailerDetails(loginId);
@@ -628,9 +675,11 @@ public class RetrofitNetworksCalls {
                                        DishesDetails dishesDetails) {
 
         if (dishesDetails != null) {
+            OkHttpClient client = createOkHttpClient(context);
             Retrofit retrofit = new Retrofit.Builder()
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
                     .baseUrl(IApiInterface.BASE_URL).build();
             if (retrofit != null) {
                 IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
@@ -677,9 +726,11 @@ public class RetrofitNetworksCalls {
     public void deleteItemFromList(final Context context, ArrayList<Integer> list) {
 
         if (list != null) {
+            OkHttpClient client = createOkHttpClient(context);
             Retrofit retrofit = new Retrofit.Builder()
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
                     .baseUrl(IApiInterface.BASE_URL).build();
             if (retrofit != null) {
                 IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
@@ -725,7 +776,10 @@ public class RetrofitNetworksCalls {
 
     public void confirmOrder(final Context context, Order orderDetails) {
 
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
 
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
@@ -747,7 +801,13 @@ public class RetrofitNetworksCalls {
                             Intent intent = new Intent(Constants.NOTIFY_USER_CONFIRM_ORDER);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
+                        } else {
+                            Intent intent = new Intent(Constants.NOTIFY_USER_CONFIRM_ORDER_ERROR);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            Toast.makeText(context,
+                                    "Order Failed", Toast.LENGTH_SHORT).show();
                         }
+
                     } else {
                         Intent intent = new Intent(Constants.NOTIFY_USER_CONFIRM_ORDER_ERROR);
                         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
@@ -768,7 +828,10 @@ public class RetrofitNetworksCalls {
     }
 
     public void getLocation(final Context context, final int firstCalling) {
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
             Call<List<LocationDetails>> call = service.getLocations(getAuthToken());
@@ -816,7 +879,10 @@ public class RetrofitNetworksCalls {
         int id = sharedpreferences.getInt(Constants.KEY_ID, 0);
         int role = sharedpreferences.getInt(Constants.KEY_ROLE, 0);
 
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             Call<String> call = null;
             IApiInterface service = retrofit.create(IApiInterface.class);
@@ -882,9 +948,11 @@ public class RetrofitNetworksCalls {
 
     public void addStoreDetails(final Context context, final RegisterStore registerStore) {
 
+        OkHttpClient client = createOkHttpClient(context);
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .baseUrl(IApiInterface.BASE_URL).build();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
@@ -930,9 +998,11 @@ public class RetrofitNetworksCalls {
     }
 
     public void updateToken(final Context context, UserResult userResult) {
+        OkHttpClient client = createOkHttpClient(context);
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .baseUrl(IApiInterface.BASE_URL).build();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
@@ -968,9 +1038,11 @@ public class RetrofitNetworksCalls {
     }
 
     public void addPlaces(LocationDetails locationDetails, final Context context) {
+        OkHttpClient client = createOkHttpClient(context);
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .baseUrl(IApiInterface.BASE_URL).build();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
@@ -1006,7 +1078,10 @@ public class RetrofitNetworksCalls {
 
 
     public void getAllLocations(final Context context) {
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
             Call<List<LocationDetails>> call = service.getAllLocations();
@@ -1053,9 +1128,11 @@ public class RetrofitNetworksCalls {
     }
 
     public void updateDelivery(int orderId, final Context context) {
+        OkHttpClient client = createOkHttpClient(context);
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .baseUrl(IApiInterface.BASE_URL).build();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
@@ -1095,7 +1172,10 @@ public class RetrofitNetworksCalls {
 
     public void getTransactionOrders(final Context context, int orderId) {
 
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
 
@@ -1149,7 +1229,10 @@ public class RetrofitNetworksCalls {
 
 
     public void getPurchaseHistory(final Context context) {
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
             SharedPreferences sharedPreferences = context
@@ -1206,7 +1289,10 @@ public class RetrofitNetworksCalls {
 
     public void getAllStoreDetails(final Context context) {
 
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             Call<List<RetailerDetails>> call = iApiInterface.getAllStores();
@@ -1255,9 +1341,11 @@ public class RetrofitNetworksCalls {
 
     public void addAdmin(final Context context, String strUserName, String strPassword) {
 
+        OkHttpClient client = createOkHttpClient(context);
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .baseUrl(IApiInterface.BASE_URL).build();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
@@ -1301,14 +1389,16 @@ public class RetrofitNetworksCalls {
 
     public void callRefundApi(final Context context, int amount,
                               int userId, int retailId) {
+        OkHttpClient client = createOkHttpClient(context);
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .baseUrl(IApiInterface.BASE_URL).build();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
 
-            Call<String> call = service.callRefundApi(userId,retailId,amount);
+            Call<String> call = service.callRefundApi(userId, retailId, amount);
 
             call.enqueue(new Callback<String>() {
                 @Override
@@ -1348,7 +1438,10 @@ public class RetrofitNetworksCalls {
     }
 
     public void getUsersByNumber(final Context context, String number) {
-        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstance();
+
+        OkHttpClient client = createOkHttpClient(context);
+
+        Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
 
@@ -1396,9 +1489,11 @@ public class RetrofitNetworksCalls {
 
     public void updateProfileDetails(final Context context,
                                      RetailerDetails mRetailerDetails) {
+        OkHttpClient client = createOkHttpClient(context);
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .baseUrl(IApiInterface.BASE_URL).build();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
@@ -1444,9 +1539,11 @@ public class RetrofitNetworksCalls {
     }
 
     public void updateUserWallet(final Context context, int userAmount) {
+        OkHttpClient client = createOkHttpClient(context);
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .baseUrl(IApiInterface.BASE_URL).build();
         SharedPreferences sharedPreferences = context
                 .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
@@ -1459,7 +1556,7 @@ public class RetrofitNetworksCalls {
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
 
-            Call<String> call = service.updateUserWallet(id,userAmount);
+            Call<String> call = service.updateUserWallet(id, userAmount);
 
             call.enqueue(new Callback<String>() {
                 @Override
@@ -1496,5 +1593,91 @@ public class RetrofitNetworksCalls {
             });
 
         }
+    }
+
+    public OkHttpClient createOkHttpClient(Context context) {
+        // loading CAs from an InputStream
+        CertificateFactory certificateFactory = null;
+        try {
+            certificateFactory = CertificateFactory.getInstance("X.509");
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        }
+
+        InputStream inputStream = context.getResources().openRawResource(R.raw.certnew); //(.crt)
+        Certificate certificate = null;
+        try {
+            certificate = certificateFactory.generateCertificate(inputStream);
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        }
+        try {
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Create a KeyStore containing our trusted CAs
+        String keyStoreType = KeyStore.getDefaultType();
+        KeyStore keyStore = null;
+        try {
+            keyStore = KeyStore.getInstance(keyStoreType);
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+        try {
+            keyStore.load(null, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        }
+        try {
+            keyStore.setCertificateEntry("ca", certificate);
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+
+        // Create a TrustManager that trusts the CAs in our KeyStore.
+        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+        TrustManagerFactory trustManagerFactory = null;
+        try {
+            trustManagerFactory = TrustManagerFactory.getInstance(tmfAlgorithm);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        try {
+            trustManagerFactory.init(keyStore);
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+
+        TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+        X509TrustManager x509TrustManager = (X509TrustManager) trustManagers[0];
+
+
+        // Create an SSLSocketFactory that uses our TrustManager
+        SSLContext sslContext = null;
+        try {
+            sslContext = SSLContext.getInstance("SSL");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        try {
+            sslContext.init(null, new TrustManager[]{x509TrustManager}, null);
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+        SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+        //create Okhttp client
+        OkHttpClient client = new OkHttpClient.Builder()
+                .sslSocketFactory(sslSocketFactory, x509TrustManager)
+                .build();
+
+        return client;
+
     }
 }

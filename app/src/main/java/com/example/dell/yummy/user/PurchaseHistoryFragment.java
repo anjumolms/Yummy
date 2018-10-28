@@ -80,6 +80,7 @@ public class PurchaseHistoryFragment extends Fragment implements View.OnClickLis
         if (calls != null) {
             mProgressDialog.setMessage("Loading....");
             mProgressDialog.show();
+            mProgressDialog.setCancelable(false);
             calls.getPurchaseHistory(getContext());
         }
         backBt.setOnClickListener(this);

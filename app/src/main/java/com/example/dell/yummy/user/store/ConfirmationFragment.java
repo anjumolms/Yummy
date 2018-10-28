@@ -59,6 +59,7 @@ public class ConfirmationFragment extends
     private ProgressDialog mProgressDialog;
     private TextView back;
     private TextView storeName;
+    private String name = "";
 
     public ConfirmationFragment() {
         // Required empty public constructor
@@ -99,10 +100,11 @@ public class ConfirmationFragment extends
     }
 
     private void showDishDetails() {
-        if (dishesDetails != null) {
+        if (dishesDetails != null && !dishesDetails.isEmpty()) {
             mConfirmationAdapter = new ConfirmationAdapter(getActivity(), dishesDetails);
             //setting adapter to recyclerview
             mRecyclerView.setAdapter(mConfirmationAdapter);
+            storeName.setText(name);
             setTotalPrice();
         }
     }
@@ -162,8 +164,9 @@ public class ConfirmationFragment extends
         this.mFragmentListener = iUserFragmentListener;
     }
 
-    public void setConfirmationDetails(List<DishesDetails> dishesDetails) {
+    public void setConfirmationDetails(List<DishesDetails> dishesDetails, String name) {
         this.dishesDetails = dishesDetails;
+        this.name = name;
     }
 
     @Override
@@ -204,6 +207,9 @@ public class ConfirmationFragment extends
                         .getInstance().getRetrofitNetworksCallsObject();
                 if (calls != null) {
                     calls.confirmOrder(getActivity(), orderDetails);
+                    mProgressDialog.setMessage("Loading......");
+                    mProgressDialog.show();
+                    mProgressDialog.setCancelable(false);
                 }
             } else {
                 if (mFragmentListener != null) {
@@ -231,11 +237,13 @@ public class ConfirmationFragment extends
         if (mProgressDialog != null) {
             mProgressDialog.setMessage("Loading...");
             mProgressDialog.show();
+            mProgressDialog.setCancelable(false);
         }
 
     }
 
     private void showWalletUpdation() {
+        stopProgress();
         SharedPreferences sharedpreferences
                 = getActivity().getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
                 Context.MODE_PRIVATE);

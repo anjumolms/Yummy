@@ -10,7 +10,7 @@
             android:title="Add Coin" />
         <item
             android:id="@+id/nav_admin_wallet"
-            android:icon="@drawable/retailerwallet"
+            android:icon="@drawable/wallet"
             android:title="Wallet" />
         <item
             android:id="@+id/nav_admin_add_retailer"
@@ -23,16 +23,16 @@
 
         <item
             android:id="@+id/nav_admin_view_all_stores"
-            android:icon="@drawable/locationtwo"
+            android:icon="@drawable/contact"
             android:title="Contact Stores" />
 
         <item
             android:id="@+id/nav_admin_location"
-            android:icon="@drawable/locationtwo"
+            android:icon="@drawable/location"
             android:title="Location" />
         <item
             android:id="@+id/new_admin"
-            android:icon="@drawable/retailerwallet"
+            android:icon="@drawable/addadmin"
             android:title="Add Admin" />
 
     </group>

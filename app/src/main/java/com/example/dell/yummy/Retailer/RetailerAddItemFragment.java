@@ -165,6 +165,7 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
             calls.addItemsToList(retailerMenu, getActivity());
             progressDialog.setMessage("Please wait..");
             progressDialog.show();
+            progressDialog.setCancelable(false);
 
         }
 

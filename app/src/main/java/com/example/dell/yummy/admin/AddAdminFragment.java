@@ -113,6 +113,7 @@ public class AddAdminFragment extends Fragment implements View.OnClickListener {
         }
         progressDialog.setMessage("Loading......");
         progressDialog.show();
+        progressDialog.setCancelable(false);
 
         RetrofitNetworksCalls calls = DataSingleton
                 .getInstance().getRetrofitNetworksCallsObject();

@@ -81,6 +81,7 @@ public class RetailerWalletFragment extends Fragment implements View.OnClickList
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
         progressDialog.show();
+        progressDialog.setCancelable(false);
         //getUserWalletDetails();
         if (isNetworkAvailable()) {
             RetrofitNetworksCalls calls = DataSingleton

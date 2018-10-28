@@ -25,7 +25,8 @@ import retrofit2.http.Path;
 
 public interface IApiInterface {
 
-    public static final String BASE_URL = "http://192.168.43.78:8080/Yummy_Service/api/";
+    //public static final String BASE_URL = "http://192.168.43.78:8080/Yummy_Service/api/";
+    public static final String BASE_URL = "https://yummyaid.ust-global.com/Yummy_Service/api/";
 //     public static final String BASE_URL = "https://91864159-07c3-4e28-8056-733d559b17cc.mock.pstmn.io/Yummy_Service/api/";
 //    public static final String BASE_URL
 //            = "https://9cbf6479-2ac8-4f57-81b0-723bca891763.mock.pstmn.io/Yummy_Service/api/";

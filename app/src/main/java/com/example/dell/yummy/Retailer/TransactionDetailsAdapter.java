@@ -104,7 +104,7 @@ class TransactionDetailsAdapter extends
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mCtx, "success", Toast.LENGTH_SHORT).show();
+
                     if (transactionDetailsList != null) {
                         if (!isConfirmOrderPage) {
                             int pos = getAdapterPosition();
