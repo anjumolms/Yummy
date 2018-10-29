@@ -38,7 +38,7 @@ public class PurchaseHistoryAdapter extends
             holder.storeName.setText("" + transactionDetails.getRetail_name());
             holder.orderStatus.setText("" + transactionDetails.getOrder_status());
             holder.orderDate.setText("" + transactionDetails.getOrder_date());
-            holder.total.setText("Total " + transactionDetails.getOrder_value());
+            holder.total.setText("Total ₹ " + transactionDetails.getOrder_value());
             holder.orderId.setText("Order Id " + transactionDetails.getOrder_id());
         }
     }

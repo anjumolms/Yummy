@@ -75,7 +75,10 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
 
                 if (intent.getAction().equals(Constants.NOTIFY_UPDATE_ITEM_ERROR)) {
                     stopProgress();
-                    updateList();
+                }
+
+                if (intent.getAction().equals(Constants.NOTIFY_LIST_ITEM_DELETED_ERROR)) {
+                    stopProgress();
                 }
             }
 
@@ -110,6 +113,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
         intentFilter.addAction(Constants.NOTIFY_LIST_ITEM_UPDATED);
         intentFilter.addAction(Constants.NOTIFY_LIST_ITEM_DELETED);
         intentFilter.addAction(Constants.NOTIFY_UPDATE_ITEM_ERROR);
+        intentFilter.addAction(Constants.NOTIFY_LIST_ITEM_DELETED_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(broadcastReceiver, intentFilter);
         actionButton.setOnClickListener(this);
@@ -146,7 +150,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
         if (adapter != null) {
             RetrofitNetworksCalls retrofitNetworksCalls = DataSingleton.getInstance()
                     .getRetrofitNetworksCallsObject();
-            if (retrofitNetworksCalls != null) {
+            if (retrofitNetworksCalls != null && adapter != null) {
                 adapter.setData(retrofitNetworksCalls.getRetailerDishDetails());
                 adapter.notifyDataSetChanged();
             }
@@ -187,7 +191,7 @@ public class RetailerListItemFragment extends Fragment implements View.OnClickLi
         if (calls != null) {
             calls.getRetailerMenuList(getActivity(), 1);
         }
-        Toast.makeText(getActivity(), "Item updated !!!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "Item updated !!!", Toast.LENGTH_SHORT).show();
     }
 
     public void showUpdatePopup(final DishesDetails dishesDetails) {

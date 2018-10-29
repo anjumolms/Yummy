@@ -93,7 +93,7 @@ public class PurchaseHistoryItemFragment extends Fragment implements View.OnClic
     private void showDishDetails() {
         if (orders != null) {
 
-            mTotal.setText("" + orders.getOrder_value());
+            mTotal.setText("₹ " + orders.getOrder_value());
             mStoreName.setText("" + orders.getRetail_name());
             RetrofitNetworksCalls calls = DataSingleton.getInstance()
                     .getRetrofitNetworksCallsObject();

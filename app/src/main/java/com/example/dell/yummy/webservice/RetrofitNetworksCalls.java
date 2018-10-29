@@ -415,6 +415,8 @@ public class RetrofitNetworksCalls {
                 public void onResponse(Call<List<DishesDetails>> call,
                                        Response<List<DishesDetails>> response) {
                     if (response != null && response.code() == 200) {
+
+
                         mRetailordishesList = response.body();
                         Intent intent = new Intent(Constants.NOTIFY_RETAILOR_DISH_DETAILS);
                         intent.putExtra(Constants.KEY_LIST_UPDATE, isFromListUpdate);
@@ -693,9 +695,16 @@ public class RetrofitNetworksCalls {
 
                         if (response != null) {
                             if (response.code() == 200) {
-
-                                Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_UPDATED);
-                                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                                String data = response.body();
+                                if (data.equalsIgnoreCase("Item Updated Successfully")) {
+                                    Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_UPDATED);
+                                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                                } else {
+                                    Toast.makeText(context, data, Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
+                                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                                }
 
                             } else {
                                 Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
@@ -743,18 +752,25 @@ public class RetrofitNetworksCalls {
 
                         if (response != null) {
                             if (response.code() == 200) {
-
-                                Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_DELETED);
-                                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                                String data = response.body();
+                                 if(data.equalsIgnoreCase("Items Deleted Successfully")){
+                                     Toast.makeText(context,"Deleted Successfully" , Toast.LENGTH_SHORT).show();
+                                     Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_DELETED);
+                                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                                 }else{
+                                     Toast.makeText(context,"Failed" , Toast.LENGTH_SHORT).show();
+                                     Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_DELETED_ERROR);
+                                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                                 }
 
                             } else {
-                                Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
+                                Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_DELETED_ERROR);
                                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                                 Toast.makeText(context, response.code()
                                         + response.message(), Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
+                            Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_DELETED_ERROR);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                             Toast.makeText(context, "Response is null",
                                     Toast.LENGTH_SHORT).show();
@@ -763,7 +779,7 @@ public class RetrofitNetworksCalls {
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-                        Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
+                        Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_DELETED_ERROR);
                         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                         Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
                     }
@@ -1189,14 +1205,10 @@ public class RetrofitNetworksCalls {
 
                         if (response.body() != null) {
                             mOrders = response.body();
+                            Toast.makeText(context, "Orders list", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(Constants.NOTIFY_TRANSACTION_ORDER);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
-                        } else if (response.code() == 204) {
-                            Intent intent = new Intent(Constants.NOTIFY_TRANSACTION_ORDER_ERROR);
-                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-                            Toast.makeText(context, "Invalid",
-                                    Toast.LENGTH_LONG).show();
                         } else {
 
                             Intent intent = new Intent(Constants.NOTIFY_TRANSACTION_ORDER_ERROR);
@@ -1204,6 +1216,10 @@ public class RetrofitNetworksCalls {
                             Toast.makeText(context, response.code()
                                     + response.message(), Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Toast.makeText(context, "Invalid", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Constants.NOTIFY_TRANSACTION_ORDER_ERROR);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     }
                 }
 

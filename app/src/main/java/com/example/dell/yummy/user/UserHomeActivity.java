@@ -647,7 +647,6 @@ public class UserHomeActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else if (mUserAddCoinsFragment.isVisible()
                 || mUserWalletFragment.isVisible()
-                || mConfirmationFragment.isVisible()
                 || mStoreDetailsFragment.isVisible()
                 || mPurchaseHistoryFragment.isVisible()) {
 
@@ -661,6 +660,8 @@ public class UserHomeActivity extends AppCompatActivity
 
         } else if(mPurchaseHistoryItemFragment.isVisible()){
             addFragment(Constants.SCREEN_PURCHASE_DETAILS);
+        } else if(mConfirmationFragment.isVisible()){
+            addFragment(Constants.SCREEN_STORE_DETAILS);
         }else {
             Intent a = new Intent(Intent.ACTION_MAIN);
             a.addCategory(Intent.CATEGORY_HOME);
@@ -810,7 +811,7 @@ public class UserHomeActivity extends AppCompatActivity
     @Override
     public void onDrawerOpened(@NonNull View drawerView) {
         int wallet = getWallet();
-        mMenuItemWallet.setTitle("Wallet " + wallet);
+        mMenuItemWallet.setTitle("Wallet ₹ " + wallet);
     }
 
     @Override

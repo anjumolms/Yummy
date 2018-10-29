@@ -112,6 +112,7 @@ public class Constants {
     public static final String NOTIFY_UPDATE_USER_WALLET = "NOTIFY_UPDATE_USER_WALLET";
     public static final String NOTIFY_UPDATE_USER_WALLET_ERROR = "NOTIFY_UPDATE_USER_WALLET_ERROR";
     public static final String NOTIFY_REVIEW_UPDATED_ERROR = "NOTIFY_REVIEW_UPDATED_ERROR";
+    public static final String NOTIFY_LIST_ITEM_DELETED_ERROR = "NOTIFY_LIST_ITEM_DELETED_ERROR";
 
     public static final String AUTHUSERNAME = "ismpost";
     public static final String AUTHPASS = "pass1";
