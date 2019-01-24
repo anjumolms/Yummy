@@ -116,7 +116,6 @@
                         android:ellipsize="end"
                         android:hint="Mobile"
                         android:inputType="number"
-                        android:maxLength="4"
                         android:maxLines="1"
                         android:theme="@style/AppTheme" />
                 </android.support.design.widget.TextInputLayout>
