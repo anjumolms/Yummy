@@ -26,25 +26,28 @@
             android:drawableLeft="@drawable/navigation_icon"
             />
     </android.support.v7.widget.Toolbar>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Order Status"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/background_light"
         android:fontFamily="@font/poppins"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:gravity="center"
-        android:textStyle="bold"
-        android:layout_marginTop="10dp"/>
-    <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:text="Order Status"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:textStyle="bold" />
+
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_transaction_details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_transaction_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

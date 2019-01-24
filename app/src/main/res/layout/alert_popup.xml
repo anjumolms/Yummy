@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -9,105 +8,118 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp">
-                <TableRow>
-                    <TextView
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp">
+
+            <TableRow>
+
+                <TextView
                     android:id="@+id/popup_store_name"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/poppins"
                     android:gravity="center_vertical"
-                        android:textSize="18dp"
-
-                        android:fontFamily="@font/poppins"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textColor="#000000"
+                    android:textSize="18dp"
                     android:textStyle="bold" />
-                </TableRow>
+            </TableRow>
 
-                <TableRow
-                    android:layout_marginTop="15dp">
+            <TableRow android:layout_marginTop="15dp">
 
-                    <TextView
-                        android:id="@+id/popup_item_name"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="5dp"
-                        android:layout_weight="1"
-                        android:textSize="18sp"
-                        android:fontFamily="@font/poppins"
-                        android:gravity="center_vertical"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                        android:textColor="#000000" />
+                <TextView
+                    android:id="@+id/popup_item_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="#000000"
+                    android:textSize="18sp" />
 
-                    <TextView
-                        android:id="@+id/popup_dish_item_count"
-                        android:layout_width="0dp"
-                        android:textSize="18sp"
-                        android:fontFamily="@font/poppins"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".3" />
+                <TextView
+                    android:id="@+id/popup_dish_item_count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:fontFamily="@font/poppins"
+                    android:textSize="18sp" />
 
-                    <android.support.v7.widget.AppCompatImageButton
-                        android:id="@+id/popup_im_add"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/additemtolist" />
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/popup_im_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/poppins"
+                    android:src="@drawable/additemtolist" />
 
-                    <android.support.v7.widget.AppCompatImageButton
-                        android:id="@+id/popup_im_rem"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:fontFamily="@font/poppins"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/removeitem" />
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/popup_im_rem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/poppins"
+                    android:src="@drawable/removeitem" />
 
-                </TableRow>
+            </TableRow>
 
-                <TableRow android:layout_marginTop="5dp">
+            <TableRow android:layout_marginTop="5dp">
 
-                    <TextView
-                        android:id="@+id/popup_item_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:textSize="18sp"
-                        android:fontFamily="@font/poppins"
-                        android:gravity="center_vertical"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+                <TextView
+                    android:id="@+id/popup_item_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textSize="18sp" />
 
-                </TableRow>
+            </TableRow>
+            <TableRow android:layout_marginTop="5dp">
 
-                <TableRow
-                    android:layout_width="fill_parent"
-                    android:gravity="right"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginBottom="20dp">
+                <TextView
+                    android:id="@+id/popup_item_stock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textSize="18sp" />
 
-                    <TextView
-                        android:id="@+id/popup_buy"
-                        android:text="Buy"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/tab_color"
-                        android:layout_marginRight="10dp"/>
+            </TableRow>
 
-                    <TextView
-                        android:id="@+id/popup_cancel"
-                        android:text="Cancel"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/tab_color"
-                        android:layout_marginRight="10dp"/>
-                </TableRow>
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="50dp"
+                android:gravity="right">
 
-            </TableLayout>
+                <TextView
+                    android:id="@+id/popup_buy"
+                    android:layout_marginRight="10dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Buy"
+                    android:textColor="@color/tab_color" />
+
+                <TextView
+                    android:id="@+id/popup_cancel"
+                    android:layout_marginRight="10dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Cancel"
+                    android:textColor="@color/tab_color" />
+            </TableRow>
+
+        </TableLayout>
     </LinearLayout>
 
 </LinearLayout>

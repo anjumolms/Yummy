@@ -87,7 +87,7 @@ public class RetrofitNetworksCalls {
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-            Call<List<StoreDetails>> call = iApiInterface.getStores(locationId);
+            Call<List<StoreDetails>> call = iApiInterface.getStores(locationId, getAuthToken());
 
             call.enqueue(new Callback<List<StoreDetails>>() {
 
@@ -133,7 +133,7 @@ public class RetrofitNetworksCalls {
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-            Call<List<DishesDetails>> call = iApiInterface.getallMenu(location_id);
+            Call<List<DishesDetails>> call = iApiInterface.getallMenu(location_id, getAuthToken());
 
 
             call.enqueue(new Callback<List<DishesDetails>>() {
@@ -197,7 +197,7 @@ public class RetrofitNetworksCalls {
                 id = sharedPreferences.getInt(Constants.KEY_ID, 0);
             }
 
-            Call<List<UserReview>> call = iApiInterface.getUserReview(id);
+            Call<List<UserReview>> call = iApiInterface.getUserReview(id, getAuthToken());
 
 
             call.enqueue(new Callback<List<UserReview>>() {
@@ -244,7 +244,7 @@ public class RetrofitNetworksCalls {
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             Call<List<Order>> call = iApiInterface
-                    .getTransactionPendingOrders(id);
+                    .getTransactionPendingOrders(id, getAuthToken());
 
             call.enqueue(new Callback<List<Order>>() {
 
@@ -284,7 +284,7 @@ public class RetrofitNetworksCalls {
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             Call<List<Order>> call = iApiInterface
-                    .getConfirmedOrders(id);
+                    .getConfirmedOrders(id, getAuthToken());
 
             call.enqueue(new Callback<List<Order>>() {
 
@@ -334,7 +334,7 @@ public class RetrofitNetworksCalls {
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             Call<List<Order>> call = iApiInterface
-                    .getAllTransactionDetails(id);
+                    .getAllTransactionDetails(id, getAuthToken());
 
             call.enqueue(new Callback<List<Order>>() {
 
@@ -408,7 +408,7 @@ public class RetrofitNetworksCalls {
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             Call<List<DishesDetails>> call = iApiInterface
-                    .getStoreMenu(id);
+                    .getStoreMenu(id, getAuthToken());
 
             call.enqueue(new Callback<List<DishesDetails>>() {
                 @Override
@@ -455,7 +455,7 @@ public class RetrofitNetworksCalls {
 
         IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
 
-        Call<String> call = iApiInterface.updateReview(reviewId, rating);
+        Call<String> call = iApiInterface.updateReview(reviewId, rating, getAuthToken());
 
 
         call.enqueue(new Callback<String>() {
@@ -471,7 +471,7 @@ public class RetrofitNetworksCalls {
                             Toast.makeText(context, "Review Updated", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(Constants.NOTIFY_REVIEW_UPDATED);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-                        } else{
+                        } else {
                             Toast.makeText(context, "Response failed", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(Constants.NOTIFY_REVIEW_UPDATED_ERROR);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
@@ -545,7 +545,7 @@ public class RetrofitNetworksCalls {
                 .baseUrl(IApiInterface.BASE_URL).build();
         IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
 
-        Call<String> call = iApiInterface.addItem(retailerMenu);
+        Call<String> call = iApiInterface.addItem(retailerMenu, getAuthToken());
 
 
         call.enqueue(new Callback<String>() {
@@ -596,7 +596,7 @@ public class RetrofitNetworksCalls {
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-            Call<UserDetails> call = iApiInterface.getUserDetails(loginId);
+            Call<UserDetails> call = iApiInterface.getUserDetails(loginId, getAuthToken());
 
 
             call.enqueue(new Callback<UserDetails>() {
@@ -634,7 +634,7 @@ public class RetrofitNetworksCalls {
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-            Call<RetailerDetails> call = iApiInterface.getRetailerDetails(loginId);
+            Call<RetailerDetails> call = iApiInterface.getRetailerDetails(loginId, getAuthToken());
 
 
             call.enqueue(new Callback<RetailerDetails>() {
@@ -685,7 +685,7 @@ public class RetrofitNetworksCalls {
                     .baseUrl(IApiInterface.BASE_URL).build();
             if (retrofit != null) {
                 IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-                Call<String> call = iApiInterface.updateMenuItem(dishesDetails);
+                Call<String> call = iApiInterface.updateMenuItem(dishesDetails, getAuthToken());
 
 
                 call.enqueue(new Callback<String>() {
@@ -724,7 +724,7 @@ public class RetrofitNetworksCalls {
                     public void onFailure(Call<String> call, Throwable t) {
                         Intent intent = new Intent(Constants.NOTIFY_UPDATE_ITEM_ERROR);
                         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-                        Toast.makeText(context, "invalid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                 });
@@ -743,7 +743,7 @@ public class RetrofitNetworksCalls {
                     .baseUrl(IApiInterface.BASE_URL).build();
             if (retrofit != null) {
                 IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-                Call<String> call = iApiInterface.deleteItemList(list);
+                Call<String> call = iApiInterface.deleteItemList(list, getAuthToken());
 
                 call.enqueue(new Callback<String>() {
                     @Override
@@ -753,15 +753,15 @@ public class RetrofitNetworksCalls {
                         if (response != null) {
                             if (response.code() == 200) {
                                 String data = response.body();
-                                 if(data.equalsIgnoreCase("Items Deleted Successfully")){
-                                     Toast.makeText(context,"Deleted Successfully" , Toast.LENGTH_SHORT).show();
-                                     Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_DELETED);
-                                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-                                 }else{
-                                     Toast.makeText(context,"Failed" , Toast.LENGTH_SHORT).show();
-                                     Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_DELETED_ERROR);
-                                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-                                 }
+                                if (data.equalsIgnoreCase("Items Deleted Successfully")) {
+                                    Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_DELETED);
+                                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                                } else {
+                                    Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_DELETED_ERROR);
+                                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                                }
 
                             } else {
                                 Intent intent = new Intent(Constants.NOTIFY_LIST_ITEM_DELETED_ERROR);
@@ -800,7 +800,7 @@ public class RetrofitNetworksCalls {
 
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             Call<Order> call = iApiInterface
-                    .getOrderDetails(orderDetails);
+                    .getOrderDetails(orderDetails, getAuthToken());
 
             call.enqueue(new Callback<Order>() {
                 @Override
@@ -812,7 +812,7 @@ public class RetrofitNetworksCalls {
                                 && result.getOrder_status()
                                 .equalsIgnoreCase("ORDER_SUCCESSFULL")) {
                             Toast.makeText(context,
-                                    "Order successfull", Toast.LENGTH_SHORT).show();
+                                    "Order Successful", Toast.LENGTH_LONG).show();
 
                             Intent intent = new Intent(Constants.NOTIFY_USER_CONFIRM_ORDER);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
@@ -903,10 +903,10 @@ public class RetrofitNetworksCalls {
             Call<String> call = null;
             IApiInterface service = retrofit.create(IApiInterface.class);
             if (role == 1) {
-                call = service.getWallet(id);
+                call = service.getWallet(id, getAuthToken());
             }
             if (role == 2) {
-                call = service.getRetailWallet(id);
+                call = service.getRetailWallet(id, getAuthToken());
             }
 
             call.enqueue(new Callback<String>() {
@@ -972,7 +972,7 @@ public class RetrofitNetworksCalls {
                 .baseUrl(IApiInterface.BASE_URL).build();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
-            Call<String> call = service.addStoreDetails(registerStore);
+            Call<String> call = service.addStoreDetails(registerStore, getAuthToken());
 
             call.enqueue(new Callback<String>() {
                 @Override
@@ -1022,7 +1022,7 @@ public class RetrofitNetworksCalls {
                 .baseUrl(IApiInterface.BASE_URL).build();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
-            Call<String> call = service.updateToken(userResult);
+            Call<String> call = service.updateToken(userResult, getAuthToken());
 
             call.enqueue(new Callback<String>() {
                 @Override
@@ -1062,7 +1062,7 @@ public class RetrofitNetworksCalls {
                 .baseUrl(IApiInterface.BASE_URL).build();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
-            Call<String> call = service.addLocation(locationDetails);
+            Call<String> call = service.addLocation(locationDetails, getAuthToken());
 
             call.enqueue(new Callback<String>() {
                 @Override
@@ -1100,7 +1100,7 @@ public class RetrofitNetworksCalls {
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
-            Call<List<LocationDetails>> call = service.getAllLocations();
+            Call<List<LocationDetails>> call = service.getAllLocations(getAuthToken());
 
             call.enqueue(new Callback<List<LocationDetails>>() {
                 @Override
@@ -1152,7 +1152,7 @@ public class RetrofitNetworksCalls {
                 .baseUrl(IApiInterface.BASE_URL).build();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
-            Call<String> call = service.updateDelivery(orderId);
+            Call<String> call = service.updateDelivery(orderId, getAuthToken());
 
             call.enqueue(new Callback<String>() {
                 @Override
@@ -1195,7 +1195,7 @@ public class RetrofitNetworksCalls {
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
 
-            Call<Order> call = service.getTransactionOrders(orderId);
+            Call<Order> call = service.getTransactionOrders(orderId, getAuthToken());
 
             call.enqueue(new Callback<Order>() {
                 @Override
@@ -1258,7 +1258,7 @@ public class RetrofitNetworksCalls {
             if (sharedPreferences != null) {
                 id = sharedPreferences.getInt(Constants.KEY_ID, 0);
             }
-            Call<List<Order>> call = service.getPurchaseHistory(id);
+            Call<List<Order>> call = service.getPurchaseHistory(id, getAuthToken());
 
             call.enqueue(new Callback<List<Order>>() {
                 @Override
@@ -1311,7 +1311,7 @@ public class RetrofitNetworksCalls {
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
-            Call<List<RetailerDetails>> call = iApiInterface.getAllStores();
+            Call<List<RetailerDetails>> call = iApiInterface.getAllStores(getAuthToken());
 
             call.enqueue(new Callback<List<RetailerDetails>>() {
 
@@ -1365,7 +1365,7 @@ public class RetrofitNetworksCalls {
                 .baseUrl(IApiInterface.BASE_URL).build();
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
-            Call<String> call = service.addadmin(strUserName, strPassword);
+            Call<String> call = service.addadmin(strUserName, strPassword, getAuthToken());
 
             call.enqueue(new Callback<String>() {
                 @Override
@@ -1414,7 +1414,7 @@ public class RetrofitNetworksCalls {
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
 
-            Call<String> call = service.callRefundApi(userId, retailId, amount);
+            Call<String> call = service.callRefundApi(userId, retailId, amount, getAuthToken());
 
             call.enqueue(new Callback<String>() {
                 @Override
@@ -1461,7 +1461,7 @@ public class RetrofitNetworksCalls {
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
 
-            Call<User> call = service.getUserByNumber(number);
+            Call<User> call = service.getUserByNumber(number, getAuthToken());
 
             call.enqueue(new Callback<User>() {
                 @Override
@@ -1514,7 +1514,7 @@ public class RetrofitNetworksCalls {
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
 
-            Call<String> call = service.updateRetailerProfile(mRetailerDetails);
+            Call<String> call = service.updateRetailerProfile(mRetailerDetails, getAuthToken());
 
             call.enqueue(new Callback<String>() {
                 @Override
@@ -1572,7 +1572,7 @@ public class RetrofitNetworksCalls {
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
 
-            Call<String> call = service.updateUserWallet(id, userAmount);
+            Call<String> call = service.updateUserWallet(id, userAmount, getAuthToken());
 
             call.enqueue(new Callback<String>() {
                 @Override

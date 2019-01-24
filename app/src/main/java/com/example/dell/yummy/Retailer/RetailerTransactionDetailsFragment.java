@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.dell.yummy.Constants;
@@ -25,6 +27,7 @@ import com.example.dell.yummy.R;
 import com.example.dell.yummy.model.Order;
 import com.example.dell.yummy.webservice.RetrofitNetworksCalls;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +42,7 @@ public class RetailerTransactionDetailsFragment
     private TransactionDetailsAdapter mAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView mTextView;
+    private int needDataUpdate = 0;
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -55,6 +59,14 @@ public class RetailerTransactionDetailsFragment
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            needDataUpdate = bundle.getInt("UPDATE_LIST",0);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,18 +102,30 @@ public class RetailerTransactionDetailsFragment
     public void showStoreDetails() {
         RetrofitNetworksCalls retrofitNetworksCalls = DataSingleton.getInstance()
                 .getRetrofitNetworksCallsObject();
+        List<Order> details = new ArrayList<>();
+        if (needDataUpdate == 1) {
+            if (retrofitNetworksCalls != null) {
+                SharedPreferences sharedPreferences = getActivity()
+                        .getSharedPreferences(Constants.SHARED_PREFERANCE_LOGIN_DETAILS,
+                                Context.MODE_PRIVATE);
+                int id = 0;
+                if (sharedPreferences != null) {
+                    id = sharedPreferences.getInt(Constants.KEY_ID, 0);
+                    retrofitNetworksCalls.getTransactionPendingOrders(getActivity(), id);
+                }
+            }
+        } else {
+            if (retrofitNetworksCalls != null) {
+                details
+                        = retrofitNetworksCalls.getTransactionList();
+                //setting adapter to recyclerview
 
-        if (retrofitNetworksCalls != null) {
-            List<Order> details
-                    = retrofitNetworksCalls.getTransactionList();
 
-            mAdapter = new TransactionDetailsAdapter(getActivity(),
-                    details, retailerFragmentListener);
-            //setting adapter to recyclerview
-            mRecyclerView.setAdapter(mAdapter);
-
+            }
         }
-
+        mAdapter = new TransactionDetailsAdapter(getActivity(),
+                details, retailerFragmentListener);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void updateData() {
@@ -122,6 +146,7 @@ public class RetailerTransactionDetailsFragment
     @Override
     public void onDestroy() {
         super.onDestroy();
+        needDataUpdate = 0;
         RetrofitNetworksCalls calls = DataSingleton
                 .getInstance().getRetrofitNetworksCallsObject();
         if(calls != null){

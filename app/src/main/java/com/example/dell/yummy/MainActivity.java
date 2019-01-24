@@ -21,10 +21,12 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 import static com.example.dell.yummy.Constants.SCREEN_LOGIN;
+import static com.example.dell.yummy.Constants.SCREEN_REGISTRATION;
 
 public class MainActivity extends AppCompatActivity implements IMainViewListener {
     private LoginFragment mLoginFragment;
     private RegistrationFragment mRegistrationFragment;
+    private int lastviewdScreenId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +61,13 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
 
         switch (screenId) {
             case SCREEN_LOGIN:
+                lastviewdScreenId = SCREEN_LOGIN;
                 fragmentTransaction.replace(R.id.fl_main_fragment_container,
                         mLoginFragment);
                 fragmentTransaction.commit();
                 break;
             case Constants.SCREEN_REGISTRATION:
+                lastviewdScreenId = SCREEN_REGISTRATION;
                 fragmentTransaction.replace(R.id.fl_main_fragment_container,
                         mRegistrationFragment);
                 fragmentTransaction.commit();
@@ -97,9 +101,23 @@ public class MainActivity extends AppCompatActivity implements IMainViewListener
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        if (mRegistrationFragment.isVisible()) {
-            addFragment(SCREEN_LOGIN);
+        if (lastviewdScreenId != -1
+                && lastviewdScreenId == SCREEN_REGISTRATION) {
+            lastviewdScreenId = SCREEN_LOGIN;
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            LoginFragment loginFragment = new LoginFragment();
+            loginFragment.addListener(this);
+            fragmentTransaction.replace(R.id.fl_main_fragment_container,
+                    loginFragment);
+            fragmentTransaction.commit();
+        }
+        else if (lastviewdScreenId != -1
+                && lastviewdScreenId == SCREEN_LOGIN) {
+            Intent a = new Intent(Intent.ACTION_MAIN);
+            a.addCategory(Intent.CATEGORY_HOME);
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
         } else {
             onDestroy();
         }

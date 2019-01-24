@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
@@ -136,8 +137,13 @@ public class UserAddCoinsFragment extends Fragment implements View.OnClickListen
 
                 if(!edt.getText().toString().isEmpty()){
                     int key = Integer.parseInt(edt.getText().toString().trim());
-                    if(userAmount > 0 && key == 5533){
+                    if(userAmount > 0 && key == 55332){
                         updateUserWallet(userAmount);
+                    }
+                    else{
+                        Toast.makeText(getActivity(),
+                                "Incorrect Pin | Invalid Amount ", Toast.LENGTH_LONG).show();
+
                     }
                 }
             }

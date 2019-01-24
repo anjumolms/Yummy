@@ -169,7 +169,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(okHttpClient);
             if (retrofit != null) {
                 IApiInterface service = retrofit.create(IApiInterface.class);
-                Call<UserResult> call = service.userLogin(userResult);
+                Call<UserResult> call = service.userLogin(userResult, RetrofitNetworksCalls.getAuthToken());
 
                 call.enqueue(new Callback<UserResult>() {
                     @Override

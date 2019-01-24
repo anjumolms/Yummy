@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/darker_gray"
     android:orientation="vertical"
     tools:context=".Retailer.RetailerTransactionDetailsFragment">
 
@@ -14,29 +15,33 @@
         android:background="@color/tab_color"
         app:layout_scrollFlags="scroll|enterAlways"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
         <TextView
             android:id="@+id/tv_back_button_admin_store"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/yummy"
-            android:fontFamily="@font/poppins"
-            android:textColor="#fff"
-            android:textSize="20dp"
-            android:gravity="center"
             android:drawableLeft="@drawable/backthree"
-            />
+            android:fontFamily="@font/poppins"
+            android:gravity="center"
+            android:text="@string/yummy"
+            android:textColor="#fff"
+            android:textSize="20dp" />
     </android.support.v7.widget.Toolbar>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/background_light"
+        android:gravity="center"
         android:text="Transaction Details"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:layout_marginTop="10dp"/>
+        android:textStyle="bold" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/background_light"
         android:orientation="vertical"
         android:padding="8dp">
 
@@ -48,7 +53,7 @@
             android:fontFamily="@font/poppins"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
             android:textColor="#000000"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/transaction_store_id"
@@ -59,6 +64,7 @@
             android:layout_marginTop="5dp"
             android:fontFamily="@font/poppins"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
         <TextView
             android:id="@+id/transaction_wallet_info"
             android:layout_width="wrap_content"
@@ -75,7 +81,6 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_admin_stores_transaction"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

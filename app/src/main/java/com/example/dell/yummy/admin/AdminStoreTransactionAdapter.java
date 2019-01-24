@@ -40,6 +40,7 @@ public class AdminStoreTransactionAdapter extends
             holder.textViewTransactionId.setText("" + transactionDetails.getWallet_tran_id());
             holder.textViewAmount.setText("" + transactionDetails.getOrder_value());
             holder.textViewTransactionStatus.setText(transactionDetails.getOrder_status());
+            holder.textViewDate.setText(""+transactionDetails.getOrder_date());
 
         }
     }
@@ -75,7 +76,7 @@ public class AdminStoreTransactionAdapter extends
     class TransactionViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewUserId, textViewTransactionId, textViewAmount,
-                textViewTransactionStatus,wallet;
+                textViewTransactionStatus,wallet,textViewDate;
         CardView cardView;
 
         public TransactionViewHolder(View itemView) {
@@ -84,6 +85,7 @@ public class AdminStoreTransactionAdapter extends
             textViewUserId = itemView.findViewById(R.id.tv_user_id);
             textViewTransactionId = itemView.findViewById(R.id.tv_transaction_id);
             textViewAmount = itemView.findViewById(R.id.tv_amount);
+            textViewDate = itemView.findViewById(R.id.tv_date_id);
 
             textViewTransactionStatus = itemView.findViewById(R.id.tv_transaction_status);
             cardView = itemView.findViewById(R.id.cv_transaction_details);

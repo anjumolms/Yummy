@@ -174,6 +174,8 @@ public class RetailerAddItemFragment extends Fragment implements View.OnClickLis
     private void dismissProgress() {
         progressDialog.dismiss();
         mSignatureDish.setChecked(false);
+        nonveg.setChecked(false);
+        mCombo.setChecked(false);
         mItimeName.setText("");
         mItemPrice.setText("");
         stock.setText("");

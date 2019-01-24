@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -265,22 +266,26 @@ public class RetailerHomeActivity extends AppCompatActivity
         } else if (mretailerWalletFragment.isVisible()
                 || mretailerListItemFragment.isVisible()
                 || mretailerAddItemFragment.isVisible()
-                || meachTransactionFragment.isVisible()
                 || mConfirmOrdersFragment.isVisible()
                 || mRefundFragment.isVisible()
                 || mProfileFragment.isVisible()) {
 
-//            RetailerTransactionDetailsFragment fragment = new RetailerTransactionDetailsFragment();
-//            fragment.addListener(this);
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container,
-//                    fragment);
-//            fragmentTransaction.commit();
+
             addFragment(Constants.SCREEN_RETAILER_TRANSACTION_DETAILS);
 
 
-        } else {
+        } else if (meachTransactionFragment.isVisible()){
+                        RetailerTransactionDetailsFragment fragment = new RetailerTransactionDetailsFragment();
+            fragment.addListener(this);
+            Bundle bundle = new Bundle();
+            bundle.putInt("UPDATE_LIST",1);
+            fragment.setArguments(bundle);
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.fl_retailer_home_fragment_container,
+                    fragment);
+            fragmentTransaction.commit();
+        }else {
             Intent a = new Intent(Intent.ACTION_MAIN);
             a.addCategory(Intent.CATEGORY_HOME);
             a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

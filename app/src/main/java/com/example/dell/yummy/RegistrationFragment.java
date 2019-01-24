@@ -91,6 +91,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         String strMobile = mMobile.getText().toString().trim();
 
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        String ustEmailPattern = "[a-zA-Z0-9._-]+@ust-global.com";
 
 
         if (TextUtils.isEmpty(strUserName)) {
@@ -101,8 +102,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         if (TextUtils.isEmpty(strEmail)) {
             mUId.setError(Constants.FIELD_EMPTY_WARNING);
             return;
-        }
-        else if(!strEmail.matches(emailPattern)){
+        } else if (!(strEmail.matches(emailPattern)||strEmail.matches(ustEmailPattern))) {
             mUId.setError(Constants.INVALID_EMAIL_WARNING);
             return;
         }
@@ -111,7 +111,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
             return;
         }
 
-        if(strPassword.length()<4){
+        if (strPassword.length() < 4) {
             mPassword.setError(Constants.PASSWORD_MINIMUM_WARNING);
             return;
         }
@@ -123,8 +123,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         if (TextUtils.isEmpty(strMobile)) {
             mMobile.setError(Constants.FIELD_EMPTY_WARNING);
             return;
-        }
-        else if(strMobile.length()!=10){
+        } else if (strMobile.length() != 10) {
             mMobile.setError(Constants.MOBILE_NUMBER_WARNING);
             return;
         }
@@ -162,7 +161,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         Retrofit retrofit = DataSingleton.getInstance().getRetrofitInstancewithOkHttp(client);
         if (retrofit != null) {
             IApiInterface service = retrofit.create(IApiInterface.class);
-            Call<RegistrationResult> call = service.register(registrationResult);
+            Call<RegistrationResult> call = service.register(registrationResult, RetrofitNetworksCalls.getAuthToken());
             call.enqueue(new Callback<RegistrationResult>() {
                 @Override
                 public void onResponse(Call<RegistrationResult> call,
@@ -176,10 +175,10 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                             if (registrationResult != null && mainView != null) {
                                 mainView.addFragment(Constants.SCREEN_LOGIN);
                             }
-                        } else if(response.code() == 204){
+                        } else if (response.code() == 204) {
                             Toast.makeText(getContext(),
                                     "Already registered", Toast.LENGTH_SHORT).show();
-                        }else{
+                        } else {
                             Toast.makeText(getContext(),
                                     "Already registered", Toast.LENGTH_SHORT).show();
                         }

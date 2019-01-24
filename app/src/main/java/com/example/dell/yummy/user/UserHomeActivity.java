@@ -462,6 +462,7 @@ public class UserHomeActivity extends AppCompatActivity
 
             TextView storeName = dialog.findViewById(R.id.popup_store_name);
             TextView itemName = dialog.findViewById(R.id.popup_item_name);
+            TextView itemStock = dialog.findViewById(R.id.popup_item_stock);
             TextView itemPrice = dialog.findViewById(R.id.popup_item_price);
             final TextView itemCount = dialog.findViewById(R.id.popup_dish_item_count);
             ImageButton addBt = dialog.findViewById(R.id.popup_im_add);
@@ -472,7 +473,7 @@ public class UserHomeActivity extends AppCompatActivity
             storeName.setText("Store Id " + dishFromApi.getRetailId());
             itemName.setText(dishFromApi.getItemName());
             itemPrice.setText("₹ " + dishFromApi.getItemPrice());
-
+            itemStock.setText("Stock " + dishFromApi.getItemStock());
 
             addBt.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -750,7 +751,7 @@ public class UserHomeActivity extends AppCompatActivity
                     .setDefaultRating(1)
                     .setTitle("Rate your YummY Taste")
                     .setDescription("Please select some stars")
-                    .setDefaultComment("It is delicious !")
+                  //  .setDefaultComment("Its very Good")
                     .setStarColor(R.color.fbutton_color_sun_flower)
                     .setNoteDescriptionTextColor(R.color.tab_color)
                     .setTitleTextColor(R.color.tab_color)

@@ -14,10 +14,14 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 
 import com.example.dell.yummy.Constants;
 import com.example.dell.yummy.DataSingleton;
@@ -33,13 +37,14 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class UserStoresFragment extends
-        Fragment implements SwipeRefreshLayout.OnRefreshListener {
+        Fragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
     RecyclerView recyclerView;
     IUserFragmentListener miUserFragmentListener;
     List<StoreDetails> StoreList;
     UserStoresAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private RelativeLayout userStoresFragment;
+    private LinearLayout userStoresFragment;
+    private SearchView storeNameSearch;
 
 
     public UserStoresFragment() {
@@ -82,13 +87,14 @@ public class UserStoresFragment extends
         recyclerView = view.findViewById(R.id.rv_stores);
         recyclerView.setHasFixedSize(true);
         userStoresFragment = view.findViewById(R.id.rl_user_stores_fragment);
+        storeNameSearch = view.findViewById(R.id.sv_store_name);
         swipeRefreshLayout = view.findViewById(R.id.swipe_user_stores);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.tab_color,
                 android.R.color.holo_green_dark,
                 android.R.color.holo_orange_dark,
                 android.R.color.holo_blue_dark);
-
+        storeNameSearch.setOnQueryTextListener(this);
         IntentFilter intentFilter = new IntentFilter(Constants.NOTIFY_STORE_DETAILS);
         intentFilter.addAction(Constants.NOTIFY_STORE_DETAILS_ERROR);
         LocalBroadcastManager.getInstance(getActivity())
@@ -186,6 +192,30 @@ public class UserStoresFragment extends
                 miUserFragmentListener.showSnackBar();
             }
         }
+
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if(adapter != null){
+            adapter.getFilter().filter(query);
+            return true;
+        }
+        else{
+
+            return false;
+        }
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+//        if(adapter != null){
+//         //adapter.getFilter().filter(newText);
+//         return true;
+//        }else {
+//            return false;
+//        }
+        return false;
 
     }
 }

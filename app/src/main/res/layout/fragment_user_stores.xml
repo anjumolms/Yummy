@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginTop="?attr/actionBarSize"
     tools:context=".user.store.UserStoresFragment"
+    android:orientation="vertical"
     android:id="@+id/rl_user_stores_fragment">
 
+    <SearchView
+        android:id="@+id/sv_store_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:queryHint="Store Name"
+        android:layout_marginTop="93dp"
+        android:layout_marginBottom="10dp">
+    </SearchView>
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipe_user_stores"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="93dp">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_stores"
@@ -24,7 +34,7 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
 
-</RelativeLayout>
+</LinearLayout>
 
 
 

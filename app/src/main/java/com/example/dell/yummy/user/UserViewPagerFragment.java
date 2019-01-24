@@ -70,7 +70,7 @@ public class UserViewPagerFragment extends Fragment implements View.OnClickListe
         FragmentUserPagerAdapter adapter = new FragmentUserPagerAdapter(getActivity()
                 .getSupportFragmentManager());
         adapter.addFrag(mUserStoresFragment , "Stores");
-        adapter.addFrag(mUserDishesFragment, "Dishes");
+        adapter.addFrag(mUserDishesFragment, "Top 20 Dishes");
         adapter.addFrag(mUserReviewFragment, "Review");
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(0);

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.FontRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,6 +39,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static com.example.dell.yummy.webservice.RetrofitNetworksCalls.getAuthToken;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -48,11 +51,12 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
     private IUserFragmentListener miUserFragmentListener;
     private TextView mStoreName;
     private StoreDetails mStoreDetails;
-    private Button mProceed;
+    private FloatingActionButton mProceed;
     private StoreDetailsAdapter adapter;
     private ProgressDialog mProgressDialog;
     private StoreDetails selectedStore;
     private TextView storeName;
+
     public StoreDetailsFragment() {
         // Required empty public constructor
     }
@@ -118,7 +122,7 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
             IApiInterface iApiInterface = retrofit.create(IApiInterface.class);
             if (selectedStore != null) {
                 Call<List<DishesDetails>> call = iApiInterface
-                        .getStoreMenu(selectedStore.getRetailId());
+                        .getStoreMenu(selectedStore.getRetailId(), getAuthToken());
                 call.enqueue(new Callback<List<DishesDetails>>() {
                     @Override
                     public void onResponse(Call<List<DishesDetails>> call,
@@ -187,10 +191,9 @@ public class StoreDetailsFragment extends Fragment implements View.OnClickListen
 
                             miUserFragmentListener.loadConformationFragment(selectedItems, selectedStore.getRetailName());
                         }
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getActivity(), "Select Item to Proceed", Toast.LENGTH_LONG).show();
-                        }
+                    }
                 }
                 break;
             default:

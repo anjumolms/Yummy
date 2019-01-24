@@ -36,7 +36,7 @@ class TransactionDetailsAdapter extends
 
     @Override
     public void onBindViewHolder(TransactionViewHolder holder, int position) {
-        if (transactionDetailsList != null) {
+        if (transactionDetailsList != null && !transactionDetailsList.isEmpty()) {
 
             transactionDetails = transactionDetailsList.get(position);
             holder.textViewUserId.setText("" + transactionDetails.getOrder_id());
@@ -68,7 +68,7 @@ class TransactionDetailsAdapter extends
 
     @Override
     public int getItemCount() {
-        if (transactionDetailsList != null) {
+        if (transactionDetailsList != null && !transactionDetailsList.isEmpty()) {
 
             return transactionDetailsList.size();
         } else {
@@ -105,7 +105,7 @@ class TransactionDetailsAdapter extends
                 @Override
                 public void onClick(View v) {
 
-                    if (transactionDetailsList != null) {
+                    if (transactionDetailsList != null && !transactionDetailsList.isEmpty()) {
                         if (!isConfirmOrderPage) {
                             int pos = getAdapterPosition();
                             if (retailerFragmentListener != null) {
